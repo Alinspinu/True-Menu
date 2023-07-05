@@ -1,0 +1,7 @@
+{
+  "name": "Meniu",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
