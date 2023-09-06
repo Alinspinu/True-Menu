@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()" [disabled]="isLoading">Cancel</ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Edit</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="danger" [strong]="true" id="present-alert"><ion-icon name="trash-outline"></ion-icon>
+      </ion-button>
+      <ion-button (click)="confirm()" type="submit" [disabled]="!form.valid || isLoading" [strong]="true">Confirm
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content class="ion-padding">
+
+  <app-logo-page *ngIf="isLoading"></app-logo-page>
+  <form [formGroup]="form" *ngIf="!isLoading">
+  <ion-item>
+    <ion-input type="text" label="Name" labelPlacement="floating" fill="outline" formControlName="name"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-input type="text" label="Price" labelPlacement="floating" fill="outline" formControlName="price"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-input  mode="ios" type="number" label="Order" labelPlacement="floating" fill="outline" formControlName="order"></ion-input>
+  </ion-item>
+  <ion-item>
+  <ion-select  mode="ios" aria-label="product" placeholder="Select Product" formControlName="product">
+    <ion-select-option *ngFor="let product of products" [value]="product._id">{{product.name}}</ion-select-option>
+  </ion-select>
+</ion-item>
+  </form>
+  <ion-alert
+  trigger="present-alert"
+  header="Sterge"
+  message="Esti sigur ca vrei să stergi produsul?"
+  [buttons]="alertButtons"
+></ion-alert>
+  </ion-content>

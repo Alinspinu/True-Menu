@@ -1,0 +1,30 @@
+ion-content{
+  --background: #f4ede6;
+}
+
+// ion-input{
+//   --background:#f4ede6;
+// }
+
+ion-input.custom {
+  --background: var(--ion-color-primary);
+  opacity: 0.7;
+  --border: 1px solid var(--ion-color-primary);
+  --color: white;
+  --placeholder-color: white;
+  --placeholder-opacity: 0.6;
+  --border-radius: 2px;
+  text-align: center;
+  margin:0 0 40px 0;
+  font-weight: 800;
+  font-size: 27px;
+ width: 40%;
+}
+
+.center-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}

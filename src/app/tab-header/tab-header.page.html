@@ -1,0 +1,33 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title class="ion-no-padding ion-text-start">
+      <img src="../../assets/icon/black-coffee.png" alt="logo-icon">
+      <span style="color: var(--ion-color-primary-tint);">
+        True Fine Coffee
+      </span>
+
+    </ion-title>
+
+    <ion-badge slot="end" class="bagde" *ngIf="isLoggedIn">
+      <ion-icon name="cash-outline" id="cash-icon"></ion-icon>
+      <span>{{user.cashBack}} Lei</span>
+      </ion-badge>
+  <ion-buttons slot="end">
+    <ion-button (click)="showActions()" *ngIf="isAdmin">
+      <ion-icon class="dark" name="add-outline"></ion-icon>
+    </ion-button>
+    <ion-button (click)="openLogin()"*ngIf="!isLoggedIn">
+      <ion-icon class="dark" name="people-outline"></ion-icon>
+    </ion-button>
+    <ion-button (click)="logout()" *ngIf="isLoggedIn">
+      <ion-icon class="dark" name="log-out-outline"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+  <ion-buttons slot="end">
+    <ion-menu-button>
+      <img id="like" src="assets/icon/black-social-media.png" alt="">
+    </ion-menu-button>
+  </ion-buttons>
+<!-- <ion-title style="font-size:18px;" class="ion-no-padding ion-text-center">{{tab | capitalize}}</ion-title> -->
+  </ion-toolbar>
+</ion-header>

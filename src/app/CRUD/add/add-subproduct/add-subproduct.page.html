@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()" [disabled]="isLoading">Cancel</ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Add Sub-Product</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="confirm()" type="submit" [disabled]="!form.valid || isLoading" [strong]="true">Confirm
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content class="ion-padding">
+  <div class="spinner" *ngIf="isLoading">
+    <app-spinner></app-spinner>
+  </div>
+  <form [formGroup]="form" *ngIf="!isLoading">
+  <ion-item>
+    <ion-input type="text" label="Name" labelPlacement="floating" fill="outline" formControlName="name"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-input type="text" label="Price" labelPlacement="floating" fill="outline" formControlName="price"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-input  mode="ios" type="number" label="Order" labelPlacement="floating" fill="outline" formControlName="order"></ion-input>
+  </ion-item>
+  <ion-item>
+  <ion-select  mode="ios" aria-label="product" placeholder="Select Product" formControlName="product">
+    <ion-select-option *ngFor="let product of products" [value]="product._id">{{product.name}}</ion-select-option>
+  </ion-select>
+</ion-item>
+  </form>
+  </ion-content>

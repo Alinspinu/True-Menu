@@ -1,0 +1,22 @@
+
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="triggerEscape()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+        BACK
+      </ion-button>
+    </ion-buttons>
+    <ion-badge slot="end" class="bagde" *ngIf="user">
+      <ion-icon name="cash-outline" id="cash-icon"></ion-icon>
+      <span>{{user.cashBack-newCashBackValue}} Lei</span>
+      </ion-badge>
+  </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true">
+  <div class="center-container">
+    <ion-input type="number" class="custom" placeholder="00" [(ngModel)]="newCashBackValue" [value]="cashBackValue" (ngModelChange)="change($event)"></ion-input>
+  <ion-button (click)="useCashBack()" expand="full">Folsește banii adunați</ion-button>
+
+  </div>
+</ion-content>

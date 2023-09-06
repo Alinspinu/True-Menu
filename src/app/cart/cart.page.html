@@ -1,0 +1,135 @@
+
+
+<app-tab-header *ngIf="!emptyBasket"></app-tab-header>
+
+<ion-content [fullscreen]="true">
+  <ion-grid *ngIf="emptyBasket && !isLoading">
+    <ion-row class="ion-no-padding">
+      <ion-col size-xs="6" offset-xs="3" class="ion-text-center" style="margin-top:30%;">
+        <img src="../../assets/icon/black-coffee.png" alt="Logo-true" id="logo-img">
+        <p class="empty-basket">Cosul este gol.</p>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <app-timer *ngIf="isLoading"></app-timer>
+
+  <!-- <div class="container"> -->
+
+
+  <ion-grid class="bill" *ngIf="!isLoading && !emptyBasket && cart">
+    <ion-row>
+      <ion-col size-md="6" offset-md="3" size-lg="4" offset-lg="4">
+        <ion-list class="ion-no-padding" *ngIf="cart">
+          <ion-item-sliding *ngFor="let product of cart.products; let i = index" class="ion-no-padding">
+          <ion-item class="ion-no-padding" color="tertiary">
+            <ion-thumbnail slot="start" class="prod-img">
+              <img [src]="product.imgPath" alt="Product image" >
+            </ion-thumbnail>
+            <div style="display: flex; flex-direction: row; width: 100%; align-items: baseline;">
+              <ion-label class="ion-text-wrap cart-prod-name" style="flex:50%">{{product.name}}</ion-label>
+
+              <ion-label class="ion-text-wrap cart-prod-qty" style="flex: 30%;">{{product.quantity}} X {{product.price}} Lei</ion-label>
+
+              <ion-label class="ion-text-wrap cart-prod-total" style="flex: 16%">{{product.total}} Lei</ion-label>
+
+              <ion-icon name="chevron-back-outline" class="slide-icon" style="flex:4%"></ion-icon>
+            </div>
+          </ion-item>
+            <ion-item-options class="ion-no-padding" >
+              <ion-item-option (click)="add(i, product.name, product.category, product.sub)">
+                <ion-icon name="add-outline"></ion-icon>
+              </ion-item-option>
+              <ion-item-option color="warning" (click)="red(i, product.name, product.category, product.sub)">
+                <ion-icon name="remove-outline"></ion-icon>
+              </ion-item-option>
+              <ion-item-option color="danger"(click)="remove(i, product.quantity, product.name, product.category, product.sub)">
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-item-option>
+            </ion-item-options>
+          </ion-item-sliding>
+
+        <ion-item class="ion-no-padding">
+          <ion-grid class="ion-no-padding">
+            <ion-row class="ion-no-padding">
+              <ion-col size-xs="12" class="ion-no-padding">
+                    <ion-item class="ion-no-padding total-wrapper" color="tertiary">
+                      <span class="total-text">TOTAL Produse</span>
+                      <span class="ion-text-wrap total-value">{{productValue}} Lei</span>
+                    </ion-item>
+                  </ion-col>
+              </ion-row>
+              <ion-row class="ion-no-padding" *ngIf="tips">
+                <ion-col size-xs="12" class="ion-no-padding">
+                  <ion-item class="ion-no-padding total-wrapper" color="tertiary">
+                    <span class="total-text light">TIPS</span>
+                    <span class="ion-text-wrap total-value light">{{cart.tips}} Lei</span>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+              <ion-row class="ion-no-padding" *ngIf="showCashBack">
+                <ion-col class="ion-no-padding">
+                      <ion-item class="ion-no-padding total-wrapper" color="tertiary">
+                        <span class="total-text light">CASH BACK</span>
+                        <span class="ion-text-wrap total-value light">-{{cart.cashBack}} Lei</span>
+                      </ion-item>
+                    </ion-col>
+                </ion-row>
+              <ion-row class="ion-no-padding" *ngIf="tips || showCashBack">
+                <ion-col class="ion-no-padding">
+                      <ion-item class="ion-no-padding total-wrapper" color="tertiary">
+                        <span>TOTAL</span>
+                        <span class="ion-text-wrap total">{{cart.total}} Lei</span>
+                      </ion-item>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+          </ion-item>
+          <ion-item class="ion-no-padding" color="tertiary">
+            <span class="light">Introdu numărul mesei pentru a putea trimite comanda!</span>
+            <ion-input type="number" color="tertiary"   class="custom" [(ngModel)]="inputValue" placeholder="00" (input)="onInputChange($event)"></ion-input>
+          </ion-item>
+          </ion-list>
+
+    <ion-row class="ion-no-padding">
+      <ion-col size-xs="12" class="ion-text-end">
+        <ion-button class="tips" id="tips" size="small" (click)="tipsModal()">Lasă tips</ion-button> <br>
+        <ion-button class="tips" size="small" (click)="cashBackModal()" *ngIf="isLoggedIn">Folosește banii adunați</ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="!isLoggedIn">
+      <ion-col size-xs="12" class="ion-text-end">
+          <div class="termeni-wrapper">
+            <ion-checkbox justify="end" labelPlacement="end" (ionChange)="checked($event)">Am citit și sunt de acord cu</ion-checkbox>
+            <a id="termeni" (click)="goTerms()">termenii și condițiile</a>
+          </div>
+      </ion-col>
+    </ion-row>
+    <ion-row class="cash-row">
+      <ion-col size-xs="8" offset-xs="2" class="ion-text-center">
+        <ion-button class="order" expand="full" [disabled]="!enableOrder" (click)="getToken()">COMANDĂ</ion-button>
+      </ion-col>
+    </ion-row>
+    <div class="auth-wrapper">
+      <ion-row style="margin-top: 10%;" *ngIf="!emptyBasket && !isLoggedIn">
+        <ion-col size-xs="3" offset-xs="2" class="ion-text-end">
+          <ion-button size="small" class="login"  (click)="onSignIn()">Login</ion-button>
+        </ion-col>
+        <ion-col size-xs="2">
+          <span class="or">Or</span>
+        </ion-col>
+        <ion-col size-xs="3" class="ion-text-start">
+          <span (click)="onRegister()" class="register">Register</span>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-text-center" *ngIf="!emptyBasket && !isLoggedIn">
+        <ion-col>
+          <p id="info-text">Pentru 5% cash-back la fiecare comandă!</p>
+        </ion-col>
+      </ion-row>
+    </div>
+  </ion-col>
+</ion-row>
+  </ion-grid>
+<!-- </div> -->
+</ion-content>

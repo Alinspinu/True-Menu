@@ -1,3 +1,35 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
+  <ion-menu contentId="main-content" type="reveal" side="end">
+    <ion-content>
+      <ion-list id="inbox-list">
+        <ion-list-header>Social Media</ion-list-header>
+        <ion-menu-toggle auto-hide="false">
+          <ion-item  href='https://www.instagram.com/truefinecoffee' lines="none" detail="false" style="margin-top:25px;">
+            <img src="assets/icon/instagram.svg" alt="Icon">
+            <!-- <ion-icon aria-hidden="true" slot="start" ios="logo-instagram" md='logo-instagram'></ion-icon> -->
+            <ion-label class="text">Instagram</ion-label>
+          </ion-item>
+          <ion-item  (click)="openFacebookPage()" lines="none" detail="false" href="#">
+            <img src="assets/icon/fb.svg" alt="Icon">
+            <!-- <ion-icon aria-hidden="true" slot="start" ios="logo-facebook" md='logo-facebook'></ion-icon> -->
+            <ion-label class="text">Facebook</ion-label>
+          </ion-item>
+          <ion-item  href='https://search.google.com/local/writereview?placeid=ChIJ96oXXor7ykARXU3JtcikJjs' lines="none" detail="false">
+            <img src="assets/icon/google-21.png" alt="Icon">
+            <ion-label class="text">Google</ion-label>
+          </ion-item>
+          <ion-item  href='https://www.tripadvisor.com/Restaurant_Review-g304060-d26258176-Reviews-True-Iasi_Iasi_County_Northeast_Romania.html' lines="none" detail="false">
+            <!-- <ion-icon aria-hidden="true" slot="start" ios="image" md='image-sharp'></ion-icon> -->
+            <img src="assets/icon/tripadvisor.svg" alt="Icon">
+            <ion-label class="text">TripAdvisor</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+      </ion-list>
+
+    </ion-content>
+  </ion-menu>
+  <ion-router-outlet id="main-content" ></ion-router-outlet>
+  <!-- <ion-content *ngIf="isLoadding">
+    <app-logo-page></app-logo-page>
+  </ion-content> -->
 </ion-app>

@@ -7,30 +7,46 @@ export const routes: Routes = [
     component: TabsPage,
     children: [
       {
-        path: 'tab1',
+        path: 'food',
         loadComponent: () =>
-          import('../tab1/tab1.page').then((m) => m.Tab1Page),
+          import('./food/food.page').then((m) => m.FoodPage),
       },
       {
-        path: 'tab2',
+        path: 'coffee',
         loadComponent: () =>
-          import('../tab2/tab2.page').then((m) => m.Tab2Page),
+          import('./coffee/coffee.page').then((m) => m.CoffeePage),
       },
       {
-        path: 'tab3',
+        path: 'bar',
         loadComponent: () =>
-          import('../tab3/tab3.page').then((m) => m.Tab3Page),
+          import('./bar/bar.page').then((m) => m.BarPage),
+      },
+      {
+        path: 'shop',
+      loadComponent: () => import('./shop/shop.page').then((m) => m.ShopPage),
+      },
+      {
+        path: 'category-content/:id',
+        loadComponent: () => import('../category-content/category-content.page').then( m => m.CategoryContentPage),
+      },
+      {
+        path: 'product-content/:id/:id',
+        loadComponent: () => import('../product-content/product-content.page').then(m => m.ProductContentPage),
+      },
+      {
+        path: 'cart',
+        loadComponent: () => import('../cart/cart.page').then( m => m.CartPage)
       },
       {
         path: '',
-        redirectTo: '/tabs/tab1',
+        redirectTo: '/tabs/food',
         pathMatch: 'full',
       },
     ],
   },
   {
     path: '',
-    redirectTo: '/tabs/tab1',
+    redirectTo: '/tabs/food',
     pathMatch: 'full',
   },
 ];

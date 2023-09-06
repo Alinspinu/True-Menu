@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()" [disabled]="isLoading">Cancel</ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Add Category</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="confirm()" type="submit" [disabled]="!form.valid || isLoading" [strong]="true">Confirm
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content class="ion-padding">
+  <div class="spinner" *ngIf="isLoading">
+    <app-spinner></app-spinner>
+  </div>
+  <form [formGroup]="form" *ngIf="!isLoading">
+  <ion-item>
+    <ion-input type="text" label="Caregory Name" labelPlacement="floating" fill="outline" formControlName="category"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-input  mode="ios" type="number" label="Order" labelPlacement="floating" fill="outline" formControlName="order"></ion-input>
+  </ion-item>
+  <app-image-picker (imagePick)="onImagePicked($event)"></app-image-picker>
+  </form>
+  </ion-content>

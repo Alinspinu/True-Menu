@@ -1,0 +1,7 @@
+{
+  "/api": {
+    "target": "https://demo-accounts.vivapayments.com",
+    "secure": true,
+    "changeOrigin": true
+  }
+}

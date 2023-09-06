@@ -1,0 +1,24 @@
+<ion-header [translucent]="true" *ngIf="!isLoading">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="'/tabs/food'" class="dark"></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-menu-button>
+        <img id="like" src="assets/icon/black-social-media.png" alt="icon">
+      </ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true">
+  <app-logo-page *ngIf="isLoading"></app-logo-page>
+  <div  class="center-container" *ngIf="user">
+    <p class="center-message">Salut {{user.name | capitalize}} bine ai venit!<br>Contul tau a fost activat! <br> Merigi înapoi la coșul de cumparaturi</p>
+    <div class="img-wrapper" (click)="backToCart()">
+      <img src="assets/icon/shopping.png" class="sub-cart" alt="cart">
+    </div>
+  </div>
+  <div  class="center-container" *ngIf="error">
+    <p class="center-message">A apărut o eroare la activarea contului! <br> Mai apasă odata pe butonul de activare din email.</p>
+  </div>
+</ion-content>

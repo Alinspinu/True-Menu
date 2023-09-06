@@ -1,0 +1,78 @@
+span, ion-back-button{
+  font-family: NoirPro !important;
+}
+
+ion-content{
+  --background: var(--ion-color-tertiary);
+  font-family: NoirPro !important;
+}
+h1{
+  font-size: 20px;
+}
+h2{
+  padding-left: 25px;
+  font-size: 17px;
+}
+h3{
+  padding-left: 20px;
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+h4{
+  padding:0 10px 0 15px;
+  font-size: 12px;
+}
+.no-intend{
+  text-indent: 0 !important;
+}
+
+p{
+  text-indent: 1.5rem;
+  font-family: NoirProLight, sans-serif;
+  font-size: 12px;
+  padding-left: 12px;
+  padding-right: 12px;
+  margin-top: 0;
+}
+
+ion-toolbar{
+  --background: #f4ede6;
+}
+
+.bold{
+  font-weight: 700;
+}
+
+#like{
+  height: 35px;
+  width: 40px;
+}
+
+.social{
+  font-size: 17px;
+}
+
+.dark{
+  color: black;
+}
+
+.text-wrapper{
+  display: flex;
+  justify-content: space-between;
+  padding: 0 12px 0 12px;
+  border: 0.7px solid rgba(0,0,0,0.4);
+}
+.text-wrapper p{
+  text-indent: 0 !important;
+  padding:5px 2px 0 2px !important;
+  margin-bottom: 0 !important;
+}
+.text-wrapper p:first-child{
+  flex: 30%;
+  align-self: center;
+  // border-right:  0.7px solid rgba(0,0,0,0.4);
+}
+.text-wrapper p:last-child{
+  flex: 70%;
+  border-left:  0.7px solid rgba(0,0,0,0.4);
+}

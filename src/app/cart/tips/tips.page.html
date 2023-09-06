@@ -1,0 +1,17 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="triggerEscape()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+        BACK
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="center-container">
+  <ion-input [(ngModel)]="tipsValue" type="number" placeholder="00"  class="custom"></ion-input>
+  <ion-button expand="full" (click)="addTips()">Adaugă Tips</ion-button>
+  </div>
+</ion-content>

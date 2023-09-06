@@ -1,0 +1,29 @@
+<ion-header [translucent]="true" *ngIf="!isLoading">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="'/tabs/food'" class="dark"></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-menu-button>
+        <p class="dark social">Social Media</p>
+        <img id="like" src="assets/icon/black-social-media.png" alt="icon">
+      </ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true">
+  <!-- <app-logo-page *ngIf="isLoading && !error"></app-logo-page> -->
+  <app-timer *ngIf="isLoading && !error"></app-timer>
+  <app-failure *ngIf="error"[errorMessage]="errorMessage"></app-failure>
+  <div class="center-container">
+  <div *ngIf="!isLoading && !error && orderTime > 0" >
+    <p class="center-message">Mulțumim pentru comandă! <br>Produsele vor fi gata în <br> <span class="bold">{{orderTime}} minute.</span></p>
+  </div>
+  <div *ngIf="!isLoading && !error && orderTime === 0">
+    <p class="center-message">Mulțumim pentru comandă! <br>Produsele vor ajunge imediat la masă!</p>
+  </div>
+  <div class="img-container" *ngIf="!isLoading && !error">
+    <img src="../../../assets/icon/logo brush.png" alt="">
+  </div>
+</div>
+</ion-content>

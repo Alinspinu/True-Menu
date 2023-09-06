@@ -1,0 +1,248 @@
+
+span, p, ion-back-button{
+  font-family: NoirPro !important;
+}
+
+ion-toolbar{
+  --background: #f4ede6;
+}
+ion-content {
+  --background: var(--ion-color-tertiary) !important;
+}
+
+
+span{
+  color: var( --ion-color-primary-tint);
+}
+
+.small{
+  font-size: 14px !important;
+  margin-top: 3px !important;
+ }
+
+
+.prod-name-row{
+  display: flex;
+  flex-direction:column;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.product-row{
+  margin-bottom: 9px;
+}
+
+
+.description{
+  display: flex;
+  padding-left: 15px;
+  align-items: center;
+}
+
+img{
+  width: 100%;
+  height: 30vh;
+  margin: 3px;
+  border-radius: 5px;
+  box-shadow: 2px 3px 2px  rgba(0,0,0,0.1);
+}
+
+
+// .description-container{
+//   display: -webkit-box;           /* Use the old flexbox syntax for compatibility */
+//   -webkit-box-orient: vertical;   /* Set the orientation to vertical (top-to-bottom) */
+//   -webkit-line-clamp: 4;          /* Show up to 5 lines of text */
+//   overflow: hidden;               /* Hide any overflowing content */
+//   text-overflow: ellipsis;        /* Display ellipsis (...) when text overflows */
+//   width: 100%;
+// }
+
+.desc{
+  font-family: NoirProLight !important;
+  font-size: 14px;
+
+}
+
+.prod-description{
+  margin-top: 5px !important;
+}
+
+.sub-prod{
+ width: 100%;
+}
+
+.cart-row{
+  margin-top: 5px;
+}
+.sub-prod span{
+  font-size: 16px;
+  font-family: NoirProLight !important;
+}
+
+.sub-prod-row{
+  margin: 5px 0 3px 0;
+}
+.price-col, .name-col{
+  display: flex;
+}
+.sub-price, .sub-name{
+  margin-top: auto;
+}
+.sub-cart{
+  height: 19px;
+  width: 19px;
+  margin-top: auto;
+  box-shadow: none !important;
+}
+
+.cart-col{
+  display: flex;
+}
+.cart-wrapper{
+  display: flex;
+  position: absolute;
+  height: 100%;
+}
+.badge{
+  font-family: Arial, Helvetica, sans-serif !important;
+  margin-top: auto;
+  display: inline-block;
+  border-radius: 50%;
+  background-color:var(--ion-color-primary);
+  color: white;
+  padding: 3px 6px;
+  position: relative;
+  bottom: 13px;
+  left: 17px;
+  font-size: 10px !important;
+  font-weight:bolder;
+}
+// .cart-col{
+//   flex-direction: row;
+//   align-items: center;
+// }
+
+.badge-prod{
+  font-family: Arial, Helvetica, sans-serif !important;
+  margin-top: auto;
+  display: inline-block;
+  border-radius: 50%;
+  background-color:var(--ion-color-primary);
+  color: white;
+  padding: 3px 6px;
+  position: relative;
+  bottom: 42px;
+  left: 40px;
+  font-size: 10px !important;
+  font-weight:bolder;
+}
+
+ion-note{
+  font-size: 15px;
+}
+
+#like{
+  height: 35px;
+  width: 35px;
+  box-shadow: none !important;
+}
+
+
+.price{
+  font-size: 18px;
+}
+ .qty{
+  font-family: NoirProLight !important;
+  font-size: 13px;
+  width: 50px;
+ }
+
+ .white-background{
+  --background: white !important;
+ }
+
+ .black-text{
+  color: black !important;
+ }
+
+ ion-button{
+  --color: white;
+ }
+
+ .edit{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+ }
+
+ ion-badge{
+  display: flex;
+  justify-content: center;
+  --color: white;
+  font-size: 15px;
+  // margin-right: 15px;
+}
+ion-badge span{
+  color: white;
+}
+#cash-icon{
+  font-size: 18px;
+  margin-right: 4px;
+ }
+
+
+@media(max-width: 300px) and (min-height: 610px){
+  .sub-prod span{
+    font-size: 12px !important;
+  }
+  .sub-prod img{
+    height: 13px;
+    width: 15px;
+  }
+  .desc{
+    font-size: 13px;
+  }
+ .description-container{
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 6;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+ion-badge, #cash-icon{
+  font-size: 12px;
+}
+
+}
+
+   @media (max-height: 500px) {
+    .sub-prod span{
+      font-size: 13px !important;
+    }
+    img{
+      height: 45vh;
+    }
+    .desc{
+      font-size: 12px;
+    }
+  }
+  @media (min-height: 800px) {
+    .sub-prod span{
+      font-size: 17px !important;
+    }
+    .prod-name-row .name{
+      font-size: 18px !important;
+    }
+    .prod-name-row .qty{
+      font-size: 19px !important;
+      width: 80px;
+    }
+    img{
+      height: 30vh;
+    }
+    .desc{
+      font-size: 18px;
+    }
+  }
+

@@ -1,0 +1,29 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="'/tabs/category-content/' + backTab" style="color: black"></ion-back-button>
+    </ion-buttons>
+    <ion-title *ngIf="product">{{product.name}}</ion-title>
+    <ion-badge slot="end" class="bagde" *ngIf="isLoggedIn">
+      <ion-icon name="cash-outline" id="cash-icon"></ion-icon>
+      <span>{{user.cashBack}} Lei</span>
+      </ion-badge>
+    <ion-buttons slot="end">
+      <ion-menu-button>
+        <img id="like" src="assets/icon/black-social-media.png" alt="icon">
+      </ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true">
+  <ion-grid>
+<ion-row>
+  <ion-col size-md="6" offset-md="3">
+
+      <div class="img-wrapper">
+        <img [src]="imagePath" alt="product-image">
+      </div>
+  </ion-col>
+</ion-row>
+  </ion-grid>
+</ion-content>

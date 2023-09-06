@@ -3,7 +3,8 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  AUTH_SECRET: "LKA-asalk-2736-MNBA-JA-54-LLOH66"
 };
 
 /*

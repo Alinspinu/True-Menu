@@ -1,0 +1,22 @@
+
+.prod-wrapper{
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+img{
+  height: 25vh;
+  padding: 2px;
+  margin: 3px;
+}
+
+.name{
+  font-size: 16px;
+}
+.price{
+  font-size: 15px;
+}
+
+.white-background{
+  --background:var(--ion-color-tertiary) !important;
+ }

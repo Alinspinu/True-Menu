@@ -1,0 +1,32 @@
+h1{
+  font-family: NoirPro, sans-serif;
+}
+.container{
+  height: 100vh;
+  display: flex;
+  flex-direction:column;
+  justify-content: center;
+  background-color: #e0cebf;
+}
+.content{
+  font-family: NoirProLight, sans-serif;
+  margin-top: auto;
+  text-align: center;
+}
+.img-wrapper{
+  margin: auto 40px 0 auto;
+}
+
+img{
+  height: 50vh;
+}
+h1{
+  color: white
+}
+span{
+  font-weight: 600;
+}
+p{
+  margin-top: 5px;
+  padding: 0 20px;
+}
