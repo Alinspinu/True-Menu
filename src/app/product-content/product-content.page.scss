@@ -1,7 +1,11 @@
 
-span, p, ion-back-button{
+span, ion-back-button{
   font-family: NoirPro !important;
 }
+h3, h4, p{
+  font-family: NoirProLight !important;
+}
+
 
 ion-toolbar{
   --background: #f4ede6;
@@ -18,17 +22,101 @@ ion-content {
 
 img{
   border-radius: 8px;
-  height: 80%;
+  height: 90%;
   box-shadow: 1px 2px 2px 1px rgba(0,0,0,0.1);
 }
+
+
 
 .img-wrapper{
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  height: 40vh;
+  border-radius:5px;
+  height: 35vh;
   padding: 0;
   width: 100%;
   background-color: rgba(197, 140, 83, 0.3)
 }
+
+.history-wrapper{
+  width: 100%;
+  white-space: normal;
+  // overflow: hidden;
+}
+
+p{
+  // display: inline-block;
+  font-size: 13px;
+}
+
+.ing-title{
+  margin-top: 0;
+}
+
+
+.ingredient-wrapper{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.box{
+  width: 10px;
+  height: 6px;
+  border-radius:2px;
+  // border: 0.8px solid black;
+  box-shadow: 0.5px 0.6px 0.6px 0.5px rgba(0, 0, 0, 0.1);
+  background-color: rgba(197, 140, 83, 0.5);
+  margin-right: 8px;
+}
+
+.prod-img{
+  border-radius: 0;
+  height: 100%;
+  width: 45px;
+}
+
+ion-item{
+  display: flex;
+  flex-direction: row;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+ion-item span{
+  font-family: NoirProLight !important;
+  font-size: 20px;
+  margin-left: 10px;
+}
+
+.val-wrapper{
+  display: flex;
+  flex-direction: column;
+}
+
+h4{
+  margin-top:0;
+  font-size: 17px;
+}
+
+.nutrition-title{
+  font-family: NoirProLight !important;
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  font-size: 21px;
+  margin-bottom: 10px;
+}
+.nutrition-title p {
+  font-size: 14px;
+  margin: 0;
+}
+
+.ingredient-wrapper div{
+  font-family: NoirProLight !important;
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+
