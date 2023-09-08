@@ -46,6 +46,22 @@ img{
   color: black !important;
  }
 
+
+
+ion-badge{
+  background-color:var(--ion-color-primary);
+  padding: 3px 6px;
+}
+ion-badge span{
+  font-family: Arial, Helvetica, sans-serif !important;
+  color: white;
+  font-weight: 400;
+}
+ion-badge[slot="fixed"]{
+  top: 5%;
+  left:20px;
+}
+
  @media (max-height: 600px) {
 
   img{

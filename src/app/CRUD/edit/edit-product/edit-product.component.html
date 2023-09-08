@@ -33,12 +33,43 @@
     <ion-textarea  mode="ios" type="text" label="Description" labelPlacement="floating" fill="outline" formControlName="description"></ion-textarea>
   </ion-item>
   <ion-item>
+    <ion-textarea  mode="ios" type="text" label="Long Description" labelPlacement="floating" fill="outline" formControlName="longDescription"></ion-textarea>
+  </ion-item>
+  <ion-item>
     <ion-select  mode="ios" aria-label="category" placeholder="Select Category" formControlName="category">
       <ion-select-option *ngFor="let category of categories" [value]="category._id">{{category.name}}</ion-select-option>
     </ion-select>
   </ion-item>
 
     <app-image-picker (imagePick)="onImagePicked($event)"></app-image-picker>
+    <div class="nutrition">
+      <h3>Nutrition</h3>
+      <ion-item>
+        <ion-textarea  mode="ios" type="text" label="Allergens" labelPlacement="floating" fill="outline" formControlName="allergens"></ion-textarea>
+      </ion-item>
+      <ion-note color="primary">After each allergen add "/"</ion-note>
+      <ion-item>
+        <ion-input  mode="ios" type="number" label="Energy Value kJ" labelPlacement="floating" fill="outline" formControlName="kJ"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input  mode="ios" type="number" label="Fats g" labelPlacement="floating" fill="outline" formControlName="allFat"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input  mode="ios" type="number" label="Saturated Acids g" labelPlacement="floating" fill="outline" formControlName="satAcids"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input  mode="ios" type="number" label="Carbohydrates g" labelPlacement="floating" fill="outline" formControlName="allCarbs"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input  mode="ios" type="number" label="Sugars g" labelPlacement="floating" fill="outline" formControlName="sugars"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input  mode="ios" type="number" label="Salt g" labelPlacement="floating" fill="outline" formControlName="salt"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input  mode="ios" type="text" label="Additives" labelPlacement="floating" fill="outline" formControlName="additives"></ion-input>
+      </ion-item>
+    </div>
 
   </form>
   <ion-alert

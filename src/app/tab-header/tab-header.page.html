@@ -5,8 +5,8 @@
     </ion-title>
 
     <ion-badge slot="end" class="bagde" *ngIf="isLoggedIn">
-      <ion-icon name="cash-outline" id="cash-icon"></ion-icon>
-      <span>{{user.cashBack}} Lei</span>
+      <!-- <ion-icon name="cash-outline" id="cash-icon"></ion-icon> -->
+      <span>{{user.cashBack}} lei</span>
       </ion-badge>
   <ion-buttons slot="end">
     <ion-button (click)="showActions()" *ngIf="isAdmin">

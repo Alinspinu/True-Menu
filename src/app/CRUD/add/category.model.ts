@@ -24,6 +24,15 @@ export class Product {
   public subProducts: SubProduct[],
   public category: Category,
   public available: boolean,
+  public longDescription: string,
+  public allergens: [{name: string, _id: string}],
+  public nutrition: {
+    energy: {kJ: number, kcal: number},
+    fat: {all: number, satAcids: number},
+    carbs: {all: number, sugar: number},
+    salts: number,
+    additives: string
+  },
   ){};
 };
 

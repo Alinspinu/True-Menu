@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button [defaultHref]="'/tabs/category-content/' + backTab" style="color: black"></ion-back-button>
+      <ion-back-button [defaultHref]="'/tabs/category-content/' + backTab" style="color: black" text=""></ion-back-button>
     </ion-buttons>
     <ion-title *ngIf="product">{{product.name}}</ion-title>
     <ion-buttons slot="end">
@@ -13,8 +13,8 @@
 </ion-header>
 <ion-content [fullscreen]="true">
   <ion-badge slot="fixed" class="bagde" *ngIf="isLoggedIn">
-    <ion-icon name="cash-outline" id="cash-icon"></ion-icon>
-    <span>{{user.cashBack}} Lei</span>
+    <!-- <ion-icon name="cash-outline" id="cash-icon"></ion-icon> -->
+    <span>{{user.cashBack}} lei</span>
     </ion-badge>
   <ion-grid>
 <ion-row>
@@ -31,8 +31,7 @@
     <div class="history-wrapper">
       <div class="separator"></div>
       <h3>Descriere</h3>
-      <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Rerum totam omnis, incidunt suscipit minus culpa nulla qui voluptate libero illo ea voluptatibus voluptatum quae quasi exercitationem tempore delectus? Maxime, aliquid!
-      Eveniet eos rerum ex impedit ipsam incidunt repellat nobis minima laudantium velit dolor, voluptatibus soluta corporis tempore facere aliquam quaerat autem hic. Eligendi quidem cumque obcaecati error alias eius consectetur. </p>
+      <p>{{product.longDescription}}</p>
     </div>
   </ion-col>
 </ion-row>
@@ -101,34 +100,10 @@
     <div class="separator"></div>
     <h3>Alergeni</h3>
     <ion-row>
-      <ion-col>
+      <ion-col size-xs="4" size-sm="3" *ngFor="let allergen of product.allergens">
         <div class="ingredient-wrapper">
           <div class="box"></div>
-          <span>Alergen</span>
-        </div>
-      </ion-col>
-      <ion-col>
-        <div class="ingredient-wrapper">
-          <div class="box"></div>
-          <span>Alergen</span>
-        </div>
-      </ion-col>
-      <ion-col>
-        <div class="ingredient-wrapper">
-          <div class="box"></div>
-          <span>Alergen</span>
-        </div>
-      </ion-col>
-      <ion-col>
-        <div class="ingredient-wrapper">
-          <div class="box"></div>
-          <span>Alergen</span>
-        </div>
-      </ion-col>
-      <ion-col>
-        <div class="ingredient-wrapper">
-          <div class="box"></div>
-          <span>Alergen</span>
+          <span>{{allergen.name}}</span>
         </div>
       </ion-col>
     </ion-row>
@@ -138,27 +113,27 @@
 <ion-row>
   <ion-col size-md="6" offset-md="3">
     <div class="separator"></div>
-    <div class="nutrition-title">Declaratie nutrițională <p>/ 100g produs</p></div>
+    <div class="nutrition-title">Declaratie nutrițională <p> 100g produs</p></div>
 
     <div class="ingredient-wrapper">
       <div class="box"></div>
-      <div>Valoare energetică - 123 kJ/ 23 kcal</div>
+      <div>Valoare energetică - {{product.nutrition.energy.kJ}} kJ/ {{product.nutrition.energy.kcal}} kcal</div>
     </div>
     <div class="ingredient-wrapper">
       <div class="box"></div>
-      <div>Grăsimi - 122 gr / din care acizi saturati - 79 gr</div>
+      <div>Grăsimi - {{product.nutrition.fat.all}} gr / din care acizi saturati - {{product.nutrition.fat.satAcids}} gr</div>
     </div>
     <div class="ingredient-wrapper">
       <div class="box"></div>
-      <div>Gluciude - 58 gr / din care zaharuri - 21 gr</div>
+      <div>Gluciude - {{product.nutrition.carbs.all}} gr / din care zaharuri - {{product.nutrition.carbs.sugar}} gr</div>
     </div>
     <div class="ingredient-wrapper">
       <div class="box"></div>
-      <div>Sare - 1.3 gr</div>
+      <div>Sare - {{product.nutrition.salts}} gr</div>
     </div>
     <div class="ingredient-wrapper">
       <div class="box"></div>
-      <div>Aditivi - E23, E6565, E545, E456</div>
+      <div>Aditivi - {{product.nutrition.additives}}</div>
     </div>
   </ion-col>
 </ion-row>

@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button [defaultHref]="'/tabs/' + backTab" style="color: black"></ion-back-button>
+      <ion-back-button [defaultHref]="'/tabs/' + backTab" style="color: black" text=""></ion-back-button>
       <ion-button (click)="showActions()" *ngIf="isAdmin">
         <ion-icon  name="add-outline" style="color: black"></ion-icon>
       </ion-button>
@@ -18,15 +18,15 @@
 </ion-header>
 <ion-content [fullscreen]="true">
   <ion-badge slot="fixed" class="bagde" *ngIf="isLoggedIn">
-    <ion-icon name="cash-outline" id="cash-icon"></ion-icon>
-    <span>{{user.cashBack}} Lei</span>
+    <!-- <ion-icon name="cash-outline" id="cash-icon"></ion-icon> -->
+    <span>{{user.cashBack}} lei</span>
     </ion-badge>
   <ion-grid>
     <ion-row>
       <ion-col size-md="8" offset-md="2" size-lg="4" offset-lg="4">
         <ion-row *ngFor="let product of products; let z = index" class="product-row">
           <ion-col size-xs="5" class="ion-no-padding"  *ngIf="isAdmin || (product.available && !isAdmin)">
-            <img alt="product" [src]='product.image.path' [routerLink]="'/tabs/product-content/' + product._id + '/'+ z"/>
+            <img alt="product" class="product-image" [src]='product.image.path' [routerLink]="'/tabs/product-content/' + product._id + '/'+ z"/>
           </ion-col>
           <ion-col size-xs="7"  class="ion-no-padding description">
             <div style="width:100%;" *ngIf="isAdmin || (product.available && !isAdmin)">
@@ -38,7 +38,7 @@
                 <div *ngFor="let subProd of product.subProducts; let i = index;" >
                     <ion-row class="sub-prod-row" *ngIf="isAdmin || (subProd.available && !isAdmin)">
                       <ion-col size-xs="6" class="ion-no-padding name-col" >
-                        <span class="sub-name" [ngClass]="{'small': product.subProducts.length > 3}">{{subProd.name}}</span>
+                        <span class="sub-name" [ngClass]="{'small': product.subProducts.length > 2}">{{subProd.name}}</span>
                       </ion-col>
                       <ion-col size-xs="4" class="ion-no-padding price-col ion-text-center" *ngIf="!isAdmin">
                         <span class="sub-price">{{subProd.price}} Lei</span>

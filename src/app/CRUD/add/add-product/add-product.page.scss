@@ -1,8 +1,28 @@
+ion-content{
+  font-family: NoirProLight !important;
+}
+
 .spinner{
   margin: 36vh 0 0 40%;
   height: 200px;
   width: 200px;
 }
 ion-button{
-  --color: blue;
+  --color: var(--ion-color-primary);
+}
+
+ion-note{
+  font-size: 12px;
+  margin-left: 20px;
+}
+
+.nutrition{
+  margin-top: 10px;
+  border: 0.8px solid var(--ion-color-primary);
+  border-radius: 5px;
+}
+
+h3{
+  text-align: center;
+  // color: var(--ion-color-primary)
 }

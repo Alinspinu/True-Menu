@@ -27,7 +27,7 @@ img{
  }
 
  ion-title img{
-  margin-left: 6px;
+  margin-left: 13px;
  }
 
 ion-badge{
@@ -35,6 +35,7 @@ ion-badge{
   justify-content: center;
   --color: white;
   font-size: 18px;
+  font-weight: 400;
   // margin-right: 15px;
 }
 #cash-icon{
@@ -64,14 +65,14 @@ ion-badge{
     height: 40px;
    }
    ion-icon{
-    font-size: 20px;
+    font-size: 24px;
    }
    img{
     height: 22px;
   }
   #like{
-    height: 29px;
-    width: 32px;
+    height: 35px;
+    width: 38px;
   }
 
 }
@@ -93,10 +94,10 @@ ion-badge{
     height: 18px;
   }
   ion-icon{
-    font-size: 16px;
+    font-size: 22px;
   }
   #like{
-    height: 22px;
-    width: 23px;
+    height: 32px;
+    width: 35px;
   }
 }

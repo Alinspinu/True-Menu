@@ -12,7 +12,28 @@ export class TabsService{
   currentCategory!: string;
   tab: string = 'food';
   emptyCategory: Category = {_id: '', mainCat: '', name: '', product: [], image: {path: '', filename:''}, order: 0}
-  emptyProduct: Product = {_id: '', name: '', qty: '', price: 0, order: 0, description: '', quantity: 0, image: {path: '', filename: ''}, subProducts: [],category: this.emptyCategory, available: false,}
+  emptyProduct: Product = {
+    _id: '',
+    name: '',
+    qty: '',
+    price: 0,
+    order: 0,
+    description: '',
+    quantity: 0,
+    image: {path: '', filename: ''},
+    subProducts: [],
+    category: this.emptyCategory,
+    available: false,
+    longDescription: '',
+    nutrition: {
+      energy:{kJ: 0, kcal: 0},
+      fat: {all: 0, satAcids: 0},
+      carbs: {all: 0, sugar: 0},
+      salts: 0,
+      additives: ''
+    },
+    allergens: [{name: '', _id: ''}]
+  }
   private categoryState!: BehaviorSubject<Category[]>;
   public categorySend$!: Observable<Category[]>;
   category: Category[] = [this.emptyCategory];

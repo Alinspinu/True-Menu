@@ -71,6 +71,42 @@ export class AddProductPage implements OnInit {
         updateOn: 'change',
         validators: [Validators.required]
       }),
+      longDescription: new FormControl(null, {
+        updateOn: 'change',
+        validators: [Validators.required]
+      }),
+      allergens: new FormControl(null, {
+        updateOn: 'change',
+        validators: [Validators.required]
+      }),
+      kJ: new FormControl(null, {
+        updateOn: 'change',
+        validators: [Validators.required]
+      }),
+      allFat: new FormControl(null, {
+        updateOn: 'change',
+        validators: [Validators.required]
+      }),
+      satAcids: new FormControl(null, {
+        updateOn: 'change',
+        validators: [Validators.required]
+      }),
+      allCarbs: new FormControl(null, {
+        updateOn: 'change',
+        validators: [Validators.required]
+      }),
+      sugars: new FormControl(null, {
+        updateOn: 'change',
+        validators: [Validators.required]
+      }),
+      salt: new FormControl(null, {
+        updateOn: 'change',
+        validators: [Validators.required]
+      }),
+      additives: new FormControl(null, {
+        updateOn: 'change',
+        validators: [Validators.required]
+      }),
       image: new FormControl(null),
     });
   };
@@ -87,25 +123,49 @@ export class AddProductPage implements OnInit {
   confirm(){
     this.isLoading = true;
     if(this.form.valid){
+      const nutrition = {
+        energy: {
+          kJ: this.form.value.kJ,
+          kcal: Math.round((this.form.value.kJ / 4.184) * 100)/100
+        },
+        fat: {
+          all: this.form.value.allFat,
+          satAcids: this.form.value.satAcids
+        },
+        carbs: {
+          all: this.form.value.allCarbs,
+          sugar: this.form.value.sugars
+        },
+        salts: this.form.value.salt,
+        additives: this.form.value.additives
+      }
+      const allergens = this.form.value.allergens.split('/').map((word: string) => ({name: word}))
       const prodData = new FormData();
       prodData.append('price', this.form.value.price);
       prodData.append('name', this.form.value.name);
       prodData.append('qty', this.form.value.qty);
       prodData.append('image', this.form.value.image);
       prodData.append('order', this.form.value.order);
-      prodData.append('description', this.form.value.description);
       prodData.append('category', this.currentCategory);
-     return this.http.post<Response>(`${this.newUrl}prod-add`, prodData).subscribe((res)=>{
-      this.tabSrv.onProductAdd(res.product);
-      showToast(this.toastCtrl, res.message, 3000);
-      this.isLoading = false;
+      prodData.append('description', this.form.value.description);
+      prodData.append('longDescription', this.form.value.longDescription);
+      prodData.append('strNutrition',  JSON.stringify(nutrition));
+      prodData.append('strAllergens', JSON.stringify(allergens));
+      return this.http.post<Response>(`${this.baseUrl}prod-add`, prodData).subscribe((res)=>{
+        this.tabSrv.onProductAdd(res.product);
+        showToast(this.toastCtrl, res.message, 3000);
+        this.isLoading = false;
         return this.cancel();
-     });
+      });
     } else{
       this.isLoading = false;
       return this.cancel();
     }
   }
+
+
+
+
 
   cancel(){
     return this.modalCtrl.dismiss(null, 'cancel');
@@ -117,10 +177,11 @@ export class AddProductPage implements OnInit {
     let imageFile;
     if(typeof imageData === 'string'){
       try{
-      imageFile = base64toBlob(
-      imageData.replace(/^data:image\/(png|jpe?g|gif|webp);base64,/, ''),
-      'image/jpeg'
-      );
+        imageFile = base64toBlob(
+          imageData.replace(/^data:image\/(png|jpe?g|gif|webp);base64,/, ''),
+          'image/jpeg'
+          );
+          console.log()
       } catch (error) {
         console.log(error);
       };
