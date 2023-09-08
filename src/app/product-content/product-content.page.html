@@ -4,10 +4,6 @@
       <ion-back-button [defaultHref]="'/tabs/category-content/' + backTab" style="color: black"></ion-back-button>
     </ion-buttons>
     <ion-title *ngIf="product">{{product.name}}</ion-title>
-    <ion-badge slot="end" class="bagde" *ngIf="isLoggedIn">
-      <ion-icon name="cash-outline" id="cash-icon"></ion-icon>
-      <span>{{user.cashBack}} Lei</span>
-      </ion-badge>
     <ion-buttons slot="end">
       <ion-menu-button>
         <img id="like" src="assets/icon/black-social-media.png" alt="icon">
@@ -16,6 +12,10 @@
   </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
+  <ion-badge slot="fixed" class="bagde" *ngIf="isLoggedIn">
+    <ion-icon name="cash-outline" id="cash-icon"></ion-icon>
+    <span>{{user.cashBack}} Lei</span>
+    </ion-badge>
   <ion-grid>
 <ion-row>
   <ion-col size-md="6" offset-md="3">
@@ -24,17 +24,34 @@
       </div>
   </ion-col>
 </ion-row>
+<div class="content-wrapper">
+<ion-grid>
 <ion-row>
   <ion-col size-md="6" offset-md="3">
     <div class="history-wrapper">
-      <h3>Istorie</h3>
+      <div class="separator"></div>
+      <h3>Descriere</h3>
       <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Rerum totam omnis, incidunt suscipit minus culpa nulla qui voluptate libero illo ea voluptatibus voluptatum quae quasi exercitationem tempore delectus? Maxime, aliquid!
       Eveniet eos rerum ex impedit ipsam incidunt repellat nobis minima laudantium velit dolor, voluptatibus soluta corporis tempore facere aliquam quaerat autem hic. Eligendi quidem cumque obcaecati error alias eius consectetur. </p>
     </div>
   </ion-col>
 </ion-row>
+
 <ion-row>
+  <ion-col size-md="6" offser-md="3">
+    <div class="separator"></div>
+    <h3>True Paring</h3>
+    <div class="product-wrapper">
+      <div class="product-name">Vin Alb</div>
+      <img src="../../assets/icon/black-cart.png" alt="cart">
+    </div>
+  </ion-col>
+</ion-row>
+
+
+<!-- <ion-row>
   <ion-col size-md="6" offset-md="3">
+    <div class="separator"></div>
     <h3>Cafele disponibile cu acest produs</h3>
     <ion-item class="ion-no-padding" color="light" lines="none">
       <img class="prod-img" src="https://res.cloudinary.com/dhetxk68c/image/upload/v1672788044/ProduseI/xx0xady3aokljrmh8hf1.jpg" alt="coffee-image" >
@@ -49,8 +66,10 @@
       <span>Papua Noua Guinee</span>
     </ion-item>
   </ion-col>
-</ion-row>
-<ion-row>
+</ion-row> -->
+
+
+<!-- <ion-row>
   <ion-col size-md="6" offset-md="3">
     <h3 class="ing-title">Ingrediente</h3>
     <ion-row>
@@ -74,11 +93,12 @@
       </ion-col>
     </ion-row>
   </ion-col>
-</ion-row>
+</ion-row> -->
 
 
 <ion-row>
   <ion-col size-md="6" offset-md="3">
+    <div class="separator"></div>
     <h3>Alergeni</h3>
     <ion-row>
       <ion-col>
@@ -117,6 +137,7 @@
 </ion-row>
 <ion-row>
   <ion-col size-md="6" offset-md="3">
+    <div class="separator"></div>
     <div class="nutrition-title">Declaratie nutrițională <p>/ 100g produs</p></div>
 
     <div class="ingredient-wrapper">
@@ -141,5 +162,7 @@
     </div>
   </ion-col>
 </ion-row>
+</ion-grid>
+</div>
   </ion-grid>
 </ion-content>

@@ -71,10 +71,13 @@ export class CategoryContentPage implements OnInit, OnDestroy {
   };
 
 
+
+
   fetchCategory(){
   this.getCurrentTab();
    this.tabSubscription = this.tabSrv.categorySend$.subscribe(res => {
     this.categories = res;
+    console.log(this.categories)
       const cat = res.find(cat => cat._id === this.currentTab );
       if(cat){
         this.categoryName = cat.name;
@@ -82,6 +85,14 @@ export class CategoryContentPage implements OnInit, OnDestroy {
         this.backTab = cat.mainCat;
       };
     });
+  };
+
+
+  getCurrentTab() {
+    const currentTab = window.location.href;
+    const indexTab = currentTab.lastIndexOf('/');
+    const tab = currentTab.slice(indexTab +1);
+    return this.currentTab = tab;
   };
 
   saveToCart(product: any, prodInd: number){
@@ -133,12 +144,7 @@ getUser(){
     this.actionSheet.showSubProduct();
   };
 
-  getCurrentTab() {
-    const currentTab = window.location.href;
-    const indexTab = currentTab.lastIndexOf('/');
-    const tab = currentTab.slice(indexTab +1);
-    return this.currentTab = tab;
-  };
+
 
 
   ngOnDestroy(): void {

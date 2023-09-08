@@ -102,24 +102,8 @@ img{
   position: absolute;
   height: 100%;
 }
-.badge{
-  font-family: Arial, Helvetica, sans-serif !important;
-  margin-top: auto;
-  display: inline-block;
-  border-radius: 50%;
-  background-color:var(--ion-color-primary);
-  color: white;
-  padding: 3px 6px;
-  position: relative;
-  bottom: 13px;
-  left: 17px;
-  font-size: 10px !important;
-  font-weight:bolder;
-}
-// .cart-col{
-//   flex-direction: row;
-//   align-items: center;
-// }
+
+
 
 .badge-prod{
   font-family: Arial, Helvetica, sans-serif !important;
@@ -175,14 +159,24 @@ ion-note{
  }
 
  ion-badge{
+  font-family: Arial, Helvetica, sans-serif !important;
+  margin-top: auto;
+  display: inline-block;
+  background-color:var(--ion-color-primary);
   display: flex;
   justify-content: center;
   --color: white;
   font-size: 15px;
-  // margin-right: 15px;
+  padding: 3px 6px;
+  font-weight:bolder;
 }
 ion-badge span{
   color: white;
+}
+
+ion-badge[slot="fixed"]{
+  top: 2%;
+  right: 20px;
 }
 #cash-icon{
   font-size: 18px;

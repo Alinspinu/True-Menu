@@ -6,10 +6,9 @@
         <ion-icon  name="add-outline" style="color: black"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-badge slot="end" class="bagde" *ngIf="isLoggedIn">
-      <ion-icon name="cash-outline" id="cash-icon"></ion-icon>
-      <span>{{user.cashBack}} Lei</span>
-      </ion-badge>
+    <ion-title>
+      {{categoryName}}
+    </ion-title>
     <ion-buttons slot="end">
       <ion-menu-button>
         <img id="like" src="assets/icon/black-social-media.png" alt="icon">
@@ -18,6 +17,10 @@
   </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
+  <ion-badge slot="fixed" class="bagde" *ngIf="isLoggedIn">
+    <ion-icon name="cash-outline" id="cash-icon"></ion-icon>
+    <span>{{user.cashBack}} Lei</span>
+    </ion-badge>
   <ion-grid>
     <ion-row>
       <ion-col size-md="8" offset-md="2" size-lg="4" offset-lg="4">
