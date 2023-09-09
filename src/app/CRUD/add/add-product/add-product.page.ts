@@ -164,13 +164,9 @@ export class AddProductPage implements OnInit {
   }
 
 
-
-
-
   cancel(){
     return this.modalCtrl.dismiss(null, 'cancel');
   }
-
 
 
   onImagePicked(imageData: string | File){

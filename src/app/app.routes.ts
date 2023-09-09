@@ -56,6 +56,10 @@ export const routes: Route[] = [
     path: 'privacy-policy',
     loadComponent: () => import('./legal/privacy-policy/privacy-policy.page').then( m => m.PrivacyPolicyPage)
   },
+  {
+    path: 'parring-product',
+    loadComponent: () => import('./CRUD/add/parring-product/parring-product.page').then( m => m.ParringProductPage)
+  },
 
 ];
 

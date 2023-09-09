@@ -118,6 +118,28 @@ h4{
   margin-top:0;
   font-size: 17px;
 }
+
+.parring-title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.parring-title img {
+  margin-left: 10px;
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  box-shadow: 0.5, 0.7, 0.7, 0.5 rgba(0,0,0,0.1);
+  background-color: rgba(197, 140, 83, 0.6);
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+.parring-title img:active{
+  background-color: rgba(197, 140, 83, 0.3);
+}
+
+
 h3{
   margin-top: 0;
 }
@@ -171,6 +193,7 @@ ion-badge span{
   align-items: center;
   background-color: #f4ede6;
   border-radius: 20px;
+  margin-bottom: 9px;
 }
 
 .product-wrapper div{

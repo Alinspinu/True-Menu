@@ -33,6 +33,7 @@ export class Product {
     salts: number,
     additives: string
   },
+  public paring: Product[]
   ){};
 };
 

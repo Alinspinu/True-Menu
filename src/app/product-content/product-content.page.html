@@ -13,8 +13,7 @@
 </ion-header>
 <ion-content [fullscreen]="true">
   <ion-badge slot="fixed" class="bagde" *ngIf="isLoggedIn">
-    <!-- <ion-icon name="cash-outline" id="cash-icon"></ion-icon> -->
-    <span>{{user.cashBack}} lei</span>
+      <span>{{user.cashBack}} lei</span>
     </ion-badge>
   <ion-grid>
 <ion-row>
@@ -39,61 +38,16 @@
 <ion-row>
   <ion-col size-md="6" offser-md="3">
     <div class="separator"></div>
-    <h3>True Paring</h3>
-    <div class="product-wrapper">
-      <div class="product-name">Vin Alb</div>
+    <div class="parring-title">
+      <h3>True Paring</h3>
+      <img src="../../assets/icon/add-outline.svg" alt="add-svg" (click)="addProduct(product._id)">
+    </div>
+    <div class="product-wrapper" *ngFor="let parProduct of product.paring">
+      <div class="product-name">{{parProduct.name}}</div>
       <img src="../../assets/icon/black-cart.png" alt="cart">
     </div>
   </ion-col>
 </ion-row>
-
-
-<!-- <ion-row>
-  <ion-col size-md="6" offset-md="3">
-    <div class="separator"></div>
-    <h3>Cafele disponibile cu acest produs</h3>
-    <ion-item class="ion-no-padding" color="light" lines="none">
-      <img class="prod-img" src="https://res.cloudinary.com/dhetxk68c/image/upload/v1672788044/ProduseI/xx0xady3aokljrmh8hf1.jpg" alt="coffee-image" >
-      <span>Brazilia Agua Lipa</span>
-    </ion-item>
-    <ion-item class="ion-no-padding" color="light" lines="none">
-      <img class="prod-img" src="https://res.cloudinary.com/dhetxk68c/image/upload/v1672788044/ProduseI/xx0xady3aokljrmh8hf1.jpg" alt="coffee-image" >
-      <span>Columbia Monteblanco</span>
-    </ion-item>
-    <ion-item class="ion-no-padding" color="light" lines="none">
-      <img class="prod-img" src="https://res.cloudinary.com/dhetxk68c/image/upload/v1672788044/ProduseI/xx0xady3aokljrmh8hf1.jpg" alt="coffee-image" >
-      <span>Papua Noua Guinee</span>
-    </ion-item>
-  </ion-col>
-</ion-row> -->
-
-
-<!-- <ion-row>
-  <ion-col size-md="6" offset-md="3">
-    <h3 class="ing-title">Ingrediente</h3>
-    <ion-row>
-      <ion-col>
-        <div class="ingredient-wrapper">
-          <div class="box"></div>
-          <span>Ingredient</span>
-        </div>
-      </ion-col>
-      <ion-col>
-        <div class="ingredient-wrapper">
-          <div class="box"></div>
-          <span>Ingredient</span>
-        </div>
-      </ion-col>
-      <ion-col>
-        <div class="ingredient-wrapper">
-          <div class="box"></div>
-          <span>Ingredient</span>
-        </div>
-      </ion-col>
-    </ion-row>
-  </ion-col>
-</ion-row> -->
-
 
 <ion-row>
   <ion-col size-md="6" offset-md="3">
@@ -141,3 +95,24 @@
 </div>
   </ion-grid>
 </ion-content>
+
+
+
+<!-- <ion-row>
+  <ion-col size-md="6" offset-md="3">
+    <div class="separator"></div>
+    <h3>Cafele disponibile cu acest produs</h3>
+    <ion-item class="ion-no-padding" color="light" lines="none">
+      <img class="prod-img" src="https://res.cloudinary.com/dhetxk68c/image/upload/v1672788044/ProduseI/xx0xady3aokljrmh8hf1.jpg" alt="coffee-image" >
+      <span>Brazilia Agua Lipa</span>
+    </ion-item>
+    <ion-item class="ion-no-padding" color="light" lines="none">
+      <img class="prod-img" src="https://res.cloudinary.com/dhetxk68c/image/upload/v1672788044/ProduseI/xx0xady3aokljrmh8hf1.jpg" alt="coffee-image" >
+      <span>Columbia Monteblanco</span>
+    </ion-item>
+    <ion-item class="ion-no-padding" color="light" lines="none">
+      <img class="prod-img" src="https://res.cloudinary.com/dhetxk68c/image/upload/v1672788044/ProduseI/xx0xady3aokljrmh8hf1.jpg" alt="coffee-image" >
+      <span>Papua Noua Guinee</span>
+    </ion-item>
+  </ion-col>
+</ion-row> -->

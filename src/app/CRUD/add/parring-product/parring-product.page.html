@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()">Cancel</ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Add Product</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="filterItems()"></ion-searchbar>
+
+  <ion-list>
+    <ion-item *ngFor="let product of filteredItems" (click)="presentAlert(product.name, product._id)">
+     <span>
+      {{ product.name }}
+     </span>
+      <ion-thumbnail slot="end">
+        <img [src]="product.image.path" alt="product-image">
+      </ion-thumbnail>
+    </ion-item>
+  </ion-list>
+</ion-content>

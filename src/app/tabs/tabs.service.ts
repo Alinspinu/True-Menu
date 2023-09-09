@@ -32,7 +32,8 @@ export class TabsService{
       salts: 0,
       additives: ''
     },
-    allergens: [{name: '', _id: ''}]
+    allergens: [{name: '', _id: ''}],
+    paring: [],
   }
   private categoryState!: BehaviorSubject<Category[]>;
   public categorySend$!: Observable<Category[]>;
@@ -61,7 +62,6 @@ export class TabsService{
   fetchCategories(){
     return this.http.get<Category[]>(`${this.newUrl}get-cats`).pipe(take(1), tap(res => {
       this.category = this.sortData(res)
-      console.log(this.category)
       this.categoryState.next([...this.category]);
     }));
 };
@@ -237,6 +237,7 @@ catDelete(categoryId: string){
   this.categoryState.next([...this.category]);
 };
 
+// *****************************GET DATA*************************
 
   getCategory(id: string){
     return this.category.find(obj => obj._id === id);
@@ -250,17 +251,27 @@ catDelete(categoryId: string){
     return this.category[catIndex].product[prodIndex].subProducts.find(obj=> obj._id === subId);
   };
 
+  getAllProducts(){
+    let products: Product[] = []
+    for( let category of this.category){
+      for( let product of category.product){
+          products.push(product)
+      }
+    }
+    return products
+  }
 
-  getProd(prodId: string, index: number) {
-    for(let i = 0; i < this.category.length; i++ ){
-        if(this.category[i].product[index] && (this.category[i].product[index]._id === prodId)){
-          return this.category[i].product[index]
-        } else {
-          continue
+  getCatIndex(id: string){
+    for(let category of this.category){
+        for(let product of category.product){
+          if(product._id === id) {
+            return this.category.findIndex(obj => obj === category)
+          } else {
+            continue
+          }
         }
     }
-    console.log('hit the empty route')
-    return this.emptyProduct
+    return 0
   }
 
 

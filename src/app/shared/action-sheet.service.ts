@@ -11,6 +11,7 @@ import { CashBackPage } from '../cart/cash-back/cash-back.page';
 import { EditProductComponent } from '../CRUD/edit/edit-product/edit-product.component';
 import { EditCategoryComponent } from '../CRUD/edit/edit-category/edit-category.component';
 import { EditSubProductComponent } from '../CRUD/edit/edit-sub-product/edit-sub-product.component';
+import { ParringProductPage } from '../CRUD/add/parring-product/parring-product.page';
 
 @Injectable({
   providedIn: 'root'
@@ -83,7 +84,8 @@ export class ActionSheetService {
   async openEdit(
     component: typeof EditCategoryComponent |
                typeof EditProductComponent |
-               typeof EditSubProductComponent,
+               typeof EditSubProductComponent|
+               typeof ParringProductPage,
                id: string,
                catIndex: number,
                prodIndex: number){
@@ -95,6 +97,7 @@ export class ActionSheetService {
         prodIndex: prodIndex,
       },
     });
+    console.log("action-sheet", id)
     modal.present();
   };
 

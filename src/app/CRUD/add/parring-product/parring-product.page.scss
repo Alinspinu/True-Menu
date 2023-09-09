@@ -1,0 +1,15 @@
+
+ion-item span{
+  font-family: NoirProLight !important;
+  font-size: 20px;
+}
+
+ion-item ion-thumbnail{
+  --border-radius: 6px;
+  box-shadow: 0.4px, 0.6px, 0.6px, 0.4px, rgba(0,0,0,0.2);
+}
+
+
+ion-item:active{
+  --background: var(--ion-color-tertiary-shade);
+}
