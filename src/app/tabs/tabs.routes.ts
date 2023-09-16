@@ -27,11 +27,11 @@ export const routes: Routes = [
       },
       {
         path: 'category-content/:id',
-        loadComponent: () => import('../category-content/category-content.page').then( m => m.CategoryContentPage),
+        loadComponent: () => import('../content/category-content/category-content.page').then( m => m.CategoryContentPage),
       },
       {
-        path: 'product-content/:id/:id',
-        loadComponent: () => import('../product-content/product-content.page').then(m => m.ProductContentPage),
+        path: 'product-content/:id/:index',
+        loadComponent: () => import('../content/product-content/product-content.page').then(m => m.ProductContentPage),
       },
       {
         path: 'cart',

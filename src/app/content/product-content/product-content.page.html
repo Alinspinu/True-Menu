@@ -11,45 +11,69 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
+
 <ion-content [fullscreen]="true">
-  <ion-badge slot="fixed" class="bagde" *ngIf="isLoggedIn">
+  <ion-badge slot="fixed" class="cash-bagde" *ngIf="isLoggedIn">
       <span>{{user.cashBack}} lei</span>
     </ion-badge>
+  <div class="badge-wrapper" slot="fixed" *ngIf="!product.subProducts.length">
+    <img src="../../assets/icon/black-cart.png" alt="cart" (click)="saveProdToCart(product, -1)">
+    <span *ngIf="product.quantity > 0">{{product.quantity}}</span>
+  </div>
   <ion-grid>
 <ion-row>
   <ion-col size-md="6" offset-md="3">
       <div class="img-wrapper">
-        <img [src]="imagePath" alt="product-image">
+        <img [src]="imagePath" alt="product-image" class="product-image">
       </div>
   </ion-col>
 </ion-row>
 <div class="content-wrapper">
 <ion-grid>
-<ion-row>
+<ion-row *ngIf="product.longDescription">
   <ion-col size-md="6" offset-md="3">
     <div class="history-wrapper">
       <div class="separator"></div>
       <h3>Descriere</h3>
-      <p>{{product.longDescription}}</p>
+      <ion-text *ngFor="let paragraph of description">
+        <p>{{paragraph}}</p>
+      </ion-text>
+    </div>
+  </ion-col>
+</ion-row>
+
+<ion-row *ngIf="product.subProducts.length">
+  <ion-col size-md="6" offset-md="3">
+    <div class="separator"></div>
+    <h3>Alege {{pickOption}}</h3>
+    <div class="product-wrapper" *ngFor="let subProduct of product.subProducts let i=index">
+      <div class="product-name" (click)="goToCoffee(subProduct.name)">{{subProduct.name}}</div>
+        <img src="../../assets/icon/black-cart.png" alt="cart" (click)="saveSubProdToCart(subProduct, product, i)">
+        <span class="badge-prod" *ngIf="subProduct.quantity > 0">{{subProduct.quantity}}</span>
     </div>
   </ion-col>
 </ion-row>
 
 <ion-row>
-  <ion-col size-md="6" offser-md="3">
+  <ion-col size-md="6" offset-md="3">
     <div class="separator"></div>
     <div class="parring-title">
       <h3>True Paring</h3>
-      <img src="../../assets/icon/add-outline.svg" alt="add-svg" (click)="addProduct(product._id)">
+      <img src="../../assets/icon/add-outline.svg" alt="add-svg" (click)="addProduct(product._id)" *ngIf="isAdmin">
     </div>
-    <div class="product-wrapper" *ngFor="let parProduct of product.paring">
-      <div class="product-name">{{parProduct.name}}</div>
-      <img src="../../assets/icon/black-cart.png" alt="cart">
+    <div *ngIf="product.paring.length">
+    <h5>Merge bine împreună cu</h5>
+    <div class="product-wrapper" *ngFor="let parProduct of product.paring; let i=index">
+      <div class="product-name" (click)="navigateParProduct(parProduct._id, parProduct.category._id)">{{parProduct.name}}</div>
+      <ion-icon name="trash-outline" color="danger" class="trash"(click)="presentAlert(parProduct.name, parProduct._id)" *ngIf="isAdmin"></ion-icon>
+        <img src="../../assets/icon/black-cart.png" alt="cart" (click)="saveProdToCart(parProduct, i)">
+        <span class="badge-prod" *ngIf="parProduct.quantity > 0">{{parProduct.quantity}}</span>
+    </div>
     </div>
   </ion-col>
 </ion-row>
 
-<ion-row>
+<ion-row *ngIf="product.allergens.length">
   <ion-col size-md="6" offset-md="3">
     <div class="separator"></div>
     <h3>Alergeni</h3>
@@ -64,7 +88,7 @@
 
   </ion-col>
 </ion-row>
-<ion-row>
+<ion-row *ngIf="product.nutrition">
   <ion-col size-md="6" offset-md="3">
     <div class="separator"></div>
     <div class="nutrition-title">Declaratie nutrițională <p> 100g produs</p></div>

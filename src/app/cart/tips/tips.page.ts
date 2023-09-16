@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { TabHeaderPage } from 'src/app/tab-header/tab-header.page';
+import { TabHeaderPage } from 'src/app/content/tab-header/tab-header.page';
 import { CartService } from '../cart.service';
 import { triggerEscapeKeyPress } from '../../shared/utils/toast-controller';
 

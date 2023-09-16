@@ -1,6 +1,6 @@
 
 import { NgModule } from '@angular/core';
-import { PreloadAllModules, Route, RouterModule, Routes } from '@angular/router';
+import { PreloadAllModules, Route, RouterModule } from '@angular/router';
 
 
 export const routes: Route[] = [
@@ -18,7 +18,7 @@ export const routes: Route[] = [
   },
   {
     path: 'tab-header',
-    loadComponent: () => import('./tab-header/tab-header.page').then( m => m.TabHeaderPage)
+    loadComponent: () => import('./content/tab-header/tab-header.page').then( m => m.TabHeaderPage)
   },
   {
     path: 'register',
@@ -56,9 +56,10 @@ export const routes: Route[] = [
     path: 'privacy-policy',
     loadComponent: () => import('./legal/privacy-policy/privacy-policy.page').then( m => m.PrivacyPolicyPage)
   },
+
   {
-    path: 'parring-product',
-    loadComponent: () => import('./CRUD/add/parring-product/parring-product.page').then( m => m.ParringProductPage)
+    path: 'coffee-content',
+    loadComponent: () => import('./content/coffee-content/coffee-content.page').then( m => m.CoffeeContentPage)
   },
 
 ];

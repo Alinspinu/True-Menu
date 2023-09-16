@@ -79,7 +79,7 @@ export class AddProductPage implements OnInit {
         updateOn: 'change',
         validators: [Validators.required]
       }),
-      kJ: new FormControl(null, {
+      kcal: new FormControl(null, {
         updateOn: 'change',
         validators: [Validators.required]
       }),
@@ -125,8 +125,8 @@ export class AddProductPage implements OnInit {
     if(this.form.valid){
       const nutrition = {
         energy: {
-          kJ: this.form.value.kJ,
-          kcal: Math.round((this.form.value.kJ / 4.184) * 100)/100
+          kJ: Math.round((this.form.value.kcal * 4.184) *100) /100 ,
+          kcal: this.form.value.kcal
         },
         fat: {
           all: this.form.value.allFat,
@@ -151,7 +151,7 @@ export class AddProductPage implements OnInit {
       prodData.append('longDescription', this.form.value.longDescription);
       prodData.append('strNutrition',  JSON.stringify(nutrition));
       prodData.append('strAllergens', JSON.stringify(allergens));
-      return this.http.post<Response>(`${this.baseUrl}prod-add`, prodData).subscribe((res)=>{
+      return this.http.post<Response>(`${this.newUrl}prod-add`, prodData).subscribe((res)=>{
         this.tabSrv.onProductAdd(res.product);
         showToast(this.toastCtrl, res.message, 3000);
         this.isLoading = false;

@@ -22,7 +22,7 @@
       <ion-col size-md="6" offset-md="3" size-lg="4" offset-lg="4">
         <ion-list class="ion-no-padding" *ngIf="cart">
           <ion-item-sliding *ngFor="let product of cart.products; let i = index" class="ion-no-padding">
-          <ion-item class="ion-no-padding" color="tertiary">
+          <ion-item class="ion-no-padding" color="tertiary" (click)="goToProductView(product._id)">
             <ion-thumbnail slot="start" class="prod-img">
               <img [src]="product.imgPath" alt="Product image" >
             </ion-thumbnail>

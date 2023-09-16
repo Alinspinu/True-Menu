@@ -2,8 +2,12 @@
  ion-back-button{
   font-family: NoirPro !important;
 }
-h3, h4, p, span, div{
+h3, h4, h5 p, span, div{
   font-family: NoirProLight !important;
+}
+h5{
+  font-size: 15px;
+  margin-bottom: 10px;
 }
 
 
@@ -20,7 +24,7 @@ ion-content {
   box-shadow: none !important;
 }
 
-img{
+.product-image{
   border-radius: 8px;
   height: 90%;
   box-shadow: 1px 2px 2px 1px rgba(0,0,0,0.1);
@@ -117,6 +121,7 @@ ion-item span{
 h4{
   margin-top:0;
   font-size: 17px;
+  margin-bottom: 5px;
 }
 
 .parring-title {
@@ -140,7 +145,7 @@ h4{
 }
 
 
-h3{
+h3, h5{
   margin-top: 0;
 }
 
@@ -165,20 +170,57 @@ h3{
 
 ion-badge[slot="fixed"]{
   top: 2%;
-  right:20px;
+  left:20px;
 }
 
-
-ion-badge{
-  font-family: Arial, Helvetica, sans-serif !important;
-  margin-top: auto;
-  display: inline-block;
-  background-color:var(--ion-color-primary);
+div[slot="fixed"]{
+  top: 12%;
+  right: 22px;
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
   display: flex;
+  position:absolute;
+  background-color: var(--ion-color-danger);
+  box-shadow: 0.4px 0.6px 0.6px 0.4px rgba(0,0,0, 0.1);
+}
+
+.badge-wrapper img{
+  position:relative;
+  top:25%;
+  left:26%;
+  height: 23px;
+  width: 23px;
+}
+
+.badge-wrapper:active{
+  background-color: var(--ion-color-danger-tint);
+}
+
+.badge-wrapper span{
+  box-shadow: 0.4px 0.6px 0.6px 0.4px rgba(0,0,0, 0.1);
+  font-family: Arial, Helvetica, sans-serif !important;
+  margin-bottom: auto;
+  display: inline-block;
+  border-radius: 50%;
+  background-color:var(--ion-color-primary);
+  color: white;
+  padding: 4px 6px;
+  position: relative;
+  top: 2%;
+  left: 30%;
+  font-weight: bolder;
+  font-size: 10px;
+}
+
+// ion-avatar img{
+//  height: 25px;
+// }
+
+
+.cash-badge{
+  background-color:var(--ion-color-primary);
   padding: 3px 6px;
-  justify-content: center;
-  --color: white;
-  font-weight:bolder;
   font-size: 15px;
 }
 ion-badge span{
@@ -189,7 +231,6 @@ ion-badge span{
 .product-wrapper{
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
   background-color: #f4ede6;
   border-radius: 20px;
@@ -197,16 +238,46 @@ ion-badge span{
 }
 
 .product-wrapper div{
+  flex: 70%;
   font-size: 20px;
   padding: 8px;
 }
 
+.trash{
+  flex: 10%;
+  font-size: 20px;
+}
+.trash:active{
+ font-size: 22px;
+}
+
 .product-wrapper img{
+  // position: relative;
+  // z-index: 1;
+  // right: 25px;
+  // bottom: 1px;
   border-radius:0 !important;
   box-shadow: none !important;
   margin-right: 20px;
   height: 20px;
   width: 20px;
+}
+
+
+
+.badge-prod{
+  font-family: Arial, Helvetica, sans-serif !important;
+  margin-top: auto;
+  display: inline-block;
+  border-radius: 50%;
+  background-color:var(--ion-color-primary);
+  color: white;
+  padding: 3px 6px;
+  position: relative;
+  bottom: 20px;
+  right: 25px;
+  font-size: 10px !important;
+  font-weight:bolder;
 }
 
 
@@ -233,3 +304,4 @@ ion-badge span{
     padding:0;
   }
 }
+

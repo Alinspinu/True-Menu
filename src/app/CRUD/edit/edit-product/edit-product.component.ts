@@ -91,7 +91,7 @@ export class EditProductComponent  implements OnInit {
         updateOn: 'change',
         validators: [Validators.required]
       }),
-      kJ: new FormControl(null, {
+      kcal: new FormControl(null, {
         updateOn: 'change',
         validators: [Validators.required]
       }),
@@ -130,7 +130,7 @@ export class EditProductComponent  implements OnInit {
     this.form.get('order')?.setValue(this.product.order);
     this.form.get('longDescription')?.setValue(this.product.longDescription);
     this.form.get('allergens')?.setValue(this.product.allergens.map(obj => obj.name).join('/'));
-    this.form.get('kJ')?.setValue(this.product.nutrition.energy.kJ);
+    this.form.get('kcal')?.setValue(this.product.nutrition.energy.kcal);
     this.form.get('allFat')?.setValue(this.product.nutrition.fat.all);
     this.form.get('satAcids')?.setValue(this.product.nutrition.fat.satAcids);
     this.form.get('allCarbs')?.setValue(this.product.nutrition.carbs.all);
@@ -146,8 +146,8 @@ export class EditProductComponent  implements OnInit {
     if(this.form.valid){
       const nutrition = {
         energy: {
-          kJ: this.form.value.kJ,
-          kcal: Math.round((this.form.value.kJ / 4.184) * 100)/100
+          kJ: Math.round((this.form.value.kcal * 4.184) *100) /100 ,
+          kcal: this.form.value.kcal
         },
         fat: {
           all: this.form.value.allFat,
@@ -173,7 +173,7 @@ export class EditProductComponent  implements OnInit {
       prodData.append('longDescription', this.form.value.longDescription);
       prodData.append('strNutrition',  JSON.stringify(nutrition));
       prodData.append('strAllergens', JSON.stringify(allergens));
-     return this.http.put<RespData>(`${this.baseUrl}product`, prodData).subscribe((res)=>{
+     return this.http.put<RespData>(`${this.newUrl}product`, prodData).subscribe((res)=>{
       this.tabSrv.onProductEdit(res.product, this.categoryIndex);
       showToast(this.toastCtrl, res.message, 3000);
       this.isLoading = false;

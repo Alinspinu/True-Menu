@@ -17,13 +17,13 @@
   </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
-  <ion-badge slot="fixed" class="bagde" *ngIf="isLoggedIn">
+  <ion-badge slot="fixed" class="cash-bagde" *ngIf="isLoggedIn">
     <!-- <ion-icon name="cash-outline" id="cash-icon"></ion-icon> -->
     <span>{{user.cashBack}} lei</span>
     </ion-badge>
   <ion-grid>
     <ion-row>
-      <ion-col size-md="8" offset-md="2" size-lg="4" offset-lg="4">
+      <ion-col size-sm="8" offset-sm="2" size-md="6" offset-md="3" size-lg="5" offset-lg="3.5">
         <ion-row *ngFor="let product of products; let z = index" class="product-row">
           <ion-col size-xs="5" class="ion-no-padding"  *ngIf="isAdmin || (product.available && !isAdmin)">
             <img alt="product" class="product-image" [src]='product.image.path' [routerLink]="'/tabs/product-content/' + product._id + '/'+ z"/>
@@ -46,7 +46,7 @@
                       <ion-col size-xs="2" class="ion-no-padding cart-col" (click)="saveToCart(subProd, z)" *ngIf="!isAdmin">
                         <img src="assets/icon/shopping.png" class="sub-cart" alt="cart">
                         <div class="cart-wrapper" *ngIf="subProd.quantity > 0">
-                          <span class="badge">{{subProd.quantity}}</span>
+                          <span class="badge-sub-prod">{{subProd.quantity}}</span>
                         </div>
                       </ion-col>
                       <ion-col size-xs="1" class="ion-no-padding edit" *ngIf="isAdmin">
@@ -70,7 +70,7 @@
                     <ion-col size-xs="8" class="ion-no-padding" >
                       <span class="price">{{product.price}} LEI</span>
                     </ion-col>
-                    <ion-col size-xs="4" class="ion-no-padding ion-text-center" (click)="saveProdToCart(product, z)">
+                    <ion-col size-xs="4" class="ion-no-padding ion-text-center cart-col" (click)="saveProdToCart(product)">
                       <img src="assets/icon/shopping.png" alt="cart" class="sub-cart">
                       <div class="cart-wrapper"*ngIf="product.quantity > 0">
                         <span class="badge-prod">{{product.quantity}}</span>

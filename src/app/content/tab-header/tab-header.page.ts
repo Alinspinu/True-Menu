@@ -2,13 +2,13 @@ import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { ActionSheetService } from '../shared/action-sheet.service';
-import { TabsService } from '../tabs/tabs.service';
-import { AuthPage } from '../auth/auth.page';
-import { AuthService } from '../auth/auth.service';
-import User from '../auth/user.model';
+import { ActionSheetService } from '../../shared/action-sheet.service';
+import { TabsService } from '../../tabs/tabs.service';
+import { AuthPage } from '../../auth/auth.page';
+import { AuthService } from '../../auth/auth.service';
+import User from '../../auth/user.model';
 import { Subscription } from 'rxjs';
-import { CapitalizePipe } from '../shared/capitalize.pipe';
+import { CapitalizePipe } from '../../shared/capitalize.pipe';
 @Component({
   selector: 'app-tab-header',
   templateUrl: './tab-header.page.html',

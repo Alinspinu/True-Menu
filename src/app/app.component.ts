@@ -4,9 +4,9 @@ import { Platform } from '@ionic/angular';
 import { Capacitor } from '@capacitor/core';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { TabsService } from './tabs/tabs.service';
+import { register } from 'swiper/element/bundle';
 
-
-
+register();
 
 @Component({
   selector: 'app-root',

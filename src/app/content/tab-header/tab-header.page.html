@@ -3,11 +3,6 @@
     <ion-title class="ion-no-padding ion-text-start">
       <img src="../../assets/icon/logo-stanga.png" alt="logo-icon">
     </ion-title>
-
-    <ion-badge slot="end" class="bagde" *ngIf="isLoggedIn">
-      <!-- <ion-icon name="cash-outline" id="cash-icon"></ion-icon> -->
-      <span>{{user.cashBack}} lei</span>
-      </ion-badge>
   <ion-buttons slot="end">
     <ion-button (click)="showActions()" *ngIf="isAdmin">
       <ion-icon class="dark" name="add-outline"></ion-icon>

@@ -2,15 +2,15 @@ import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { TabsService } from '../tabs/tabs.service';
-import { Category } from '../CRUD/add/category.model';
-import { ActionSheetService } from '../shared/action-sheet.service';
+import { TabsService } from '../../tabs/tabs.service';
+import { Category } from '../../CRUD/add/category.model';
+import { ActionSheetService } from '../../shared/action-sheet.service';
 import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { LogoPagePage } from '../shared/logo-page/logo-page.page';
-import { AuthService } from '../auth/auth.service';
-import User from '../auth/user.model';
-import { EditCategoryComponent } from '../CRUD/edit/edit-category/edit-category.component';
+import { LogoPagePage } from '../../shared/logo-page/logo-page.page';
+import { AuthService } from '../../auth/auth.service';
+import User from '../../auth/user.model';
+import { EditCategoryComponent } from '../../CRUD/edit/edit-category/edit-category.component';
 
 
 @Component({

@@ -62,7 +62,6 @@ onConfirm(id: string){
     productToPushId: id,
   }
   this.http.post<RespData>(`${this.newUrl}add-paring-product`, data).subscribe(response => {
-    console.log(response)
     const catIndex = this.tabSrv.getCatIndex(this.productId)
     this.tabSrv.onProductEdit(response.updatedProduct, catIndex)
     showToast(this.toastCtrl, response.message, 3000)

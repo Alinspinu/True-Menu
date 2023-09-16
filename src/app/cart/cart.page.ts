@@ -12,7 +12,7 @@ import { RegisterPage } from '../auth/register/register.page';
 import { AuthPage } from '../auth/auth.page';
 import User from '../auth/user.model';
 import { AuthService } from '../auth/auth.service';
-import { TabHeaderPage } from '../tab-header/tab-header.page';
+import { TabHeaderPage } from '../content/tab-header/tab-header.page';
 import { TipsPage } from './tips/tips.page';
 import { CashBackPage } from './cash-back/cash-back.page';
 import { Router } from '@angular/router';
@@ -49,6 +49,7 @@ export class CartPage implements OnInit, OnDestroy {
   userSub!: Subscription;
   admin!: Subscription;
   authSub!: Subscription;
+  // categoryIndex!: String;
 
 
   constructor(
@@ -65,6 +66,21 @@ export class CartPage implements OnInit, OnDestroy {
     this.getUser();
     this.detectColorScheme();
   };
+
+  goToProductView(id: string){
+    const catProdIndex = this.tabSrv.getProductIndex(id)
+    if(catProdIndex !== -1) {
+      this.router.navigateByUrl('tabs/product-content/' + id + '/' + catProdIndex)
+    } else {
+      const productId = this.tabSrv.getProductId(id)
+      if(productId !== -1) {
+        const productIndex = this.tabSrv.getProductIndex(productId)
+          if(productIndex !== -1) {
+            this.router.navigateByUrl('tabs/product-content/' + productId + '/' + productIndex)
+          }
+      }
+    }
+  }
 
 
   saveCart(){

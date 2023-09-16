@@ -271,8 +271,40 @@ catDelete(categoryId: string){
           }
         }
     }
-    return 0
+    return -1
   }
+
+  getProductIndex(id: string){
+    for(let category of this.category){
+      for(let product of category.product){
+        if(product._id === id) {
+          return category.product.findIndex(obj => obj === product)
+        } else {
+          continue
+        }
+      }
+  }
+  return -1
+}
+
+getProductId(subProdId: string){
+  for(let category of this.category){
+    for(let product of category.product){
+      for(let subProd of product.subProducts){
+        if(subProd._id === subProdId) {
+          return product._id
+        } else {
+          continue
+        }
+      }
+
+    }
+  }
+  return -1
+}
+
+
+
 
 
   private sortData(data: Category[]){

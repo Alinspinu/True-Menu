@@ -2,18 +2,18 @@ import { Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { TabsService } from '../tabs/tabs.service';
-import { Category, Product} from '../CRUD/add/category.model';
-import { ActionSheetService } from '../shared/action-sheet.service';
+import { TabsService } from '../../tabs/tabs.service';
+import { Category, Product} from '../../CRUD/add/category.model';
+import { ActionSheetService } from '../../shared/action-sheet.service';
 import { RouterModule } from '@angular/router';
-import { CartService } from '../cart/cart.service';
-import { Cart } from '../cart/cart.model';
+import { CartService } from '../../cart/cart.service';
+import { Cart } from '../../cart/cart.model';
 import { Subscription } from 'rxjs';
-import User from '../auth/user.model';
-import { AuthService } from '../auth/auth.service';
-import { EditProductComponent } from '../CRUD/edit/edit-product/edit-product.component';
-import { EditSubProductComponent } from '../CRUD/edit/edit-sub-product/edit-sub-product.component';
-import { CapitalizePipe } from '../shared/capitalize.pipe';
+import User from '../../auth/user.model';
+import { AuthService } from '../../auth/auth.service';
+import { EditProductComponent } from '../../CRUD/edit/edit-product/edit-product.component';
+import { EditSubProductComponent } from '../../CRUD/edit/edit-sub-product/edit-sub-product.component';
+import { CapitalizePipe } from '../../shared/capitalize.pipe';
 
 
 
@@ -77,7 +77,6 @@ export class CategoryContentPage implements OnInit, OnDestroy {
   this.getCurrentTab();
    this.tabSubscription = this.tabSrv.categorySend$.subscribe(res => {
     this.categories = res;
-    console.log(this.categories)
       const cat = res.find(cat => cat._id === this.currentTab );
       if(cat){
         this.categoryName = cat.name;
@@ -111,14 +110,14 @@ export class CategoryContentPage implements OnInit, OnDestroy {
     this.tabSrv.addSub(product.name, product.product.name, product.product.category);
   };
 
-  saveProdToCart(product: Product, index: number){
+  saveProdToCart(product: Product){
     const cartProduct = {
       name: product.name,
       price: product.price,
       quantity: 1,
       _id: product._id,
       total: product.price,
-      imgPath: this.products[index].image.path,
+      imgPath: product.image.path,
       category: product.category._id,
       sub: false,
     };
