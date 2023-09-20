@@ -13,10 +13,21 @@ import { HttpClient } from '@angular/common/http';
 import { showToast, triggerEscapeKeyPress } from '../../shared/utils/toast-controller';
 import { CartService } from '../../cart/cart.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ProductContentService } from './product-content.service';
+
 
 interface Response {
   message: string,
   updatedProduct: Product
+}
+interface Result {
+  energy: {kJ: number, kcal: number},
+  carbs: { all: number, sugar: number },
+  fat: { all: number, satAcids: number },
+  salts: number,
+  protein: number,
+  additives: {name: string, _id: string}[],
+  allergens: {name: string, _id: string}[]
 }
 
 @Component({
@@ -28,8 +39,18 @@ interface Response {
 })
 export class ProductContentPage implements OnInit, OnDestroy {
 
-  baseUrl: string = 'http://localhost:8080/api-true/';
-  newUrl: string = 'https://flow-api-394209.lm.r.appspot.com/api-true/';
+  baseUrl: string = 'http://localhost:8080/';
+  newUrl: string = 'https://flow-api-394209.lm.r.appspot.com/';
+
+  emptyResult: Result = {
+    energy: {kJ: 0, kcal: 0},
+    carbs: { all: 0, sugar: 0 },
+    fat: { all: 0, satAcids: 0 },
+    salts: 0,
+    protein: 0,
+    additives: [],
+    allergens: []
+  }
 
   user!: User;
   isLoggedIn: boolean = false;
@@ -46,6 +67,7 @@ export class ProductContentPage implements OnInit, OnDestroy {
   pickOption: string = '';
   description: string[] = []
 
+
   constructor(
     private authSrv: AuthService,
     private tabsServ: TabsService,
@@ -57,12 +79,14 @@ export class ProductContentPage implements OnInit, OnDestroy {
     private cartService: CartService,
     private router: Router,
     private route: ActivatedRoute,
+    private productService: ProductContentService
     ) { }
 
   ngOnInit() {
     this.setProductIdandIndex();
     this.getUser();
     this.fetchCategory()
+    this.calcProdNutrition()
     this.splitDescription()
     this.setImageCroppingSettings();
     this.getBackTab();
@@ -87,6 +111,49 @@ export class ProductContentPage implements OnInit, OnDestroy {
     });
   }
 
+  async showActions(){
+    const data = await this.actionSheet.showAdd();
+    this.productService.addIngredients(data, this.productId).subscribe()
+
+  }
+
+  calcProdNutrition(){
+    if(this.product.ingredients){
+      const prefixes = ['energy', 'carbs', 'fat', 'salts', 'protein']
+      const result = this.product.ingredients.reduce<Result>((acc, obj) => {
+        Object.keys(obj.ingredient).forEach(key => {
+          if (prefixes.some(prefix => key.startsWith(prefix))) {
+            if (typeof (obj.ingredient as any)[key] === 'object') {
+              Object.keys((obj.ingredient as any)[key]).forEach(subKey => {
+                (acc as any)[key] = (acc as any)[key] || {};
+                (acc as any)[key][subKey] = this.round(((acc as any)[key][subKey] || 0) + ((obj.ingredient as any)[key][subKey] * (obj.quantity / 100)));
+              });
+            } else {
+              (acc as any)[key] = this.round(((acc as any)[key] || 0) + ((obj.ingredient as any)[key] * (obj.quantity / 100)));
+            }
+          } else if((Array.isArray((obj.ingredient as any)[key]))) {
+            (acc as any)[key] = (acc as any)[key] || [];
+            (obj.ingredient as any)[key].forEach((item: any) => {
+                const index = (acc as any)[key].findIndex((obj:any) => obj.name === item.name)
+                if (index === -1) {
+                    (acc as any)[key].push(item);
+                }
+            });
+          }
+        });
+        return acc;
+      }, this.emptyResult);
+      this.product.nutrition.energy = result.energy;
+      this.product.nutrition.carbs = result.carbs;
+      this.product.nutrition.fat = result.fat;
+      this.product.nutrition.salts = result.salts;
+      this.product.nutrition.protein = result.protein;
+      this.product.allergens = result.allergens;
+      this.product.additives = result.additives;
+    }
+  }
+
+
 
 
   fetchCategory(){
@@ -105,7 +172,11 @@ export class ProductContentPage implements OnInit, OnDestroy {
 
   setPickOption(name: string){
     switch(name){
-      case "BLACK COFFEE" || "WITH MILK":
+      case "BLACK COFFEE":
+        console.log('hit cafea')
+        this.pickOption = "Cafeaua";
+        break;
+      case "WITH MILK":
         this.pickOption = "Cafeaua";
         break;
       default: this.pickOption = "o Opțiune";
@@ -213,7 +284,7 @@ export class ProductContentPage implements OnInit, OnDestroy {
       productToBeRemovedId,
       productToRemoveFromId: this.productId
     }
-    return this.http.post<Response>(`${this.newUrl}remove-paring-product`, data).subscribe(response => {
+    return this.http.post<Response>(`${this.newUrl}api-true/remove-paring-product`, data).subscribe(response => {
       const catIndex = this.tabSrv.getCatIndex(this.productId)
       this.tabSrv.onProductEdit(response.updatedProduct, catIndex)
       showToast(this.toastCtrl, response.message, 3000)
@@ -222,7 +293,7 @@ export class ProductContentPage implements OnInit, OnDestroy {
 
   }
 
-async presentAlert(name: string, productToBeRemovedId: string) {
+  async presentAlert(name: string, productToBeRemovedId: string) {
   const alert = await this.alertController.create({
     header: 'Șterge',
     message: `Ești sigur că vrei să ștergi ${name}?`,
@@ -241,6 +312,10 @@ async presentAlert(name: string, productToBeRemovedId: string) {
     ]
   });
   await alert.present();
+}
+
+ round(num: number): number {
+  return Math.round((num + Number.EPSILON) * 100) / 100;
 }
 
     // onDelete(){

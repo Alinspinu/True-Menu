@@ -87,38 +87,6 @@ export class EditProductComponent  implements OnInit {
         updateOn: 'change',
         validators: [Validators.required]
       }),
-      allergens: new FormControl(null, {
-        updateOn: 'change',
-        validators: [Validators.required]
-      }),
-      kcal: new FormControl(null, {
-        updateOn: 'change',
-        validators: [Validators.required]
-      }),
-      allFat: new FormControl(null, {
-        updateOn: 'change',
-        validators: [Validators.required]
-      }),
-      satAcids: new FormControl(null, {
-        updateOn: 'change',
-        validators: [Validators.required]
-      }),
-      allCarbs: new FormControl(null, {
-        updateOn: 'change',
-        validators: [Validators.required]
-      }),
-      sugars: new FormControl(null, {
-        updateOn: 'change',
-        validators: [Validators.required]
-      }),
-      salt: new FormControl(null, {
-        updateOn: 'change',
-        validators: [Validators.required]
-      }),
-      additives: new FormControl(null, {
-        updateOn: 'change',
-        validators: [Validators.required]
-      }),
 
       image: new FormControl(null),
     });
@@ -129,14 +97,6 @@ export class EditProductComponent  implements OnInit {
     this.form.get('category')?.setValue(this.product.category._id);
     this.form.get('order')?.setValue(this.product.order);
     this.form.get('longDescription')?.setValue(this.product.longDescription);
-    this.form.get('allergens')?.setValue(this.product.allergens.map(obj => obj.name).join('/'));
-    this.form.get('kcal')?.setValue(this.product.nutrition.energy.kcal);
-    this.form.get('allFat')?.setValue(this.product.nutrition.fat.all);
-    this.form.get('satAcids')?.setValue(this.product.nutrition.fat.satAcids);
-    this.form.get('allCarbs')?.setValue(this.product.nutrition.carbs.all);
-    this.form.get('sugars')?.setValue(this.product.nutrition.carbs.sugar);
-    this.form.get('salt')?.setValue(this.product.nutrition.salts);
-    this.form.get('additives')?.setValue(this.product.nutrition.additives);
   };
 
 

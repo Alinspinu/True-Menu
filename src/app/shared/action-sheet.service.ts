@@ -12,6 +12,7 @@ import { EditProductComponent } from '../CRUD/edit/edit-product/edit-product.com
 import { EditCategoryComponent } from '../CRUD/edit/edit-category/edit-category.component';
 import { EditSubProductComponent } from '../CRUD/edit/edit-sub-product/edit-sub-product.component';
 import { ParringProductPage } from '../CRUD/add/parring-product/parring-product.page';
+import { RecipeIngredientPage } from '../CRUD/add/recipe-ingredient/recipe-ingredient.page';
 
 @Injectable({
   providedIn: 'root'
@@ -68,17 +69,48 @@ export class ActionSheetService {
     console.log('Action Sheet result:', result);
   }
 
+  async showAdd():Promise<any> {
+    const result = await ActionSheet.showActions({
+      title: 'Choose',
+      message: 'Select an option to perform',
+      options: [
+        {
+          title: 'Parring Product',
+        },
+        {
+          title: 'Recipe Ingredient',
+        },
+        {
+          title: 'Cancel',
+          style: ActionSheetButtonStyle.Cancel,
+        },
+      ],
+    });
+
+    if (result.index === 0) {
+     return this.openModal(ParringProductPage);
+    } else if (result.index === 1) {
+      return this.openModal(RecipeIngredientPage);
+    }
+
+    console.log('Action Sheet result:', result);
+  }
+
   async openModal(
     component: typeof AddCategoryPage |
                typeof AddProductPage |
                typeof AddSubproductPage |
                typeof TipsPage |
-               typeof CashBackPage
+               typeof CashBackPage |
+               typeof ParringProductPage |
+               typeof RecipeIngredientPage
                ) {
     const modal = await this.modalCtrl.create({
       component: component,
     });
     modal.present();
+    const { data } = await modal.onDidDismiss();
+    return data
   }
 
   async openEdit(

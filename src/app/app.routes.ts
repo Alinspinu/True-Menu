@@ -40,10 +40,6 @@ export const routes: Route[] = [
     path: 'reset-password',
     loadComponent: () => import('./auth/reset-password/reset-password.page').then( m => m.ResetPasswordPage)
   },
-  // {
-  //   path: 'timer',
-  //   loadComponent: () => import('./shared/timer/timer.page').then( m => m.TimerPage)
-  // },
   {
     path: 'terms',
     loadComponent: () => import('./legal/terms/terms.page').then( m => m.TermsPage)
@@ -60,6 +56,14 @@ export const routes: Route[] = [
   {
     path: 'coffee-content',
     loadComponent: () => import('./content/coffee-content/coffee-content.page').then( m => m.CoffeeContentPage)
+  },
+  {
+    path: 'add-ingredient',
+    loadComponent: () => import('./CRUD/add/add-ingredient/add-ingredient.page').then( m => m.AddIngredientPage)
+  },
+  {
+    path: 'recipe-ingredient',
+    loadComponent: () => import('./CRUD/add/recipe-ingredient/recipe-ingredient.page').then( m => m.RecipeIngredientPage)
   },
 
 ];

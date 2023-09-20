@@ -7,7 +7,6 @@ import { Category, Product, SubProduct} from "../CRUD/add/category.model";
 
 export class TabsService{
   baseUrl: string = 'http://localhost:8080/api-true/';
-  baseUrlHeroku: string = 'https://www.cafetish.com/api/';
   newUrl: string = 'https://flow-api-394209.lm.r.appspot.com/api-true/';
   currentCategory!: string;
   tab: string = 'food';
@@ -25,14 +24,16 @@ export class TabsService{
     category: this.emptyCategory,
     available: false,
     longDescription: '',
+    ingredients: [],
     nutrition: {
       energy:{kJ: 0, kcal: 0},
       fat: {all: 0, satAcids: 0},
       carbs: {all: 0, sugar: 0},
       salts: 0,
-      additives: ''
+      protein: 0,
     },
-    allergens: [{name: '', _id: ''}],
+    additives: [],
+    allergens: [],
     paring: [],
   }
   private categoryState!: BehaviorSubject<Category[]>;

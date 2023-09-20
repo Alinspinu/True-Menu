@@ -1,0 +1,56 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()"[disabled]="isLoading">Cancel</ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Add Ingredient</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="confirm()" type="submit" [disabled]="!form.valid || isLoading" [strong]="true">Confirm
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content class="ion-padding">
+  <form [formGroup]="form">
+  <ion-item>
+    <ion-input mode="ios" type="text" label="Ingredinet Name" labelPlacement="floating" fill="outline" formControlName="name"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-textarea  mode="ios" type="text" label="Label Info" labelPlacement="floating" fill="outline" formControlName="labelInfo"></ion-textarea>
+  </ion-item>
+    <ion-item>
+      <ion-textarea  mode="ios" type="text" label="Allergens" labelPlacement="floating" fill="outline" formControlName="allergens"></ion-textarea>
+    </ion-item>
+    <ion-note color="primary">After each allergen add "/"</ion-note>
+    <ion-item>
+      <ion-input  mode="ios" type="text" label="Additives" labelPlacement="floating" fill="outline" formControlName="additives"></ion-input>
+    </ion-item>
+    <ion-note color="primary">After each additive add "/"</ion-note>
+    <div class="nutrition">
+      <h3>Declarația nutritionala / 100g Produs</h3>
+      <ion-item>
+        <ion-input  mode="ios" type="number" label="Energy Value kcal" labelPlacement="floating" fill="outline" formControlName="kcal"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input  mode="ios" type="number" label="Fats g" labelPlacement="floating" fill="outline" formControlName="allFat"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input  mode="ios" type="number" label="Saturated Acids g" labelPlacement="floating" fill="outline" formControlName="satAcids"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input  mode="ios" type="number" label="Carbohydrates g" labelPlacement="floating" fill="outline" formControlName="allCarbs"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input  mode="ios" type="number" label="Sugars g" labelPlacement="floating" fill="outline" formControlName="sugars"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input  mode="ios" type="number" label="Salt g" labelPlacement="floating" fill="outline" formControlName="salt"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input  mode="ios" type="number" label="Protein g" labelPlacement="floating" fill="outline" formControlName="protein"></ion-input>
+      </ion-item>
+    </div>
+</form>
+  </ion-content>

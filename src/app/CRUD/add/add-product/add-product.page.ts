@@ -75,38 +75,6 @@ export class AddProductPage implements OnInit {
         updateOn: 'change',
         validators: [Validators.required]
       }),
-      allergens: new FormControl(null, {
-        updateOn: 'change',
-        validators: [Validators.required]
-      }),
-      kcal: new FormControl(null, {
-        updateOn: 'change',
-        validators: [Validators.required]
-      }),
-      allFat: new FormControl(null, {
-        updateOn: 'change',
-        validators: [Validators.required]
-      }),
-      satAcids: new FormControl(null, {
-        updateOn: 'change',
-        validators: [Validators.required]
-      }),
-      allCarbs: new FormControl(null, {
-        updateOn: 'change',
-        validators: [Validators.required]
-      }),
-      sugars: new FormControl(null, {
-        updateOn: 'change',
-        validators: [Validators.required]
-      }),
-      salt: new FormControl(null, {
-        updateOn: 'change',
-        validators: [Validators.required]
-      }),
-      additives: new FormControl(null, {
-        updateOn: 'change',
-        validators: [Validators.required]
-      }),
       image: new FormControl(null),
     });
   };
@@ -123,23 +91,6 @@ export class AddProductPage implements OnInit {
   confirm(){
     this.isLoading = true;
     if(this.form.valid){
-      const nutrition = {
-        energy: {
-          kJ: Math.round((this.form.value.kcal * 4.184) *100) /100 ,
-          kcal: this.form.value.kcal
-        },
-        fat: {
-          all: this.form.value.allFat,
-          satAcids: this.form.value.satAcids
-        },
-        carbs: {
-          all: this.form.value.allCarbs,
-          sugar: this.form.value.sugars
-        },
-        salts: this.form.value.salt,
-        additives: this.form.value.additives
-      }
-      const allergens = this.form.value.allergens.split('/').map((word: string) => ({name: word}))
       const prodData = new FormData();
       prodData.append('price', this.form.value.price);
       prodData.append('name', this.form.value.name);
@@ -149,8 +100,8 @@ export class AddProductPage implements OnInit {
       prodData.append('category', this.currentCategory);
       prodData.append('description', this.form.value.description);
       prodData.append('longDescription', this.form.value.longDescription);
-      prodData.append('strNutrition',  JSON.stringify(nutrition));
-      prodData.append('strAllergens', JSON.stringify(allergens));
+      // prodData.append('strNutrition',  JSON.stringify(nutrition));
+      // prodData.append('strAllergens', JSON.stringify(allergens));
       return this.http.post<Response>(`${this.newUrl}prod-add`, prodData).subscribe((res)=>{
         this.tabSrv.onProductAdd(res.product);
         showToast(this.toastCtrl, res.message, 3000);

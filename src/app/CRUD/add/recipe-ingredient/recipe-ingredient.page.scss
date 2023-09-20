@@ -1,0 +1,14 @@
+ion-item{
+  display: flex;
+}
+.ing-name{
+  flex: 70%;
+}
+
+.label{
+  margin-right: 20px;
+}
+
+ion-item ion-input{
+width: 60px;
+}

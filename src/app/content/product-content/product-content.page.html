@@ -2,6 +2,9 @@
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button [defaultHref]="'/tabs/category-content/' + backTab" style="color: black" text=""></ion-back-button>
+      <ion-button (click)="showActions()" *ngIf="isAdmin">
+        <ion-icon  name="add-outline" style="color: black"></ion-icon>
+      </ion-button>
     </ion-buttons>
     <ion-title *ngIf="product">{{product.name}}</ion-title>
     <ion-buttons slot="end">
@@ -36,7 +39,7 @@
       <div class="separator"></div>
       <h3>Descriere</h3>
       <ion-text *ngFor="let paragraph of description">
-        <p>{{paragraph}}</p>
+        <p class="long-description">{{paragraph}}</p>
       </ion-text>
     </div>
   </ion-col>
@@ -95,7 +98,7 @@
 
     <div class="ingredient-wrapper">
       <div class="box"></div>
-      <div>Valoare energetică - {{product.nutrition.energy.kJ}} kJ/ {{product.nutrition.energy.kcal}} kcal</div>
+      <div>Valoare energetică - {{product.nutrition.energy.kcal}} kcal / {{product.nutrition.energy.kJ}} kJ </div>
     </div>
     <div class="ingredient-wrapper">
       <div class="box"></div>
@@ -111,7 +114,11 @@
     </div>
     <div class="ingredient-wrapper">
       <div class="box"></div>
-      <div>Aditivi - {{product.nutrition.additives}}</div>
+      <div>Proteine - {{product.nutrition.protein}} gr</div>
+    </div>
+    <div class="ingredient-wrapper" *ngIf="product.additives.length">
+      <div class="box"></div>
+      <div>Aditivi - {{product.additives}}</div>
     </div>
   </ion-col>
 </ion-row>

@@ -4,12 +4,16 @@
 }
 h3, h4, h5 p, span, div{
   font-family: NoirProLight !important;
+  color: var(--ion-color-primary-contrast) !important;
 }
 h5{
   font-size: 15px;
   margin-bottom: 10px;
 }
 
+ion-title{
+  --color: var(--ion-color-primary-contrast) !important;
+}
 
 ion-toolbar{
   --background: #f4ede6;
@@ -29,6 +33,7 @@ ion-content {
   height: 90%;
   box-shadow: 1px 2px 2px 1px rgba(0,0,0,0.1);
 }
+
 
 
 
@@ -241,6 +246,7 @@ ion-badge span{
   flex: 70%;
   font-size: 20px;
   padding: 8px;
+  cursor: pointer;
 }
 
 .trash{
@@ -261,6 +267,7 @@ ion-badge span{
   margin-right: 20px;
   height: 20px;
   width: 20px;
+  cursor: pointer;
 }
 
 
@@ -278,6 +285,10 @@ ion-badge span{
   right: 25px;
   font-size: 10px !important;
   font-weight:bolder;
+}
+
+.long-description{
+  font-size: 15px;
 }
 
 
