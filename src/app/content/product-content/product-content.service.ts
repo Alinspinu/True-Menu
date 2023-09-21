@@ -23,6 +23,9 @@ export class ProductContentService{
    return this.http.post(`${this.newUrl}nutrition/add-ing-to-product?id=${productId}`, ingredients)
   }
 
+  addProductIngredient(ingredients: Ings[], name: string){
+    return this.http.post(`${this.newUrl}nutrition/add-prod-ing?name=${name}`, ingredients )
+  }
 }
 
 

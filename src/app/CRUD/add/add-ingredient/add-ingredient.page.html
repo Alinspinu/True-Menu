@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-button (click)="cancel()"[disabled]="isLoading">Cancel</ion-button>
     </ion-buttons>
-    <ion-title class="ion-text-center">Add Ingredient</ion-title>
+    <ion-title class="ion-text-center">{{title}}</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="confirm()" type="submit" [disabled]="!form.valid || isLoading" [strong]="true">Confirm
       </ion-button>

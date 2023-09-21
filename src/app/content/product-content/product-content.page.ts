@@ -112,9 +112,26 @@ export class ProductContentPage implements OnInit, OnDestroy {
   }
 
   async showActions(){
-    const data = await this.actionSheet.showAdd();
-    this.productService.addIngredients(data, this.productId).subscribe()
+    const data = await this.actionSheet.showAdd(this.getProductIngredients());
+    if(data){
+      if(!data.name){
+        this.productService.addIngredients(data, this.productId).subscribe()
+      } else {
+        this.productService.addProductIngredient(data.ingredients, data.name).subscribe()
+      }
+    }
+  }
 
+  getProductIngredients(){
+   let ings: {_id: string, qty: number}[] = []
+    this.product.ingredients.forEach(el => {
+      const ing = {
+        _id: el.ingredient._id,
+        qty: el.quantity
+      }
+      ings.push(ing)
+    })
+    return {ing: ings, mode:'', ingId: ''}
   }
 
   calcProdNutrition(){

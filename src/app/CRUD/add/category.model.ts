@@ -58,7 +58,7 @@ export class Ingredient{
     public labelInfo: string,
     public energy: {kcal: number, kJ: number},
     public carbs: {all: number, sugar: number},
-    public fat: {all: number, sat: number},
+    public fat: {all: number, satAcids: number},
     public salts: number,
     public protein: number,
     public additives: {name: string, _id: string}[],

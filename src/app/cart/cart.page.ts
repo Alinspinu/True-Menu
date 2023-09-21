@@ -300,11 +300,11 @@ remove(index: number, qty: number, name: string, category: string, sub: boolean)
 
 
   cashBackModal(){
-    this.actionSheet.openModal(CashBackPage);
+    this.actionSheet.openModal(CashBackPage, {ing: [], mode: '', ingId: ''});
   };
 
   tipsModal(){
-    this.actionSheet.openModal(TipsPage);
+    this.actionSheet.openModal(TipsPage, {ing: [], mode: '', ingId: ''});
   };
 
 

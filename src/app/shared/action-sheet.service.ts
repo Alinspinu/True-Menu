@@ -13,11 +13,23 @@ import { EditCategoryComponent } from '../CRUD/edit/edit-category/edit-category.
 import { EditSubProductComponent } from '../CRUD/edit/edit-sub-product/edit-sub-product.component';
 import { ParringProductPage } from '../CRUD/add/parring-product/parring-product.page';
 import { RecipeIngredientPage } from '../CRUD/add/recipe-ingredient/recipe-ingredient.page';
+import { AddIngredientPage } from '../CRUD/add/add-ingredient/add-ingredient.page';
+
+interface Data {
+  ing: {
+    _id: string,
+    qty: number
+  }[]
+  mode: string
+  ingId: string
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class ActionSheetService {
+
+  emptyData: Data = {ing: [], mode: '', ingId: ''}
 
   constructor(private modalCtrl: ModalController) { }
 
@@ -37,7 +49,7 @@ export class ActionSheetService {
     });
 
     if (result.index === 0) {
-      this.openModal(AddCategoryPage);
+      this.openModal(AddCategoryPage, this.emptyData);
     }
     console.log('Action Sheet result:', result);
   }
@@ -61,24 +73,33 @@ export class ActionSheetService {
     });
 
     if (result.index === 1) {
-      this.openModal(AddSubproductPage);
+      this.openModal(AddSubproductPage, this.emptyData);
     } else if (result.index === 0) {
-      this.openModal(AddProductPage);
+      this.openModal(AddProductPage, this.emptyData);
     }
 
     console.log('Action Sheet result:', result);
   }
 
-  async showAdd():Promise<any> {
+  async showAdd(data: Data ):Promise<any> {
     const result = await ActionSheet.showActions({
       title: 'Choose',
       message: 'Select an option to perform',
       options: [
         {
-          title: 'Parring Product',
+          title: 'Add Parring Product',
         },
         {
-          title: 'Recipe Ingredient',
+          title: 'Add Ingredients to Recipe',
+        },
+        {
+          title: 'Add Product Ingredient',
+        },
+        {
+          title: 'Add Ingredient',
+        },
+        {
+          title: 'Edit Ingredient',
         },
         {
           title: 'Cancel',
@@ -88,9 +109,19 @@ export class ActionSheetService {
     });
 
     if (result.index === 0) {
-     return this.openModal(ParringProductPage);
+     return this.openModal(ParringProductPage, this.emptyData);
     } else if (result.index === 1) {
-      return this.openModal(RecipeIngredientPage);
+      return this.openModal(RecipeIngredientPage, data);
+    } else if (result.index === 2) {
+      data.mode = 'prod-ing'
+      data.ing = []
+      return this.openModal(RecipeIngredientPage, data)
+    } else if (result.index === 3){
+      return this.openModal(AddIngredientPage, this.emptyData)
+    } else if (result.index === 4){
+      data.mode = 'on-edit';
+      data.ing = []
+      return this.openModal(RecipeIngredientPage, data)
     }
 
     console.log('Action Sheet result:', result);
@@ -103,10 +134,13 @@ export class ActionSheetService {
                typeof TipsPage |
                typeof CashBackPage |
                typeof ParringProductPage |
-               typeof RecipeIngredientPage
+               typeof RecipeIngredientPage |
+               typeof AddIngredientPage,
+    dta: Data
                ) {
     const modal = await this.modalCtrl.create({
       component: component,
+      componentProps: {data: dta}
     });
     modal.present();
     const { data } = await modal.onDidDismiss();
