@@ -66,6 +66,7 @@ export class ProductContentPage implements OnInit, OnDestroy {
   category!: Category[];
   pickOption: string = '';
   description: string[] = []
+  additives: string = ''
 
 
   constructor(
@@ -167,6 +168,7 @@ export class ProductContentPage implements OnInit, OnDestroy {
       this.product.nutrition.protein = result.protein;
       this.product.allergens = result.allergens;
       this.product.additives = result.additives;
+      this.additives = result.additives.map(obj => obj.name).join('/')
     }
   }
 
