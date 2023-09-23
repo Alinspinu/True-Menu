@@ -11,7 +11,7 @@ import { IonicModule } from '@ionic/angular';
 })
 export class TimerPage implements OnInit {
 
-  maxCountdown: number = 20;
+  maxCountdown: number = 25;
   countdown: number = this.maxCountdown;
 
   constructor() {}

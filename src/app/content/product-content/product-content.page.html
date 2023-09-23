@@ -15,7 +15,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" *ngIf="product">
   <ion-badge slot="fixed" class="cash-bagde" *ngIf="isLoggedIn">
       <span>{{user.cashBack}} lei</span>
     </ion-badge>
@@ -50,7 +50,7 @@
     <div class="separator"></div>
     <h3>Alege {{pickOption}}</h3>
     <div class="product-wrapper" *ngFor="let subProduct of product.subProducts let i=index">
-      <div class="product-name" (click)="goToCoffee(subProduct.name)">{{subProduct.name}}</div>
+      <div  (click)="goToCoffee(subProduct.name)">{{subProduct.name}}</div>
         <img src="../../assets/icon/black-cart.png" alt="cart" (click)="saveSubProdToCart(subProduct, product, i)">
         <span class="badge-prod" *ngIf="subProduct.quantity > 0">{{subProduct.quantity}}</span>
     </div>
@@ -58,16 +58,16 @@
 </ion-row>
 
 <ion-row>
-  <ion-col size-md="6" offset-md="3">
+  <ion-col size-md="6" offset-md="3" *ngIf="product.paring.length || isAdmin">
     <div class="separator"></div>
     <div class="parring-title">
       <h3>True Paring</h3>
       <img src="../../assets/icon/add-outline.svg" alt="add-svg" (click)="addProduct(product._id)" *ngIf="isAdmin">
     </div>
-    <div *ngIf="product.paring.length">
+    <div>
     <h5>Merge bine împreună cu</h5>
     <div class="product-wrapper" *ngFor="let parProduct of product.paring; let i=index">
-      <div class="product-name" (click)="navigateParProduct(parProduct._id, parProduct.category._id)">{{parProduct.name}}</div>
+      <div (click)="navigateParProduct(parProduct._id, parProduct.category._id)">{{parProduct.name}}</div>
       <ion-icon name="trash-outline" color="danger" class="trash"(click)="presentAlert(parProduct.name, parProduct._id)" *ngIf="isAdmin"></ion-icon>
         <img src="../../assets/icon/black-cart.png" alt="cart" (click)="saveProdToCart(parProduct, i)">
         <span class="badge-prod" *ngIf="parProduct.quantity > 0">{{parProduct.quantity}}</span>
@@ -127,23 +127,3 @@
   </ion-grid>
 </ion-content>
 
-
-
-<!-- <ion-row>
-  <ion-col size-md="6" offset-md="3">
-    <div class="separator"></div>
-    <h3>Cafele disponibile cu acest produs</h3>
-    <ion-item class="ion-no-padding" color="light" lines="none">
-      <img class="prod-img" src="https://res.cloudinary.com/dhetxk68c/image/upload/v1672788044/ProduseI/xx0xady3aokljrmh8hf1.jpg" alt="coffee-image" >
-      <span>Brazilia Agua Lipa</span>
-    </ion-item>
-    <ion-item class="ion-no-padding" color="light" lines="none">
-      <img class="prod-img" src="https://res.cloudinary.com/dhetxk68c/image/upload/v1672788044/ProduseI/xx0xady3aokljrmh8hf1.jpg" alt="coffee-image" >
-      <span>Columbia Monteblanco</span>
-    </ion-item>
-    <ion-item class="ion-no-padding" color="light" lines="none">
-      <img class="prod-img" src="https://res.cloudinary.com/dhetxk68c/image/upload/v1672788044/ProduseI/xx0xady3aokljrmh8hf1.jpg" alt="coffee-image" >
-      <span>Papua Noua Guinee</span>
-    </ion-item>
-  </ion-col>
-</ion-row> -->

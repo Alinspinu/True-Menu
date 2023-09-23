@@ -21,7 +21,7 @@ export class CartService{
 
   private cartState!: BehaviorSubject<Cart>;
   public cartSend$!: Observable<Cart>;
-  emptyCart: Cart = {_id: '', total: 0, products: [], masa: 0, cashBack: 0, productCount: 0, tips: 0, totalProducts: 0, userId: ''};
+  emptyCart: Cart = {_id: '', total: 0, products: [], masa: 0, cashBack: 0, productCount: 0, tips: 0, totalProducts: 0, userId: '', toGo: false, pickUp: false};
   cart: Cart = this.emptyCart;
 
 

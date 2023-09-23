@@ -1,7 +1,7 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component,  Inject, Input, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AlertController, IonicModule, ModalController } from '@ionic/angular';
+import { AlertController, IonicModule, IonInput, ModalController } from '@ionic/angular';
 import { RecipeIngredientService } from './recipe-ingredient.service';
 import { ActionSheetService } from 'src/app/shared/action-sheet.service';
 import { AddIngredientPage } from '../add-ingredient/add-ingredient.page';
@@ -32,6 +32,7 @@ interface Data{
 export class RecipeIngredientPage implements OnInit {
 
   @Input() data!: Data
+
   ingredients!: Ing[]
   filteredOptions: any[] = [];
   searchTerm: string = '';
@@ -58,9 +59,23 @@ export class RecipeIngredientPage implements OnInit {
           }
         })
        })
-       this.filteredOptions = [...this.ingredients];
+       this.filteredOptions = [...this.sortIngredients()];
     })
     this.setMode()
+  }
+
+  sortIngredients(){
+    return this.ingredients.slice().sort((a,b)=> a.name.localeCompare(b.name))
+  }
+
+  onChange(event: any, qtyInput: IonInput){
+    if(event.detail.checked){
+      qtyInput.setFocus()
+    }
+  }
+
+  showActions(){
+    this.actionSheet.openModal(AddIngredientPage, {ing: [], mode:'', ingId: ''})
   }
 
   setMode(){
@@ -103,13 +118,13 @@ export class RecipeIngredientPage implements OnInit {
     this.actionSheet.openModal(AddIngredientPage, {ing: [], mode: 'on-edit', ingId: id});
   }
 
-  onDelete(ingredientId: string){
+  onDelete(ingredientId: string, index: number){
     this.ingSrv.deleteIngredients(ingredientId).subscribe(response => {
-      console.log(response.message)
+      this.filteredOptions.splice(index, 1)
     })
   }
 
-  async presentAlert(name: string, ingredientId: string) {
+  async presentAlert(name: string, ingredientId: string, index: number) {
     const alert = await this.alertController.create({
       header: 'Șterge',
       message: `Ești sigur că vrei să ștergi ${name}?`,
@@ -122,7 +137,7 @@ export class RecipeIngredientPage implements OnInit {
           text: 'Șterge',
           role: 'confirm',
           handler: () => {
-            this.onDelete(ingredientId);
+            this.onDelete(ingredientId, index);
           },
         },
       ]

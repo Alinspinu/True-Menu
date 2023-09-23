@@ -139,6 +139,12 @@ export class AddIngredientPage implements OnInit, OnDestroy {
   confirm(){
     this.isLoading = true;
     if(this.form.valid){
+      if(!this.form.value.allergens){
+        this.form.value.allergens = '';
+      }
+      if(!this.form.value.additives){
+        this.form.value.additives = '';
+      }
       const allergens = this.form.value.allergens.split('/').map((word: string) => ({name: word}))
       const additives = this.form.value.additives.split('/').map((word: string) => ({name: word}))
 

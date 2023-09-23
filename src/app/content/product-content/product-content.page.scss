@@ -1,17 +1,15 @@
 
- ion-back-button{
-  font-family: NoirPro !important;
-}
 h3, h4, h5 p, span, div{
   font-family: NoirProLight !important;
   color: var(--ion-color-primary-contrast) !important;
 }
+
 h5{
   font-size: 15px;
   margin-bottom: 10px;
 }
 
-ion-title{
+ion-titlwe{
   --color: var(--ion-color-primary-contrast) !important;
 }
 
@@ -35,8 +33,6 @@ ion-content {
 }
 
 
-
-
 .img-wrapper{
   display: flex;
   flex-direction: row;
@@ -52,11 +48,9 @@ ion-content {
 .history-wrapper{
   width: 100%;
   white-space: normal;
-  // overflow: hidden;
 }
 
 p{
-  // display: inline-block;
   font-size: 13px;
   -webkit-hyphens: auto;
   -ms-hyphens: auto;
@@ -218,9 +212,6 @@ div[slot="fixed"]{
   font-size: 10px;
 }
 
-// ion-avatar img{
-//  height: 25px;
-// }
 
 
 .cash-badge{
@@ -249,6 +240,7 @@ ion-badge span{
   cursor: pointer;
 }
 
+
 .trash{
   flex: 10%;
   font-size: 20px;
@@ -258,10 +250,6 @@ ion-badge span{
 }
 
 .product-wrapper img{
-  // position: relative;
-  // z-index: 1;
-  // right: 25px;
-  // bottom: 1px;
   border-radius:0 !important;
   box-shadow: none !important;
   margin-right: 20px;

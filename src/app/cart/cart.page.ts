@@ -49,6 +49,8 @@ export class CartPage implements OnInit, OnDestroy {
   userSub!: Subscription;
   admin!: Subscription;
   authSub!: Subscription;
+  toGo: boolean = false;
+  pickUp: boolean = false;
   // categoryIndex!: String;
 
 
@@ -83,8 +85,11 @@ export class CartPage implements OnInit, OnDestroy {
   }
 
 
+
   saveCart(){
     this.cart.masa = this.inputValue;
+    this.cart.pickUp = this.pickUp;
+    this.cart.toGo = this.toGo;
     if(!this.cart.tips){
       this.cart.tips = 0;
     }
@@ -118,7 +123,7 @@ export class CartPage implements OnInit, OnDestroy {
 
 
   checked(event: any){
-    if(this.inputValue && event.detail.checked){
+    if(this.inputValue && event.detail.checked || this.pickUp && event.detail.checked){
       this.enableOrder = true
       this.checkedTerms = true
     } else if(event.detail.checked){
@@ -126,6 +131,33 @@ export class CartPage implements OnInit, OnDestroy {
     } else {
       this.enableOrder = false
       this.checkedTerms = false
+    }
+  }
+
+  selectPickUp(event: any) {
+    if(event.detail.checked && this.checkedTerms){
+      this.pickUp = true;
+      this.inputValue = 0
+      this.enableOrder = true
+    } else if(event.detail.checked && !this.isLoggedIn) {
+      this.pickUp = true
+      this.inputValue = 0
+    } else if(event.detail.checked && this.isLoggedIn){
+      this.pickUp = true;
+      this.inputValue = 0
+      this.enableOrder = true
+      console.log(this.enableOrder)
+    } else {
+      this.pickUp = false;
+      this.enableOrder = false
+    }
+  }
+
+  selectToGo(event: any) {
+    if(event.detail.checked){
+      this.toGo = true;
+    } else {
+      this.toGo = false;
     }
   }
 

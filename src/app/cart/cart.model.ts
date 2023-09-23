@@ -10,6 +10,8 @@ export class Cart{
     public cashBack: number,
     public productCount: number,
     public userId: string,
+    public toGo: boolean,
+    public pickUp: boolean
   ){}
 };
 

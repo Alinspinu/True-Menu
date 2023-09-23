@@ -4,7 +4,6 @@ ion-content{
 }
 
 ion-button.order{
-  // --background: #e3ab72;
   --background-activated: #d8b99b;
   --color: white;
   font-weight: 800;
@@ -52,7 +51,6 @@ ion-button.register{
 
 p{
   font-size: 15px;
-  // color: var(--ion-color-warning)
 }
 
 ion-button.tips{
@@ -143,7 +141,6 @@ ion-button, p{
   margin-left: 67%;
 }
 
-
 #logo-img{
   height: 90px;
 }
@@ -151,7 +148,6 @@ ion-button, p{
 #logo-header{
   height: 30px;
 }
-
 
 .prod-wrapper{
   display: flex;
@@ -162,8 +158,6 @@ ion-button, p{
   height: 30px;
   width: 30px;
 }
-
-
 
 
 #like{
@@ -206,12 +200,9 @@ ion-button, p{
 }
 
 
-
  .black-text{
 color: black!important;
  }
-
-
 
 
  ion-checkbox {
@@ -230,15 +221,23 @@ ion-checkbox::part(container) {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  justify-content: center;
+  justify-content: flex-start;
+}
+.toGoPickUp-wrapper{
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
 }
 
+.toGoPickUp-wrapper ion-checkbox{
+  font-size: 15px;
+}
 #termeni{
   font-size: 13px;
   margin: 0 0 0 4px;
 }
-
-
 
 
 
@@ -277,11 +276,3 @@ ion-checkbox::part(container) {
   }
 }
 
-
-//  .item-background {
-//   --background: white !important;
-//  }
-
-// .white-background{
-//   background-color: white !important;
-//  }

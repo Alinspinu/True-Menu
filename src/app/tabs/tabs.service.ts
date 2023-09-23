@@ -187,14 +187,17 @@ onProductEdit(editedProduct: any, catIndex: number){
     if(index !== -1){
      const oldProduct = this.category[catIndex].product[index];
      if(oldProduct.category._id !== editedProduct.category._id){
+      console.log('hit categoy change')
         this.category[catIndex].product.splice(index, 1);
         const newCatIndex = this.category.findIndex(obj => obj._id === editedProduct.category)
         this.category[newCatIndex].product.push(editedProduct);
         this.category = this.sortData(this.category);
         this.categoryState.next([...this.category]);
      } else {
+      console.log("hit the right place")
         this.category[catIndex].product[index] = editedProduct;
         this.category = this.sortData(this.category);
+        console.log(this.category)
         this.categoryState.next([...this.category]);
      };
     };

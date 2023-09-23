@@ -5,6 +5,9 @@
     </ion-buttons>
     <ion-title class="ion-text-center">{{title}}</ion-title>
     <ion-buttons slot="end" *ngIf="!onEdit">
+      <ion-button (click)="showActions()">
+        <ion-icon  name="add-outline" style="color: black"></ion-icon>
+      </ion-button>
       <ion-button expand="full" (click)="closeModal()">Confirm</ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -20,18 +23,18 @@
     </ion-input>
   </ion-item>
   <ion-list>
-    <ion-item *ngFor="let ingredient of filteredOptions">
+    <ion-item *ngFor="let ingredient of filteredOptions; let i = index">
       <span class="ing-name">{{ ingredient.name }}</span>
-      <ion-checkbox slot="start" [(ngModel)]="ingredient.selected" *ngIf="!onEdit"></ion-checkbox>
+      <ion-checkbox slot="start" [(ngModel)]="ingredient.selected" *ngIf="!onEdit" (ionChange)="onChange($event, qtyInput)"></ion-checkbox>
       <span class="label" *ngIf="ingredient.selected && !onEdit">g</span>
       <ion-input class="ing-input"
         type="number"
         placeholder="Qty"
         [(ngModel)]="ingredient.quantity"
-        *ngIf="ingredient.selected">
+        #qtyInput>
       </ion-input>
       <ion-buttons *ngIf="onEdit">
-        <ion-button color="danger" [strong]="true" (click)="presentAlert(ingredient.name, ingredient._id)"><ion-icon name="trash-outline"></ion-icon>
+        <ion-button color="danger" [strong]="true" (click)="presentAlert(ingredient.name, ingredient._id, i)"><ion-icon name="trash-outline"></ion-icon>
         </ion-button>
         <ion-button (click)="editIngredient(ingredient._id)">
           <ion-icon  name="create-outline" style="color: black"></ion-icon>

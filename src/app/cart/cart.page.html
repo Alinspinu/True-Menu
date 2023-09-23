@@ -85,12 +85,26 @@
                 </ion-row>
             </ion-grid>
           </ion-item>
-          <ion-item class="ion-no-padding" color="tertiary">
-            <span class="light">Introdu numărul mesei pentru a putea trimite comanda!</span>
+          <!-- <div class="space"></div> -->
+          <ion-item class="ion-no-padding" color="tertiary" *ngIf="!pickUp">
+            <span class="light">Introdu numărul mesei pentru a primi comanda!</span>
             <ion-input type="number" color="tertiary"   class="custom" [(ngModel)]="inputValue" placeholder="00" (input)="onInputChange($event)"></ion-input>
           </ion-item>
           </ion-list>
-
+          <ion-row>
+            <ion-col size-xs="12" class="ion-text-end">
+                <div class="toGoPickUp-wrapper">
+                  <ion-checkbox justify="end" labelPlacement="end" (ionChange)="selectPickUp($event)">Vin eu să ridic comanda!</ion-checkbox>
+                </div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size-xs="12" class="ion-text-end">
+                <div class="toGoPickUp-wrapper">
+                  <ion-checkbox justify="end" labelPlacement="end" (ionChange)="selectToGo($event)">Vreau la pachet!</ion-checkbox>
+                </div>
+            </ion-col>
+          </ion-row>
     <ion-row class="ion-no-padding">
       <ion-col size-xs="12" class="ion-text-end">
         <ion-button class="tips" id="tips" size="small" (click)="tipsModal()">Lasă tips</ion-button> <br>

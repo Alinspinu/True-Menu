@@ -91,25 +91,27 @@ export class ProductContentPage implements OnInit, OnDestroy {
     this.splitDescription()
     this.setImageCroppingSettings();
     this.getBackTab();
-    this.setPickOption(this.product.category.name)
+    this.product ? this.setPickOption(this.product.category.name) : null
   }
 
   splitDescription(){
-    if(this.product.longDescription){
+    if(this.product && this.product.longDescription){
       this.description = this.product.longDescription.split('#s#')
     }
   }
 
   ngOnDestroy(): void {
     this.tabSubs.unsubscribe();
-    this.paramSubs.unsubscribe();
   }
 
   setProductIdandIndex(){
-    this.paramSubs = this.route.params.subscribe(params => {
-      this.productId = params['id'];
-      this.productIndex = params['index'];
-    });
+    const strings = window.location.href.split('/')
+    this.productId = strings[5]
+    this.productIndex = parseFloat(strings[6])
+    // this.paramSubs = this.route.params.subscribe(params => {
+    //   this.productId = params['id'];
+    //   this.productIndex = params['index'];
+    // });
   }
 
   async showActions(){
@@ -136,7 +138,7 @@ export class ProductContentPage implements OnInit, OnDestroy {
   }
 
   calcProdNutrition(){
-    if(this.product.ingredients){
+    if(this.product && this.product.ingredients){
       const prefixes = ['energy', 'carbs', 'fat', 'salts', 'protein']
       const result = this.product.ingredients.reduce<Result>((acc, obj) => {
         Object.keys(obj.ingredient).forEach(key => {
@@ -223,6 +225,7 @@ export class ProductContentPage implements OnInit, OnDestroy {
 
   navigateParProduct(productId: string, catId: string){
     const catIndex = this.category.findIndex(obj=> obj._id === catId);
+    console.log(catIndex, this.category)
     const prodIndex = this.category[catIndex].product.findIndex(obj=> obj._id === productId);
     this.router.navigate(['tabs/product-content/'+ productId + '/' + prodIndex])
   }
@@ -277,11 +280,12 @@ export class ProductContentPage implements OnInit, OnDestroy {
 
 
     getBackTab(){
-      if(this.product.category._id.length)
+      if(this.product && this.product.category._id.length)
       this.backTab = this.product.category._id
     }
 
     setImageCroppingSettings(): string {
+      if(this.product){
       const url = this.product.image.path
       const segments = url.split('/');
       const uploadIndex = segments.indexOf('upload');
@@ -291,6 +295,8 @@ export class ProductContentPage implements OnInit, OnDestroy {
       const transformation = `c_crop,w_555,h_888,x_0,y_55`;
       segments.splice(uploadIndex + 1, 0, transformation);
       return this.imagePath = segments.join('/');
+    }
+    return ''
     };
 
     addProduct(id: string){
@@ -303,13 +309,12 @@ export class ProductContentPage implements OnInit, OnDestroy {
       productToBeRemovedId,
       productToRemoveFromId: this.productId
     }
-    return this.http.post<Response>(`${this.newUrl}api-true/remove-paring-product`, data).subscribe(response => {
+    return this.http.post<Response>(`${this.baseUrl}api-true/remove-paring-product`, data).subscribe(response => {
       const catIndex = this.tabSrv.getCatIndex(this.productId)
       this.tabSrv.onProductEdit(response.updatedProduct, catIndex)
       showToast(this.toastCtrl, response.message, 3000)
       triggerEscapeKeyPress()
     })
-
   }
 
   async presentAlert(name: string, productToBeRemovedId: string) {

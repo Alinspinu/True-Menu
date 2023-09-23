@@ -48,6 +48,7 @@ export class SuccessPage implements OnInit {
   cart!: Cart;
   order!: Order;
   errorMessage: string = "Ceva nu a mers cum trebuie!";
+  orderNumber: number = 0
 
 
   constructor(
@@ -110,6 +111,7 @@ export class SuccessPage implements OnInit {
     const cart = Preferences.get({ key: 'cart' }).then(res => {
       if (res.value) {
         const cartObject: Cart = JSON.parse(res.value);
+        console.log(cartObject)
         this.createOrder(cartObject);
       } else { console.log('No cart Found')};
     });
@@ -130,6 +132,8 @@ export class SuccessPage implements OnInit {
     if(cart.userId.length){
       const order = {
         masa: cart.masa,
+        toGo: cart.toGo,
+        pickUp: cart.pickUp,
         productCount: cart.productCount,
         tips: cart.tips,
         totalProducts: cart.totalProducts,
@@ -142,6 +146,8 @@ export class SuccessPage implements OnInit {
     } else {
       const order = {
         masa: cart.masa,
+        toGo: cart.toGo,
+        pickUp: cart.pickUp,
         productCount: cart.productCount,
         tips: cart.tips,
         totalProducts: cart.totalProducts,
@@ -157,9 +163,11 @@ export class SuccessPage implements OnInit {
     this.http.post<any>(`${this.newUrl}save-order`, order).subscribe(res => {
       if(res.message === 'Order Saved Without a user'){
         this.getTime(res.orderId)
+        this.orderNumber = res.orderIndex
         Preferences.remove({key: 'cart'});
       } else {
         console.log(res)
+        this.orderNumber = res.orderIndex
         this.authServ.updateCaskBack(res.user);
         this.getTime(res.orderId)
         Preferences.remove({key: 'cart'});
@@ -175,7 +183,7 @@ getTime(orderId: string){
       this.orderTime = res.completetime / 1000 / 60
       this.isLoading = false
     })
-  }, 19000)
+  }, 24000)
 
 }
 
