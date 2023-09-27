@@ -138,7 +138,8 @@ export class ProductContentPage implements OnInit, OnDestroy {
   }
 
   calcProdNutrition(){
-    if(this.product && this.product.ingredients){
+    if(this.product && this.product.ingredients.length > 0){
+      const productQuantity = parseFloat(this.product.qty.replace(/g|ml/g, ''))
       const prefixes = ['energy', 'carbs', 'fat', 'salts', 'protein']
       const result = this.product.ingredients.reduce<Result>((acc, obj) => {
         Object.keys(obj.ingredient).forEach(key => {
@@ -146,10 +147,10 @@ export class ProductContentPage implements OnInit, OnDestroy {
             if (typeof (obj.ingredient as any)[key] === 'object') {
               Object.keys((obj.ingredient as any)[key]).forEach(subKey => {
                 (acc as any)[key] = (acc as any)[key] || {};
-                (acc as any)[key][subKey] = this.round(((acc as any)[key][subKey] || 0) + ((obj.ingredient as any)[key][subKey] * (obj.quantity / 100)));
+                (acc as any)[key][subKey] = this.round((((acc as any)[key][subKey] || 0) + ((obj.ingredient as any)[key][subKey] * (obj.quantity / 100)))/(productQuantity/100));
               });
             } else {
-              (acc as any)[key] = this.round(((acc as any)[key] || 0) + ((obj.ingredient as any)[key] * (obj.quantity / 100)));
+              (acc as any)[key] = this.round((((acc as any)[key] || 0) + ((obj.ingredient as any)[key] * (obj.quantity / 100)))/(productQuantity/100));
             }
           } else if((Array.isArray((obj.ingredient as any)[key]))) {
             (acc as any)[key] = (acc as any)[key] || [];
@@ -163,6 +164,7 @@ export class ProductContentPage implements OnInit, OnDestroy {
         });
         return acc;
       }, this.emptyResult);
+      console.log(result)
       this.product.nutrition.energy = result.energy;
       this.product.nutrition.carbs = result.carbs;
       this.product.nutrition.fat = result.fat;
@@ -309,7 +311,7 @@ export class ProductContentPage implements OnInit, OnDestroy {
       productToBeRemovedId,
       productToRemoveFromId: this.productId
     }
-    return this.http.post<Response>(`${this.baseUrl}api-true/remove-paring-product`, data).subscribe(response => {
+    return this.http.post<Response>(`${this.newUrl}api-true/remove-paring-product`, data).subscribe(response => {
       const catIndex = this.tabSrv.getCatIndex(this.productId)
       this.tabSrv.onProductEdit(response.updatedProduct, catIndex)
       showToast(this.toastCtrl, response.message, 3000)
