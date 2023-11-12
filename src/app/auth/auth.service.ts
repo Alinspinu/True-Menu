@@ -6,6 +6,7 @@ import { Preferences } from "@capacitor/preferences";
 import User from "./user.model";
 import { CartService } from "../cart/cart.service";
 import { TabsService } from "../tabs/tabs.service";
+import { Survey } from "./register/register.page";
 
 
 export interface AuthResData {
@@ -25,7 +26,7 @@ export class AuthService{
   baseUrlHeroku: string = 'https://www.cafetish.com/api/';
   newUrl: string = 'https://flow-api-394209.lm.r.appspot.com/auth/';
   activeLogoutTimer!: any;
-  emptyUser: User = {_id: '', name:'',token:'',cashBack: -1, admin: 0, email:'', tokenExpirationDate: '', status: ''};
+  emptyUser: User = {_id: '', name:'',token:'',cashBack: -1, admin: 0, email:'', tokenExpirationDate: '', status: '', telephone: ''};
 
   private user = new BehaviorSubject<User>(this.emptyUser);
 
@@ -41,6 +42,7 @@ export class AuthService{
             email: string,
             tokenExpirationDate: any,
             status: string,
+            telephone: string,
           };
           const tokenDate = new Date(userData.tokenExpirationDate).getTime() - new Date().getTime();
           if(tokenDate <= 0){
@@ -65,23 +67,23 @@ export class AuthService{
 
   constructor(private http: HttpClient, private cartSrv: CartService, private tabSrv: TabsService){}
 
-  onLogin(name: string, password: string){
+  onLogin(email: string, password: string){
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
       })
     };
-    return this.http.post<any>(`${this.newUrl}login`,{name, password}, httpOptions)
+    return this.http.post<any>(`${this.newUrl}login`,{email, password}, httpOptions)
         .pipe(tap(this.setAndStoreUserData.bind(this)));
   }
 
-  onRegister(name: string, email: string, password: string, confirmPassword: string, firstCart: string){
+  onRegister(name: string, email: string, tel: string, password: string, confirmPassword: string, firstCart: string, survey: string){
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
       })
     };
-    return this.http.post<{message: string, id: string}>(`${this.newUrl}register`,{name, email, password, confirmPassword, firstCart}, httpOptions);
+    return this.http.post<{message: string, id: string}>(`${this.newUrl}register`,{name, email, password, confirmPassword, firstCart, survey, tel}, httpOptions);
   };
 
   verifyToken(token: string){
@@ -112,6 +114,7 @@ export class AuthService{
         email: userData.email,
         tokenExpirationDate: expirationDate,
         status: userData.status,
+        telephone: userData.telephone
       });
       const tokenDate = new Date(expirationDate).getTime() - new Date().getTime();
       this.aoutoLogout(tokenDate);

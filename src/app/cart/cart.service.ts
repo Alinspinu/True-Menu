@@ -21,7 +21,21 @@ export class CartService{
 
   private cartState!: BehaviorSubject<Cart>;
   public cartSend$!: Observable<Cart>;
-  emptyCart: Cart = {_id: '', total: 0, products: [], masa: 0, cashBack: 0, productCount: 0, tips: 0, totalProducts: 0, userId: '', toGo: false, pickUp: false};
+  emptyCart: Cart = {
+    _id: '',
+    total: 0,
+    products: [],
+    masa: 0,
+    cashBack: 0,
+    productCount: 0,
+    tips: 0,
+    totalProducts: 0,
+    userId: '',
+    toGo: false,
+    pickUp: false,
+    userName: '',
+    userTel: ''
+  };
   cart: Cart = this.emptyCart;
 
 
@@ -36,7 +50,8 @@ export class CartService{
 
   saveCartProduct(product: CartProduct){
     this.cart.productCount++
-    const existingProduct = this.cart.products.find((p: CartProduct) => p.name === product.name);
+    const existingProduct = this.cart.products.find((p: CartProduct) =>(p.name === product.name) && this.arraysAreEqual(p.toppings, product.toppings));
+
     if (existingProduct) {
       existingProduct.quantity = product.quantity + existingProduct.quantity;
       existingProduct.total = (existingProduct.quantity) * existingProduct.price;
@@ -45,6 +60,18 @@ export class CartService{
     }
     this.cartState.next(this.cart);
   };
+
+  removeCartProd(product: CartProduct){
+    this.cart.productCount--
+    const productIndex = this.cart.products.findIndex((p: CartProduct) => p.name === product.name);
+    this.redOne(productIndex)
+  }
+
+  removeAmbalaj(product: CartProduct){
+    const productIndex = this.cart.products.findIndex((p: CartProduct) => p.name === product.name);
+    console.log(this.cart.productCount)
+    this.removeProduct(productIndex, product.quantity)
+  }
 
   get cart$(){
   return from(Preferences.get({key: 'cart'})).pipe(map(data=> {
@@ -95,8 +122,8 @@ export class CartService{
     this.cartState.next(this.cart);
 };
 
-checkAvailable(subId: string[], prodId: string[]){
-  return this.http.post<{message: string}>(`${this.newUrl}api-true/check-product`,{subProdId: subId, prodId: prodId});
+checkAvailable(subId: string[], prodId: string[], toppings: string[]){
+  return this.http.post<{message: string}>(`${this.newUrl}api-true/check-product`,{subProdId: subId, prodId: prodId, toppings: toppings});
 };
 
 getToken(total: number) {
@@ -125,8 +152,10 @@ updateCashBack(cash: number){
 addTips(tips: number){
   this.cart.tips = tips;
   this.cartState.next(this.cart);
-  console.log(this.cart)
 };
+
+
+arraysAreEqual = (arr1: string[], arr2: string[]) => arr1.length === arr2.length && arr1.every((value, index) => value === arr2[index]);
 
 };
 

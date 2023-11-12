@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()">Cancel</ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Add Topping</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="confirm()" type="submit" [disabled]="!form.valid" [strong]="true">Confirm
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <form [formGroup]="form">
+    <ion-row>
+      <ion-col size-s>
+        <ion-item>
+          <ion-input type="text" label="Name" labelPlacement="floating" fill="outline" formControlName="name"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input  mode="ios" type="number" label="Price" labelPlacement="floating" fill="outline" formControlName="price"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input  mode="ios" type="number" label="UM" labelPlacement="floating" fill="outline" formControlName="um"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input  mode="ios" type="number" label="Qty" labelPlacement="floating" fill="outline" formControlName="qty"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </form>
+</ion-content>

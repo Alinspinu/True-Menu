@@ -1,9 +1,13 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title class="ion-no-padding ion-text-start">
-      <img src="../../assets/icon/logo-stanga.png" alt="logo-icon">
+      <img [src]="imgPath" alt="logo-icon" *ngIf="imgPath.length">
+      <ion-label class="title">{{title}}</ion-label>
     </ion-title>
-  <ion-buttons slot="end">
+  <ion-buttons slot="end" *ngIf="user">
+    <ion-button (click)="blackList()" *ngIf="isAdmin">
+      <ion-icon class="dark" name="close-sharp"></ion-icon>
+    </ion-button>
     <ion-button (click)="showActions()" *ngIf="isAdmin">
       <ion-icon class="dark" name="add-outline"></ion-icon>
     </ion-button>
@@ -14,9 +18,10 @@
       <ion-icon class="dark" name="log-out-outline"></ion-icon>
     </ion-button>
   </ion-buttons>
-  <ion-buttons slot="end">
+  <ion-buttons slot="end" *ngIf="user">
     <ion-menu-button>
-      <img id="like" src="assets/icon/black-social-media.png" alt="">
+      <ion-icon name="key-outline" *ngIf="user.admin === 1"></ion-icon>
+      <img id="like" src="assets/icon/black-social-media.png" alt="" *ngIf="user.admin === 0">
     </ion-menu-button>
   </ion-buttons>
 <!-- <ion-title style="font-size:18px;" class="ion-no-padding ion-text-center">{{tab | capitalize}}</ion-title> -->

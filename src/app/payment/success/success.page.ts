@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, ToastController } from '@ionic/angular';
+import { IonicModule } from '@ionic/angular';
 import { Preferences } from '@capacitor/preferences'
 import { Cart } from 'src/app/cart/cart.model';
 import { HttpClient } from '@angular/common/http';
@@ -48,7 +48,9 @@ export class SuccessPage implements OnInit {
   cart!: Cart;
   order!: Order;
   errorMessage: string = "Ceva nu a mers cum trebuie!";
-  orderNumber: number = 0
+  orderNumber: number = 0;
+  payOnSite: boolean = false;
+  payOnline: boolean = false;
 
 
   constructor(
@@ -72,6 +74,8 @@ export class SuccessPage implements OnInit {
     const lang = params.get('lang');
     const eventId = params.get('eventId');
     const eci = params.get('eci');
+    const payOnSite = params.get('pay-on');
+    console.log(userId, payOnSite)
     if(userId && ucbb && ccb){
       this.crtSrv.checkUser(userId, +ccb, +ucbb).subscribe(res => {
 
@@ -88,6 +92,7 @@ export class SuccessPage implements OnInit {
           const parsedData = JSON.parse(data.value);
           this.crtSrv.checkUser(parsedData.userId, +parsedData.cartCashBack, +parsedData.userCashBackBefore).subscribe(res => {
             if(res.message === "User verified"){
+              this.payOnline = true
               this.getCart();
           } else {
             this.isLoading = false
@@ -96,10 +101,16 @@ export class SuccessPage implements OnInit {
           };
           });
         } else {
+          this.payOnline = true
           this.getCart();
         };
       });
+    } else if(userId && payOnSite === userId){
+      this.payOnSite = true
+      this.getCart()
     } else {
+      // this.getCart();
+      // this.payOnline = true
       this.isLoading = false
       this.errorMessage = 'Nu ai ce cauta aici, mergi înapoi la magazin! :)';
       this.error = true;
@@ -111,7 +122,6 @@ export class SuccessPage implements OnInit {
     const cart = Preferences.get({ key: 'cart' }).then(res => {
       if (res.value) {
         const cartObject: Cart = JSON.parse(res.value);
-        console.log(cartObject)
         this.createOrder(cartObject);
       } else { console.log('No cart Found')};
     });
@@ -126,6 +136,7 @@ export class SuccessPage implements OnInit {
         quantity: product.quantity,
         price: product.price,
         total: product.total,
+        toppings: product.toppings
       }
       products.push(orderProduct);
     }
@@ -141,6 +152,10 @@ export class SuccessPage implements OnInit {
         total: cart.total,
         products: products,
         user: cart.userId,
+        payOnSite: this.payOnSite,
+        payOnline: this.payOnline,
+        userName: cart.userName,
+        userTel: cart.userTel
       };
      return this.saveOrder(order)
     } else {
@@ -154,13 +169,19 @@ export class SuccessPage implements OnInit {
         cashBack: cart.cashBack,
         total: cart.total,
         products: products,
+        payOnSite: this.payOnSite,
+        payOnline: this.payOnline,
+        userName: 'Neînregistrat',
+        userTel: 'Neînregistrat',
       };
       return this.saveOrder(order);
     };
   };
 
   saveOrder(order: Order) {
-    this.http.post<any>(`${this.newUrl}save-order`, order).subscribe(res => {
+    console.log("success",order)
+    this.http.post<any>(`${this.baseUrl}save-order`, order).subscribe(res => {
+      console.log("success-in-function")
       if(res.message === 'Order Saved Without a user'){
         this.getTime(res.orderId)
         this.orderNumber = res.orderIndex

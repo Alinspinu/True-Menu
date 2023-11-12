@@ -18,7 +18,6 @@
 </ion-header>
 <ion-content [fullscreen]="true">
   <ion-badge slot="fixed" class="cash-bagde" *ngIf="isLoggedIn">
-    <!-- <ion-icon name="cash-outline" id="cash-icon"></ion-icon> -->
     <span>{{user.cashBack}} lei</span>
     </ion-badge>
   <ion-grid>
@@ -32,36 +31,36 @@
             <div style="width:100%;" *ngIf="isAdmin || (product.available && !isAdmin)">
               <div class="prod-name-row">
                 <span class="name">{{product.name}}<ion-icon *ngIf="isAdmin" name="create-outline" style="font-size: 22px;"(click)="editProd(product._id, z)"></ion-icon></span>
-                <span class="qty">{{product.qty}}</span>
+                <span class="qty" *ngIf="!isAdmin">{{product.qty}}</span>
               </div>
-              <div class="sub-prod" *ngIf="product.subProducts.length">
+              <ion-row *ngIf="isAdmin">
+                <ion-col size-xs="5">
+                   <ion-button size="small" [disabled]="product.available" (click)="activateProduct(product._id, z, 99)">Activează</ion-button>
+                </ion-col>
+                <ion-col size-xs="4">
+                  <ion-button size="small" [disabled]="!product.available" (click)="deactivateProduct(product._id, z, 99)">Dezactivează</ion-button>
+                </ion-col>
+              </ion-row>
+              <div class="sub-prod" *ngIf="product.subProducts.length && isAdmin">
                 <div *ngFor="let subProd of product.subProducts; let i = index;" >
-                    <ion-row class="sub-prod-row" *ngIf="isAdmin || (subProd.available && !isAdmin)">
-                      <ion-col size-xs="6" class="ion-no-padding name-col" >
+                    <ion-row class="sub-prod-row">
+                      <ion-col size-xs="6" class="ion-no-padding name-col">
                         <span class="sub-name" [ngClass]="{'small': product.subProducts.length > 2}">{{subProd.name}}</span>
                       </ion-col>
-                      <ion-col size-xs="4" class="ion-no-padding price-col ion-text-center" *ngIf="!isAdmin">
-                        <span class="sub-price">{{subProd.price}} Lei</span>
-                      </ion-col>
-                      <ion-col size-xs="2" class="ion-no-padding cart-col" (click)="saveToCart(subProd, z)" *ngIf="!isAdmin">
-                        <img src="assets/icon/shopping.png" class="sub-cart" alt="cart">
-                        <div class="cart-wrapper" *ngIf="subProd.quantity > 0">
-                          <span class="badge-sub-prod">{{subProd.quantity}}</span>
-                        </div>
-                      </ion-col>
-                      <ion-col size-xs="1" class="ion-no-padding edit" *ngIf="isAdmin">
+
+                      <ion-col size-xs="1" class="ion-no-padding edit">
                         <ion-icon name="create-outline" style="font-size: 22px;" (click)="editSub(subProd._id, z, i)"></ion-icon>
                       </ion-col>
                       <ion-col size-xs="2" class="ion-no-padding">
-                         <ion-button size="small" color="primary" [disabled]="subProd.available" (click)="activateProduct(subProd._id, z, i)" style="font-size:12px ;" *ngIf="isAdmin">Act</ion-button>
+                         <ion-button size="small" color="primary" [disabled]="subProd.available" (click)="activateProduct(subProd._id, z, i)" style="font-size:12px ;">Act</ion-button>
                       </ion-col>
                       <ion-col size-xs="2" class="ion-no-padding">
-                        <ion-button size="small" color="primary" [disabled]="!subProd.available" (click)="deactivateProduct(subProd._id, z, i)" style="font-size:12px ;" *ngIf="isAdmin">Dez</ion-button>
+                        <ion-button size="small" color="primary" [disabled]="!subProd.available" (click)="deactivateProduct(subProd._id, z, i)" style="font-size:12px ;">Dez</ion-button>
                       </ion-col>
                     </ion-row>
                   </div>
               </div>
-              <div class="prod-description"*ngIf="!product.subProducts.length">
+              <div class="prod-description" >
                 <div class="description-container">
                   <span class="desc">{{product.description}}</span>
                 </div>
@@ -75,14 +74,6 @@
                       <div class="cart-wrapper"*ngIf="product.quantity > 0">
                         <span class="badge-prod">{{product.quantity}}</span>
                       </div>
-                    </ion-col>
-                  </ion-row>
-                  <ion-row *ngIf="isAdmin">
-                    <ion-col size-xs="5">
-                       <ion-button size="small" [disabled]="product.available" (click)="activateProduct(product._id, z, 99)">Activează</ion-button>
-                    </ion-col>
-                    <ion-col size-xs="4">
-                      <ion-button size="small" [disabled]="!product.available" (click)="deactivateProduct(product._id, z, 99)">Dezactivează</ion-button>
                     </ion-col>
                   </ion-row>
                 </ion-grid>

@@ -34,6 +34,13 @@ export class Product {
     salts: number,
     protein: number,
   },
+  public toppings: {
+    name: string,
+    price: number,
+    coffee: boolean,
+    qty: string,
+    um: string
+  }[],
   public ingredients:{quantity: number, ingredient: Ingredient}[],
   public paring: Product[]
   ){};

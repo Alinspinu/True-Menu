@@ -1,0 +1,75 @@
+
+
+ion-card-title{
+  font-family: NoirProLight !important;
+  text-align: end;
+  // color: var(--ion-color-primary-contrast) !important;
+}
+
+h5{
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+
+
+
+ion-title{
+  font-family: NoirPro !important;
+  --color: var(--ion-color-primary-contrast) !important;
+}
+
+ion-toolbar{
+  --background: #f4ede6;
+}
+ion-content {
+  --background: var(--ion-color-tertiary) !important;
+}
+
+.entry{
+  display: flex;
+  flex-direction: row;
+}
+.description{
+  font-family: NoirProLight !important;
+  flex: 50%;
+  margin: 5px;
+}
+
+.tip{
+  font-family: NoirPro !important;
+  text-align: start;
+  margin: 5px;
+  flex: 20%;
+  color: green;
+}
+.amount{
+  font-family: NoirPro !important;
+  text-align: end;
+  flex: 30%;
+  margin: 5px;
+  color: green;
+}
+
+.red{
+  color: red;
+}
+
+.date{
+  font-family: NoirPro !important;
+  font-size: 14px;
+  color: rgb(76, 74, 74);
+}
+
+.cash{
+  text-align: end;
+  font-family: NoirPro !important;
+  font-size: 20px;
+  color: rgb(76, 74, 74);
+}
+
+
+@media(max-width: 300px) {
+    ion-label{
+      font-size: 13px !important;
+    }
+}

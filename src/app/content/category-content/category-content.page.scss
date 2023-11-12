@@ -1,6 +1,7 @@
 
 span, p, ion-back-button{
   font-family: NoirPro !important;
+  color: var( --ion-color-primary-tint);
 }
 
 ion-toolbar{
@@ -15,15 +16,10 @@ ion-title{
 }
 
 
-span{
-  color: var( --ion-color-primary-tint);
-}
-
 .small{
   font-size: 14px !important;
   margin-top: 3px !important;
  }
-
 
 .prod-name-row{
   display: flex;
@@ -34,7 +30,6 @@ span{
 .product-row{
   margin-bottom: 9px;
 }
-
 
 .description{
   display: flex;
@@ -84,10 +79,12 @@ img{
   margin-top: auto;
 }
 .sub-cart{
-  height: 19px;
-  width: 19px;
+  height: 32px;
+  width: 32px;
   margin-top: auto;
-  box-shadow: none !important;
+  background-color: var(--ion-color-danger);
+  padding: 4px;
+  // box-shadow: none !important;
 }
 
 .cart-col{
@@ -109,11 +106,13 @@ img{
   color: white;
   padding: 3px 6px;
   position: relative;
-  bottom: 10px;
-  left: 17px;
+  bottom: 18px;
+  left: 18px;
   font-size: 10px !important;
   font-weight:bolder;
 }
+
+
 
 
 .badge-prod{
@@ -125,9 +124,9 @@ img{
   color: white;
   padding: 3px 6px;
   position: relative;
-  bottom: 14px;
-  left: 14px;
-  font-size: 10px !important;
+  bottom: 25px;
+  left: 25px;
+  font-size: 16px !important;
   font-weight:bolder;
 }
 
@@ -141,10 +140,10 @@ ion-note{
   box-shadow: none !important;
 }
 
-
 .price{
   font-size: 18px;
 }
+
  .qty{
   font-family: NoirProLight !important;
   font-size: 13px;
@@ -227,7 +226,6 @@ ion-badge[slot="fixed"]{
 .price{
   font-size: 14px;
 }
-
 
 }
 

@@ -58,7 +58,9 @@ export class AddIngredientPage implements OnInit, OnDestroy {
   };
 
   ngOnDestroy(): void {
-    this.ingredientSub.unsubscribe()
+    if(this.ingredientSub){
+      this.ingredientSub.unsubscribe()
+    }
   }
   setupForm() {
     this.form = new FormGroup({

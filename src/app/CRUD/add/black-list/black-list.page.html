@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="update()">Cancel</ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Add to Black List</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="update()" type="submit" [strong]="true">Update
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-input aria-label="Primary input" color="primary" placeholder="Adauga" [(ngModel)]="topping"></ion-input>
+          <ion-buttons slot="end">
+            <ion-button size="large" (click)="addToList()">
+              <ion-icon name="add-outline"></ion-icon>
+              Adauga</ion-button>
+          </ion-buttons>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row class="ion-margin-top" *ngIf="toppingsList.length">
+      <ion-col>
+        <ion-item *ngFor="let topping of toppingsList; let i =index">
+          <ion-buttons slot="end">
+            <ion-button size="small" (click)="removeTopping(i)">
+              <ion-icon name="close-outline"></ion-icon>
+              Scoate
+            </ion-button>
+          </ion-buttons>
+          {{ topping}}
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

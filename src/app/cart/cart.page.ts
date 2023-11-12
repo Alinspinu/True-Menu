@@ -1,7 +1,7 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, ToastController } from '@ionic/angular';
+import { AlertController, IonicModule, ToastController } from '@ionic/angular';
 import { CartService } from './cart.service';
 import { Cart } from './cart.model';
 import { Subscription } from 'rxjs';
@@ -18,7 +18,18 @@ import { CashBackPage } from './cash-back/cash-back.page';
 import { Router } from '@angular/router';
 import { showToast } from '../shared/utils/toast-controller';
 import { TimerPage } from '../shared/timer/timer.page';
+import { InviteAuthPage } from '../auth/invite-auth/invite-auth.page';
 
+
+interface Data {
+  ing: {
+    _id: string,
+    qty: number
+  }[],
+  mode: string,
+  ingId: string,
+  prodData: {_id: string, index: number}
+}
 
 
 @Component({
@@ -51,7 +62,8 @@ export class CartPage implements OnInit, OnDestroy {
   authSub!: Subscription;
   toGo: boolean = false;
   pickUp: boolean = false;
-  // categoryIndex!: String;
+  emptyData: Data = {ing:[], mode:'', ingId: '', prodData:{_id:'', index: -1}}
+
 
 
   constructor(
@@ -59,6 +71,7 @@ export class CartPage implements OnInit, OnDestroy {
     private tabSrv: TabsService,
     private toastCtrl: ToastController,
     private authSrv: AuthService,
+    private alertController: AlertController,
     private router: Router,
     @Inject(ActionSheetService) private actionSheet: ActionSheetService,
     ) { }
@@ -66,7 +79,7 @@ export class CartPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.getCart();
     this.getUser();
-    this.detectColorScheme();
+    this.detectColorScheme()
   };
 
   goToProductView(id: string){
@@ -96,9 +109,12 @@ export class CartPage implements OnInit, OnDestroy {
     if(this.user) {
       if(this.user._id.length){
         this.cart.userId = this.user._id;
+        this.cart.userName = this.user.name;
+        this.cart.userTel = this.user.telephone
       }
     }
     const cart = JSON.stringify(this.cart);
+    console.log(this.cart)
     Preferences.set({key: 'cart', value: cart});
   }
 
@@ -151,15 +167,30 @@ export class CartPage implements OnInit, OnDestroy {
       this.pickUp = false;
       this.enableOrder = false
     }
+    this.selectToGo(event)
   }
 
   selectToGo(event: any) {
     if(event.detail.checked){
       this.toGo = true;
+      for(let product of this.cart.products){
+        if(product.payToGo){
+          this.cartService.saveCartProduct(this.tabSrv.getAmbalaj(product.quantity))
+        }
+      }
     } else {
+      for(let product of this.cart.products){
+        if(product.name === "Ambalaj"){
+          this.cartService.removeAmbalaj(this.tabSrv.getAmbalaj(product.quantity))
+        }
+      }
       this.toGo = false;
     }
   }
+
+  // getAmbalaj(){
+  //  const amb = this.tabSrv.getAmbalaj()
+  // }
 
   saveData(userId: string, userCashBackBefore: number, cartCashBack: number){
       const data = JSON.stringify({
@@ -204,21 +235,37 @@ export class CartPage implements OnInit, OnDestroy {
 
 
   async getToken() {
-    this.checkProductsAvalability();
+    // this.presentAlert()
+    if(this.cart.total === 0 && this.cart.totalProducts === this.cart.cashBack){
+      this.checkProductsAvalability()
+    } else {
+      this.saveCart()
+      this.presentAlert()
+    }
   };
 
   checkProductsAvalability(){
     this.isLoading = true;
     let idProd = [];
     let idSub = [];
+    let toppings: string[] = [];
     for(let product of this.cart.products){
       if(product.name.includes('-')){
         idSub.push(product._id);
       } else {
         idProd.push(product._id);
       };
+      if(product.toppings.length){
+
+        product.toppings.forEach(el => {
+          const topping = el.trim().replace(/\s+/g, '').toLocaleLowerCase()
+          if(!toppings.includes(topping)){
+            toppings.push(topping)
+          }
+        })
+      }
     };
-    this.cartService.checkAvailable(idSub, idProd).subscribe(res => {
+    this.cartService.checkAvailable(idSub, idProd, toppings).subscribe(res => {
       if(res.message === 'All good'){
         if(this.user._id.length){
           return this.cartService.checkUserCashBack(this.cart.cashBack, this.user._id, this.cart.total).subscribe(res => {
@@ -234,7 +281,7 @@ export class CartPage implements OnInit, OnDestroy {
               })
             } else if(res.message === 'Value 0') {
               this.saveCart();
-              return window.location.href = `https://true-meniu.web.app/success?user=${res.userId}&ucbb=${res.userCashBackBefore}&ccb=${res.cartCashBack}`;
+              return window.location.href = `http://localhost:8100/success?user=${res.userId}&ucbb=${res.userCashBackBefore}&ccb=${res.cartCashBack}`;
             } else {
               this.isLoading = false;
               return showToast(this.toastCtrl, res.message, 4000);
@@ -345,6 +392,53 @@ remove(index: number, qty: number, name: string, category: string, sub: boolean)
     this.userSub.unsubscribe();
     this.admin.unsubscribe();
   };
+
+
+  async presentAlert() {
+    const alert = await this.alertController.create({
+      header: 'Plată',
+      message: `Plătești Online sau în Locație?`,
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Ok',
+          role: 'confirm',
+        },
+      ],
+      inputs: [
+        {
+          label: 'Online',
+          type: 'radio',
+          value: 'online',
+        },
+        {
+          label: 'Locatie',
+          type: 'radio',
+          value: 'locatie',
+        },
+      ]
+    });
+    await alert.present();
+    const result = await alert.onDidDismiss();
+    if (result.role === 'confirm') {
+       if(result.data.values === 'online'){
+        this.checkProductsAvalability();
+       } else if(result.data.values === 'locatie') {
+        if(this.isLoggedIn){
+          this.saveCart()
+          return window.location.href = `http://localhost:8100/success?user=${this.user._id}&pay-on=${this.user._id}`;
+        } else {
+          return this.actionSheet.openModal(InviteAuthPage, this.emptyData)
+        }
+       }
+      }
+  }
+
+
+
 
 }
 

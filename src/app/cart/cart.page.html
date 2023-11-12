@@ -22,20 +22,26 @@
       <ion-col size-md="6" offset-md="3" size-lg="4" offset-lg="4">
         <ion-list class="ion-no-padding" *ngIf="cart">
           <ion-item-sliding *ngFor="let product of cart.products; let i = index" class="ion-no-padding">
-          <ion-item class="ion-no-padding" color="tertiary" (click)="goToProductView(product._id)">
-            <ion-thumbnail slot="start" class="prod-img">
-              <img [src]="product.imgPath" alt="Product image" >
-            </ion-thumbnail>
-            <div style="display: flex; flex-direction: row; width: 100%; align-items: baseline;">
-              <ion-label class="ion-text-wrap cart-prod-name" style="flex:50%">{{product.name}}</ion-label>
+          <ion-item class="ion-no-padding" color="tertiary" (click)="goToProductView(product._id)" lines="none">
+                <ion-thumbnail slot="start" class="prod-img">
+                  <img [src]="product.imgPath" alt="Product image" >
+                </ion-thumbnail>
+                <div style="display: flex; flex-direction: row; width: 100%; align-items: baseline;;">
+                  <ion-label class="ion-text-wrap cart-prod-name" style=" flex: 50%; padding-right: 5px;">{{product.name}}</ion-label>
 
-              <ion-label class="ion-text-wrap cart-prod-qty" style="flex: 30%;">{{product.quantity}} X {{product.price}} Lei</ion-label>
+                  <ion-label class="ion-text-wrap cart-prod-qty" style="flex: 30%;">{{product.quantity}} X {{product.price}} Lei</ion-label>
 
-              <ion-label class="ion-text-wrap cart-prod-total" style="flex: 16%">{{product.total}} Lei</ion-label>
+                  <ion-label class="ion-text-wrap cart-prod-total" style="flex: 16%">{{product.total}} Lei</ion-label>
 
-              <ion-icon name="chevron-back-outline" class="slide-icon" style="flex:4%"></ion-icon>
-            </div>
+                  <ion-icon name="chevron-back-outline" class="slide-icon" style="flex:4%"></ion-icon>
+                </div>
           </ion-item>
+          <div class="options" *ngIf="product.toppings.length">
+            <div class="toppings-wrapper">
+              <ion-label *ngFor="let topping of product.toppings" class="toppings">+{{topping}}</ion-label>
+            </div>
+          </div>
+          <div class="line"></div>
             <ion-item-options class="ion-no-padding" >
               <ion-item-option (click)="add(i, product.name, product.category, product.sub)">
                 <ion-icon name="add-outline"></ion-icon>
@@ -48,6 +54,8 @@
               </ion-item-option>
             </ion-item-options>
           </ion-item-sliding>
+
+
 
         <ion-item class="ion-no-padding">
           <ion-grid class="ion-no-padding">
@@ -86,25 +94,25 @@
             </ion-grid>
           </ion-item>
           <!-- <div class="space"></div> -->
-          <ion-item class="ion-no-padding" color="tertiary" *ngIf="!pickUp">
+          <!-- <ion-item class="ion-no-padding" color="tertiary" *ngIf="!pickUp">
             <span class="light">Introdu numărul mesei pentru a primi comanda!</span>
             <ion-input type="number" color="tertiary"   class="custom" [(ngModel)]="inputValue" placeholder="00" (input)="onInputChange($event)"></ion-input>
-          </ion-item>
-          </ion-list>
+          </ion-item> -->
+        </ion-list>
           <ion-row>
             <ion-col size-xs="12" class="ion-text-end">
                 <div class="toGoPickUp-wrapper">
-                  <ion-checkbox justify="end" labelPlacement="end" (ionChange)="selectPickUp($event)">Vin eu să ridic comanda!</ion-checkbox>
+                  <ion-checkbox justify="end" labelPlacement="end" (ionChange)="selectPickUp($event)">La pachet!</ion-checkbox>
                 </div>
             </ion-col>
           </ion-row>
-          <ion-row>
+          <!-- <ion-row>
             <ion-col size-xs="12" class="ion-text-end">
                 <div class="toGoPickUp-wrapper">
                   <ion-checkbox justify="end" labelPlacement="end" (ionChange)="selectToGo($event)">Vreau la pachet!</ion-checkbox>
                 </div>
             </ion-col>
-          </ion-row>
+          </ion-row> -->
     <ion-row class="ion-no-padding">
       <ion-col size-xs="12" class="ion-text-end">
         <ion-button class="tips" id="tips" size="small" (click)="tipsModal()">Lasă tips</ion-button> <br>

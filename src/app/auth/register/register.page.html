@@ -3,20 +3,19 @@
     <ion-buttons slot="start">
       <ion-button (click)="triggerEscape()">
         <ion-icon name="arrow-back-outline" style="font-size: 22px"></ion-icon>
-        <!-- <span style="font-size: 20px">BACK</span> -->
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="auth-wrapper">
-  <div class="header">
+  <div class="header" [ngClass]="{'hide': showQuestion}">
     <h4 class="subtitle">Register</h4>
   </div>
   <ion-grid>
     <form [formGroup]="form">
   <ion-row>
-    <ion-col >
+    <ion-col [ngClass]="{'hide': showQuestion}">
       <ion-item lines="none">
         <ion-input label="Name" labelPlacement="floating"  type="text" name="name" size=1 formControlName="name">
         </ion-input>
@@ -25,7 +24,11 @@
         <ion-input label="Email" labelPlacement="floating"  type="email" name="email" email formControlName="email">
         </ion-input>
       </ion-item>
-      <ion-note *ngIf="!form.get('email')?.valid && form.get('email')?.touched">Invalid email</ion-note>
+      <ion-note *ngIf="!form.get('email')?.valid && form.get('email')?.touched" color="primary">Invalid email</ion-note>
+      <ion-item lines="none">
+        <ion-input label="Telephone" labelPlacement="floating"  type="text" name="tel"  formControlName="tel">
+        </ion-input>
+      </ion-item>
         <ion-item lines="none">
           <ion-input
           label="Password"
@@ -51,20 +54,79 @@
           ></ion-input>
           <ion-icon [name]="iconName" slot="end" (click)="togglePassword()"></ion-icon>
         </ion-item>
-        <ion-note *ngIf="form.hasError('match_error')">
+        <ion-note *ngIf="form.hasError('match_error')" color="primary">
           Passwords don't match
         </ion-note>
       </ion-col>
-    </ion-row>
-    <ion-row [ngClass]="{'hide': !form.valid}">
+  </ion-row>
+    <ion-row [ngClass]="{'hide': !form.valid || showQuestion}">
       <ion-col size-xs="12" >
           <div class="termeni-wrapper">
-            <ion-checkbox justify="end" labelPlacement="end" (ionChange)="checked($event)" [ngClass]="{'hide': !form.valid}">Am citit și sunt de acord cu</ion-checkbox>
+            <ion-checkbox id="check-terms" justify="end" labelPlacement="end" (ionChange)="checked($event)" [ngClass]="{'hide': !form.valid}">Am citit și sunt de acord cu</ion-checkbox>
             <a id="termeni" (click)="goTerms()" [ngClass]="{'hide': !form.valid}">termenii și condițiile</a>
           </div>
       </ion-col>
     </ion-row>
+
+    <div class="header" [ngClass]="{'hide': !showQuestion}">
+      <h4 class="title" [ngClass]="{'hide': !showFood}">Ajută-ne să-ți oferim ceea ce-ți dorești!</h4>
+      <h4 class="sub">{{question}}</h4>
+    </div>
+
+    <ion-list class="ion-no-padding ion-no-margin" [ngClass]="{'hide': !showFood}">
+      <ion-item *ngFor="let foodAnswer of foodAnswers;" lines="none" color="secondary" class="question" >
+        <ion-checkbox slot="start" labelPlacement="end" (ionChange)="onChange($event, foodAnswer, 'food')">{{ foodAnswer }}</ion-checkbox>
+      </ion-item>
+    </ion-list>
+    <ion-list class="ion-no-padding ion-no-margin" [ngClass]="{'hide': !showFoodPrice}">
+      <ion-item *ngFor="let price of foodPrice;" lines="none" color="secondary" class="question" >
+        <ion-checkbox slot="start" labelPlacement="end" (ionChange)="onChange($event, price, 'food-price')">{{ price }}</ion-checkbox>
+      </ion-item>
+    </ion-list>
+
+    <ion-list class="ion-no-padding ion-no-margin hide" [ngClass]="{'hide': !showCoffee}">
+      <ion-item *ngFor="let coffeeAnswer of coffeeAnswers;" lines="none" color="secondary" class="question" >
+        <ion-checkbox slot="start" labelPlacement="end" (ionChange)="onChange($event, coffeeAnswer, 'coffee')">{{ coffeeAnswer }}</ion-checkbox>
+      </ion-item>
+    </ion-list>
+    <ion-list class="ion-no-padding ion-no-margin" [ngClass]="{'hide': !showCoffeePrice}">
+      <ion-item *ngFor="let price of coffeePrice;" lines="none" color="secondary" class="question" >
+        <ion-checkbox slot="start" labelPlacement="end" (ionChange)="onChange($event, price, 'coffee-price')">{{ price }}</ion-checkbox>
+      </ion-item>
+    </ion-list>
+
+
     <ion-row>
+      <ion-col>
+        <ion-button color="primary" (click)="openSurvey('survey')" class="ion-padding submit" size="large" expand="full" [disabled]="!enableRegister" [ngClass]="{'hide': hideSurveyButton}">
+          <ion-label>
+            Continue
+          </ion-label>
+        </ion-button>
+        <ion-button color="primary" (click)="openSurvey('food')" class="ion-padding submit" size="large" expand="full" [ngClass]="{'hide': !showFood}">
+          <ion-label>
+            Continue
+          </ion-label>
+        </ion-button>
+        <ion-button color="primary" (click)="openSurvey('food-price')" class="ion-padding submit" size="large" expand="full" [ngClass]="{'hide': !showFoodPrice}">
+          <ion-label>
+            Continue
+          </ion-label>
+        </ion-button>
+        <ion-button color="primary" (click)="openSurvey('coffee')" class="ion-padding submit" size="large" expand="full" [ngClass]="{'hide': !showCoffee}">
+          <ion-label>
+            Continue
+          </ion-label>
+        </ion-button>
+        <ion-button color="primary" (click)="openSurvey('coffee-price')" class="ion-padding submit" size="large" expand="full" [ngClass]="{'hide': !showCoffeePrice}">
+          <ion-label>
+            Continue
+          </ion-label>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row [ngClass]="{'hide': !register}">
       <ion-col>
         <ion-button color="primary" (click)="onSubmit()" class="ion-padding submit" size="large" expand="full" [disabled]="!enableRegister">
           <ion-label>

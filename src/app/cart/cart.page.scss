@@ -1,6 +1,11 @@
 ion-content{
   --background:var(--ion-color-tertiary);
 
+
+}
+
+ion-label{
+  font-family: NoirProLight !important;
 }
 
 ion-button.order{
@@ -25,6 +30,10 @@ ion-button.register{
   --border-radius: 0;
   --color: var(--ion-color-primary);
   font-weight: 700;
+}
+
+ion-checkbox{
+  color: var(--ion-color-primary-contrast);
 }
 
 .empty-basket{
@@ -180,8 +189,27 @@ ion-button, p{
   font-size: 15px;
 }
 
-.cart-prod-name{
-  padding-right: 5px;
+
+.toppings{
+  font-family: NoirPro !important;
+  font-size: 14px;
+  color: var(--ion-color-primary-contrast);
+}
+
+.toppings-wrapper{
+  margin-left: auto;
+}
+
+.options{
+  display: flex;
+  width: 100%;
+  background: var(--ion-color-tertiary);
+}
+
+.line{
+  width: 100%;
+  height: 1.2px;
+  background-color: var(--ion-color-tertiary-shade);
 }
 
 
@@ -189,6 +217,7 @@ ion-button, p{
   font-family: NoirProLight !important;
   font-size: 14px;
   margin: 0;
+  color: var(--ion-color-primary-contrast);
 }
 
 

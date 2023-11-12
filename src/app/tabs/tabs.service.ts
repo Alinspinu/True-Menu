@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, map, Observable, take, tap} from "rxjs";
-import { Category, Product, SubProduct} from "../CRUD/add/category.model";
+import { BehaviorSubject, Observable, take, tap} from "rxjs";
+import { Category, Product} from "../CRUD/add/category.model";
 
 @Injectable({providedIn: 'root'})
 
@@ -35,6 +35,7 @@ export class TabsService{
     additives: [],
     allergens: [],
     paring: [],
+    toppings: [],
   }
   private categoryState!: BehaviorSubject<Category[]>;
   public categorySend$!: Observable<Category[]>;
@@ -63,9 +64,29 @@ export class TabsService{
   fetchCategories(){
     return this.http.get<Category[]>(`${this.newUrl}get-cats`).pipe(take(1), tap(res => {
       this.category = this.sortData(res)
+      console.log(this.category)
       this.categoryState.next([...this.category]);
     }));
 };
+
+getAmbalaj(qty: number){
+    const categoryIndex = this.category.findIndex(index => index.name == 'MERCH');
+    const productIndex = this.category[categoryIndex].product.findIndex(index => index.name == "Ambalaj")
+    const product = this.category[categoryIndex].product[productIndex]
+    const cartAmbalaj = {
+      name: product.name,
+      price: product.price,
+      quantity: 1 * qty,
+      _id: product._id,
+      total: product.price,
+      imgPath: product.image.path,
+      category: product.category._id,
+      sub: false,
+      toppings: [],
+      payToGo: false
+    };
+    return cartAmbalaj
+}
 
 changeProdStatus(status: string, id: string){
   return this.http.post(`${this.newUrl}change-status`, {stat: status, id: id});

@@ -34,6 +34,7 @@ export class AddProductPage implements OnInit {
   form!: FormGroup;
   product: Product;
 
+
   constructor(
     private modalCtrl: ModalController,
     private toastCtrl: ToastController,
@@ -100,9 +101,8 @@ export class AddProductPage implements OnInit {
       prodData.append('category', this.currentCategory);
       prodData.append('description', this.form.value.description);
       prodData.append('longDescription', this.form.value.longDescription);
-      // prodData.append('strNutrition',  JSON.stringify(nutrition));
-      // prodData.append('strAllergens', JSON.stringify(allergens));
       return this.http.post<Response>(`${this.newUrl}prod-add`, prodData).subscribe((res)=>{
+        console.log(res)
         this.tabSrv.onProductAdd(res.product);
         showToast(this.toastCtrl, res.message, 3000);
         this.isLoading = false;

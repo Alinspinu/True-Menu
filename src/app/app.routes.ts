@@ -20,10 +20,10 @@ export const routes: Route[] = [
     path: 'tab-header',
     loadComponent: () => import('./content/tab-header/tab-header.page').then( m => m.TabHeaderPage)
   },
-  {
-    path: 'register',
-    loadComponent: () => import('./auth/register/register.page').then( m => m.RegisterPage)
-  },
+  // {
+  //   path: 'register',
+  //   loadComponent: () => import('./auth/register/register.page').then( m => m.RegisterPage)
+  // },
   {
     path: 'email-sent',
     loadComponent: () => import('./auth/email-sent/email-sent.page').then( m => m.EmailSentPage)
@@ -58,12 +58,21 @@ export const routes: Route[] = [
     loadComponent: () => import('./content/coffee-content/coffee-content.page').then( m => m.CoffeeContentPage)
   },
   {
-    path: 'add-ingredient',
-    loadComponent: () => import('./CRUD/add/add-ingredient/add-ingredient.page').then( m => m.AddIngredientPage)
+    path: 'invite-auth',
+    loadComponent: () => import('./auth/invite-auth/invite-auth.page').then( m => m.InviteAuthPage)
+  },
+
+  {
+    path: 'cash-register',
+    loadComponent: () => import('./content/back-office/cash-register/cash-register.page').then( m => m.CashRegisterPage)
   },
   {
-    path: 'recipe-ingredient',
-    loadComponent: () => import('./CRUD/add/recipe-ingredient/recipe-ingredient.page').then( m => m.RecipeIngredientPage)
+    path: 'reports',
+    loadComponent: () => import('./content/back-office/reports/reports.page').then( m => m.ReportsPage)
+  },
+  {
+    path: 'orders',
+    loadComponent: () => import('./content/back-office/orders/orders.page').then( m => m.OrdersPage)
   },
 
 ];

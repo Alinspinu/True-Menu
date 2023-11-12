@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
 import { AuthService } from './auth.service';
 import { Preferences } from '@capacitor/preferences';
 import { showToast, triggerEscapeKeyPress } from '../shared/utils/toast-controller';
+import { ActionSheetService } from '../shared/action-sheet.service';
+import { RegisterPage } from './register/register.page';
 
 
 export interface AuthResData {
@@ -40,7 +42,8 @@ export class AuthPage implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private toastCtrl: ToastController
+    private toastCtrl: ToastController,
+    @Inject(ActionSheetService) private actionSheet: ActionSheetService,
   ) { }
 
 
@@ -68,7 +71,7 @@ export class AuthPage implements OnInit {
   ngOnInit() {
     this.getCurrentTab();
     this.form = new FormGroup({
-      name: new FormControl(null, {
+      email: new FormControl(null, {
         updateOn: 'change',
         validators: [Validators.required]
       }),
@@ -80,9 +83,9 @@ export class AuthPage implements OnInit {
   };
 
   onSubmit(){
-    const name = this.form.value.name;
+    const email = this.form.value.email;
     const password = this.form.value.password;
-    this.authService.onLogin(name, password).subscribe(res => {
+    this.authService.onLogin(email, password).subscribe(res => {
       if(res.message === 'Email sent'){
         const data = JSON.stringify({
           name: res.user.name,
@@ -143,5 +146,10 @@ export class AuthPage implements OnInit {
         showToast(this.toastCtrl, error.error.message, 4000 );
       };
     });
+  };
+
+
+  onRegister(){
+    this.actionSheet.openAuth(RegisterPage);
   };
 };

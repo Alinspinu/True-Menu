@@ -1,7 +1,7 @@
 import { Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { AlertController, IonicModule } from '@ionic/angular';
 import { TabsService } from '../../tabs/tabs.service';
 import { Category, Product} from '../../CRUD/add/category.model';
 import { ActionSheetService } from '../../shared/action-sheet.service';
@@ -14,6 +14,8 @@ import { AuthService } from '../../auth/auth.service';
 import { EditProductComponent } from '../../CRUD/edit/edit-product/edit-product.component';
 import { EditSubProductComponent } from '../../CRUD/edit/edit-sub-product/edit-sub-product.component';
 import { CapitalizePipe } from '../../shared/capitalize.pipe';
+import { ProductContentService } from '../product-content/product-content.service';
+import { triggerEscapeKeyPress } from 'src/app/shared/utils/toast-controller';
 
 
 
@@ -42,35 +44,42 @@ export class CategoryContentPage implements OnInit, OnDestroy {
   products!: Product[];
   categories!: Category[];
   categoryName!: string
+  hideProduct: boolean = false;
+  blackList: string[] = [];
+  blackListSub!: Subscription;
 
   constructor(
     private tabSrv: TabsService,
     @Inject(ActionSheetService) private actionSheet: ActionSheetService,
+    private productSrv: ProductContentService,
     private cartService: CartService,
     private authSrv: AuthService,
-
   ) {}
 
 
 
   ngOnInit() {
     this.fetchCategory();
+    this.getBlackList()
     this.getCart();
     this.getUser();
     this.detectColorScheme();
   };
 
-  // setIsSmall(){
-  //   this.pr
-  // }
+
+  getBlackList(){
+    this.blackListSub = this.productSrv.blackListSend$.subscribe(response => {
+      console.log(response)
+       response === undefined ? this.blackList= [] : this.blackList = response
+    })
+   }
+
 
   getCart(){
     this.cartSubscription = this.cartService.cartSend$.subscribe(cart => {
       this.cart = cart;
     });
   };
-
-
 
 
   fetchCategory(){
@@ -80,8 +89,13 @@ export class CategoryContentPage implements OnInit, OnDestroy {
       const cat = res.find(cat => cat._id === this.currentTab );
       if(cat){
         this.categoryName = cat.name;
-        this.products = cat.product;
+        const products = cat.product;
+        this.products = [...products]
         this.backTab = cat.mainCat;
+        const ambIndex = this.products.findIndex(prod => prod.name == "Ambalaj")
+        if(ambIndex != -1) {
+          this.products.splice(ambIndex,1)
+        }
       };
     });
   };
@@ -94,35 +108,72 @@ export class CategoryContentPage implements OnInit, OnDestroy {
     return this.currentTab = tab;
   };
 
-  saveToCart(product: any, prodInd: number){
-    const name = this.products[prodInd].name + '-' + product.name;
-    const cartProduct = {
-      name: name,
-      price: product.price,
-      quantity: 1,
-      _id: product._id,
-      total: product.price,
-      imgPath: this.products[prodInd].image.path,
-      category: product.product.category._id,
-      sub: true,
-    };
-    this.cartService.saveCartProduct(cartProduct);
-    this.tabSrv.addSub(product.name, product.product.name, product.product.category);
-  };
 
-  saveProdToCart(product: Product){
-    const cartProduct = {
-      name: product.name,
-      price: product.price,
-      quantity: 1,
-      _id: product._id,
-      total: product.price,
-      imgPath: product.image.path,
-      category: product.category._id,
-      sub: false,
-    };
-    this.cartService.saveCartProduct(cartProduct);
-    this.tabSrv.addProd(product.category._id, product.name);
+ async saveProdToCart(product: Product){
+    let payToGo = false
+    const categoryToCheck = ['BREAKFAST ALL DAY', 'SALATE SI APERITIV', 'PASTE ȘI RISOTTO', 'CARTOFI CRISPERS', 'TOAST & MUFFIN', 'DESERT'];
+    if (categoryToCheck.some(prefix => product.category.name === prefix)){
+      payToGo = true
+    }
+    let price: number = product.price;
+    let cartProdName: string = product.name;
+    let subProducts: string[] = []
+    if(product.subProducts.length){
+      product.subProducts.forEach(el => {
+        if(el.available){
+          subProducts.push(`${el.name} - ${el.price} Lei`)
+        }
+      })
+    }
+    if(subProducts.length){
+      const result = await this.actionSheet.chooseSubProduct(subProducts)
+      if(result){
+        const subProd = result.split('-')
+        const subProdName = subProd[0];
+        price  = parseFloat(subProd[1].slice(0, -2))
+        cartProdName = product.name + '-' + subProdName;
+      } else {
+       return triggerEscapeKeyPress()
+      }
+    }
+    let options: string[] = []
+    let optionPrice: number = 0;
+    let extraNames: string[] = [];
+    if(product.toppings.length){
+      const itemsToSort = [...product.toppings]
+      const sortedTopings = itemsToSort.sort((a, b) => a.price - b.price)
+      const filterOptions = sortedTopings.filter(item => !this.blackList.includes(item.name.trim().replace(/\s+/g, '').toLocaleLowerCase()))
+      filterOptions.forEach(el => {
+        let price: string = 'Lei'
+        el.price === 1 ? price = 'Leu' : price = 'Lei'
+        options.push(`${el.name} +${el.price} ${price}`)
+      })
+    }
+    if(options.length){
+      const extra = await this.actionSheet.chooseExtra(options)
+        if(extra) {
+          extra.forEach((el: string) => {
+            const extraName = el.split('+')
+            extraNames.push(extraName[0])
+            optionPrice += parseFloat(extraName[1].slice(0,-2))
+          })
+        }
+      }
+      const totalPrice = price + optionPrice
+      const cartProduct = {
+        name: cartProdName,
+        price: totalPrice,
+        quantity: 1,
+        _id: product._id,
+        total: totalPrice,
+        imgPath: product.image.path,
+        category: product.category._id,
+        sub: false,
+        toppings: extraNames,
+        payToGo
+      };
+      this.cartService.saveCartProduct(cartProduct);
+      this.tabSrv.addProd(product.category._id, product.name);
   };
 
 
@@ -206,5 +257,7 @@ getUser(){
           };
        };
   };
+
+
 
 };

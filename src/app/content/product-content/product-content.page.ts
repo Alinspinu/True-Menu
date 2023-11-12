@@ -66,7 +66,10 @@ export class ProductContentPage implements OnInit, OnDestroy {
   category!: Category[];
   pickOption: string = '';
   description: string[] = []
-  additives: string = ''
+  additives: string = '';
+  catIndex!: number;
+  blackList: string[] = [];
+  blackListSub!: Subscription;
 
 
   constructor(
@@ -79,20 +82,28 @@ export class ProductContentPage implements OnInit, OnDestroy {
     private toastCtrl: ToastController,
     private cartService: CartService,
     private router: Router,
-    private route: ActivatedRoute,
+    private productSrv: ProductContentService,
     private productService: ProductContentService
     ) { }
 
   ngOnInit() {
     this.setProductIdandIndex();
-    this.getUser();
-    this.fetchCategory()
-    this.calcProdNutrition()
-    this.splitDescription()
-    this.setImageCroppingSettings();
-    this.getBackTab();
-    this.product ? this.setPickOption(this.product.category.name) : null
+    this.fetchCategory();
+    this.getBlackList();
+     this.getUser()
+     this.calcProdNutrition()
+     this.splitDescription()
+     this.setImageCroppingSettings();
+     this.getBackTab();
+     this.product ? this.setPickOption(this.product.category.name) : null
+
   }
+
+ getBlackList(){
+  this.blackListSub = this.productSrv.blackListSend$.subscribe(response => {
+    response === undefined ? this.blackList= [] : this.blackList = response
+  })
+ }
 
   splitDescription(){
     if(this.product && this.product.longDescription){
@@ -108,16 +119,19 @@ export class ProductContentPage implements OnInit, OnDestroy {
     const strings = window.location.href.split('/')
     this.productId = strings[5]
     this.productIndex = parseFloat(strings[6])
-    // this.paramSubs = this.route.params.subscribe(params => {
-    //   this.productId = params['id'];
-    //   this.productIndex = params['index'];
-    // });
   }
 
   async showActions(){
     const data = await this.actionSheet.showAdd(this.getProductIngredients());
     if(data){
-      if(!data.name){
+      if(data.topping){
+        this.productService.addProductTopping(data.topping, this.productId).subscribe(res => {
+          if(res){
+            console.log(res)
+            this.tabSrv.onProductEdit(res, this.catIndex)
+          }
+        })
+      } else if(!data.name && !data.topping){
         this.productService.addIngredients(data, this.productId).subscribe()
       } else {
         this.productService.addProductIngredient(data.ingredients, data.name).subscribe()
@@ -156,7 +170,7 @@ export class ProductContentPage implements OnInit, OnDestroy {
             (acc as any)[key] = (acc as any)[key] || [];
             (obj.ingredient as any)[key].forEach((item: any) => {
                 const index = (acc as any)[key].findIndex((obj:any) => obj.name === item.name)
-                if (index === -1) {
+                if (index === -1 && item.name.length > 1) {
                     (acc as any)[key].push(item);
                 }
             });
@@ -164,7 +178,6 @@ export class ProductContentPage implements OnInit, OnDestroy {
         });
         return acc;
       }, this.emptyResult);
-      console.log(result)
       this.product.nutrition.energy = result.energy;
       this.product.nutrition.carbs = result.carbs;
       this.product.nutrition.fat = result.fat;
@@ -184,6 +197,8 @@ export class ProductContentPage implements OnInit, OnDestroy {
       this.category = res
       for(let i = 0; i < res.length; i++ ){
         if(res[i].product[this.productIndex] && (res[i].product[this.productIndex]._id === this.productId)){
+          this.catIndex = i
+          console.log(res[i].product[this.productIndex])
           return this.product = res[i].product[this.productIndex]
         } else {
           continue
@@ -245,41 +260,71 @@ export class ProductContentPage implements OnInit, OnDestroy {
     });
     };
 
-
-    saveProdToCart(product: Product, index: number){
-      const cartProduct = {
-        name: product.name,
-        price: product.price,
-        quantity: 1,
-        _id: product._id,
-        total: product.price,
-        imgPath: product.image.path,
-        category: product.category._id,
-        sub: false,
-      };
-      if(index !== -1){
-        this.product.paring[index].quantity++
+    async saveProdToCart(product: Product, index: number){
+      let payToGo = false
+      const categoryToCheck = ['BREAKFAST ALL DAY', 'SALATE SI APERITIV', 'PASTE ȘI RISOTTO', 'CARTOFI CRISPERS', 'TOAST & MUFFIN', 'DESERT'];
+      if (categoryToCheck.some(prefix => product.category.name === prefix)){
+        payToGo = true
       }
-      this.cartService.saveCartProduct(cartProduct);
-      this.tabSrv.addProd(product.category._id, product.name);
-    }
-
-    saveSubProdToCart(subProd: SubProduct, product: Product, index: number){
-      const name = product.name + '-' + subProd.name;
-      const cartProduct = {
-        name: name,
-        price: subProd.price,
-        quantity: 1,
-        _id: subProd._id,
-        total: subProd.price,
-        imgPath: product.image.path,
-        category: product.category._id,
-        sub: true,
-      };
-      this.cartService.saveCartProduct(cartProduct);
-      this.tabSrv.addSub(subProd.name, product.name, product.category._id);
-    }
-
+      let price: number = product.price;
+      let cartProdName: string = product.name;
+      let subProducts: string[] = []
+      if(product.subProducts.length){
+        product.subProducts.forEach(el => {
+          if(el.available){
+            subProducts.push(`${el.name} - ${el.price} Lei`)
+          }
+        })
+      }
+      if(subProducts.length){
+        const result = await this.actionSheet.chooseSubProduct(subProducts)
+        const subProd = result.split('-')
+        const subProdName = subProd[0];
+        price  = parseFloat(subProd[1].slice(0, -2))
+        cartProdName = product.name + '-' + subProdName;
+      }
+      let options: string[] = []
+      let optionPrice: number = 0;
+      let extraNames: string[] = [];
+      if(product.toppings.length){
+        const itemsToSort = [...product.toppings]
+        const sortedTopings = itemsToSort.sort((a, b) => a.price - b.price)
+        const filterOptions = sortedTopings.filter(item => !this.blackList.includes(item.name.trim().replace(/\s+/g, '').toLocaleLowerCase()))
+        filterOptions.forEach(el => {
+          let price: string = 'Lei'
+          el.price === 1 ? price = 'Leu' : price = 'Lei'
+          options.push(`${el.name} +${el.price} ${price}`)
+        })
+      }
+      if(options.length){
+        const extra = await this.actionSheet.chooseExtra(options)
+          if(extra) {
+            extra.forEach((el: string) => {
+              const extraName = el.split('+')
+              extraNames.push(extraName[0])
+              optionPrice += parseFloat(extraName[1].slice(0,-2))
+            })
+          }
+        }
+        const totalPrice = price + optionPrice
+        const cartProduct = {
+          name: cartProdName,
+          price: totalPrice,
+          quantity: 1,
+          _id: product._id,
+          total: totalPrice,
+          imgPath: product.image.path,
+          category: product.category._id,
+          sub: false,
+          toppings: extraNames,
+          payToGo
+        };
+          if(index !== -1){
+            this.product.paring[index].quantity++
+          }
+        this.cartService.saveCartProduct(cartProduct);
+        this.tabSrv.addProd(product.category._id, product.name);
+    };
 
     getBackTab(){
       if(this.product && this.product.category._id.length)
@@ -344,29 +389,5 @@ export class ProductContentPage implements OnInit, OnDestroy {
   return Math.round((num + Number.EPSILON) * 100) / 100;
 }
 
-    // onDelete(){
-    //   this.http.delete<{message: string}>(`${this.newUrl}product?id=${this.productId}`).subscribe(res => {
-    //     this.tabSrv.prodDelete(this.categoryIndex, this.prodIndex);
-    //     triggerEscapeKeyPress();
-    //     showToast(this.toastCtrl, res.message, 3000);
-    //   }, error => {
-    //     console.log(error);
-    //     showToast(this.toastCtrl, error.error.message, 3000);
-    //     triggerEscapeKeyPress();
-    //   });
-    // };
-
-      // getProductIndex() {
-  //   const currentTab = window.location.href;
-  //   const indexTab = currentTab.lastIndexOf('/');
-  //   const tab = currentTab.slice(indexTab +1);
-  //   return this.productIndex = parseFloat(tab);
-  // };
-
-  // getProductId() {
-  //   const url = window.location.href;
-  //   const segments = url.split('/');
-  //   return this.productId = segments[segments.length - 2];
-  // }
 
 }

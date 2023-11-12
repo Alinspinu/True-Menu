@@ -1,0 +1,42 @@
+.auth-wrapper{
+  font-family: NoirProLight !important;
+  display: flex;
+  position: absolute;
+  --background: #f4ede6;
+  background-size: cover;
+  height: 100vh;
+}
+.header{
+  position: relative;
+  top: 20%;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  color: black;
+}
+.login{
+ font-size: 18px;
+}
+
+.first-p{
+  font-size: 20px;
+}
+
+.second-p{
+  font-size: 15px;
+}
+
+.third-p{
+  font-size: 20px;
+}
+
+.register{
+  color:var(--ion-color-primary);
+  font-family: NoirProLight !important;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.first-p{
+
+}

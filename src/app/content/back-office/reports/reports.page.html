@@ -1,0 +1,42 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Rapoarte</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-item lines="none">
+          <ion-button slot="start" size="medium" (click)="pickDate('start')">
+            De La
+            <ion-icon name="calendar-outline" slot="end"></ion-icon>
+          </ion-button>
+          <ion-label *ngIf="startDate">{{startDate.split('T')[0]}}</ion-label>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>content</ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item lines="none">
+          <ion-button slot="start" size="medium" (click)="pickDate('end')">
+            Pana La
+            <ion-icon name="calendar-outline" slot="end"></ion-icon>
+          </ion-button>
+          <ion-label *ngIf="endDate">{{endDate.split('T')[0]}}</ion-label>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button size="medium" color="danger" (click)="getDocuments()">Arată</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <!-- <ion-button size="medium" color="danger" (click)="pickDate('end')">Pana La</ion-button> -->
+
+</ion-content>
+
+<!-- <ion-button size="medium" color="primary" (click)="pickDate('start')">De La</ion-button> -->

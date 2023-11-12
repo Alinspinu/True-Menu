@@ -38,6 +38,14 @@ export const routes: Routes = [
         loadComponent: () => import('../cart/cart.page').then( m => m.CartPage)
       },
       {
+        path: 'orders',
+        loadComponent: () => import('../content/back-office/orders/orders.page').then( m => m.OrdersPage)
+      },
+      {
+        path: 'cash-register',
+        loadComponent: () => import('../content/back-office/cash-register/cash-register.page').then( m => m.CashRegisterPage)
+      },
+      {
         path: '',
         redirectTo: '/tabs/food',
         pathMatch: 'full',

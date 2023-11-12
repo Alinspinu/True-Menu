@@ -19,7 +19,7 @@
   <ion-badge slot="fixed" class="cash-bagde" *ngIf="isLoggedIn">
       <span>{{user.cashBack}} lei</span>
     </ion-badge>
-  <div class="badge-wrapper" slot="fixed" *ngIf="!product.subProducts.length">
+  <div class="badge-wrapper" slot="fixed">
     <img src="../../assets/icon/black-cart.png" alt="cart" (click)="saveProdToCart(product, -1)">
     <span *ngIf="product.quantity > 0">{{product.quantity}}</span>
   </div>
@@ -51,8 +51,6 @@
     <h3>Alege {{pickOption}}</h3>
     <div class="product-wrapper" *ngFor="let subProduct of product.subProducts let i=index">
       <div  (click)="goToCoffee(subProduct.name)">{{subProduct.name}}</div>
-        <img src="../../assets/icon/black-cart.png" alt="cart" (click)="saveSubProdToCart(subProduct, product, i)">
-        <span class="badge-prod" *ngIf="subProduct.quantity > 0">{{subProduct.quantity}}</span>
     </div>
   </ion-col>
 </ion-row>
@@ -76,7 +74,7 @@
   </ion-col>
 </ion-row>
 
-<ion-row *ngIf="product.allergens.length">
+<ion-row *ngIf="product.allergens.length && product.nutrition.energy.kcal > 0">
   <ion-col size-md="6" offset-md="3">
     <div class="separator"></div>
     <h3>Alergeni</h3>
@@ -91,7 +89,7 @@
 
   </ion-col>
 </ion-row>
-<ion-row *ngIf="product.nutrition">
+<ion-row *ngIf="product.nutrition.energy.kcal > 0">
   <ion-col size-md="6" offset-md="3">
     <div class="separator"></div>
     <div class="nutrition-title">Declaratie nutrițională <p> 100g produs</p></div>

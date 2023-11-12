@@ -1,7 +1,7 @@
 <ion-app>
   <ion-menu contentId="main-content" type="reveal" side="end">
-    <ion-content>
-      <ion-list id="inbox-list">
+    <ion-content *ngIf="user">
+      <ion-list id="inbox-list" *ngIf="user.admin === 0">
         <ion-list-header>Social Media</ion-list-header>
         <ion-menu-toggle auto-hide="false">
           <ion-item  href='https://www.instagram.com/truefinecoffee' lines="none" detail="false" style="margin-top:25px;">
@@ -22,6 +22,20 @@
             <!-- <ion-icon aria-hidden="true" slot="start" ios="image" md='image-sharp'></ion-icon> -->
             <img src="assets/icon/tripadvisor.svg" alt="Icon">
             <ion-label class="text">TripAdvisor</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+      </ion-list>
+      <ion-list id="inbox-list" *ngIf="user.admin === 1">
+        <ion-list-header>Back Office</ion-list-header>
+        <ion-menu-toggle auto-hide="false">
+          <ion-item  lines="none" detail="false" style="margin-top:25px;" routerLink="/tabs/orders">
+            <ion-label class="text">Comenzi Live</ion-label>
+          </ion-item>
+          <ion-item  lines="none" detail="false" style="margin-top:25px;">
+            <ion-label class="text">Comenzi Terminate</ion-label>
+          </ion-item>
+          <ion-item  lines="none" detail="false" style="margin-top:25px;" routerLink="/tabs/cash-register">
+            <ion-label class="text">Registru de Casa</ion-label>
           </ion-item>
         </ion-menu-toggle>
       </ion-list>

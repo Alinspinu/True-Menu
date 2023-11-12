@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { ActionSheet, ActionSheetButtonStyle } from '@capacitor/action-sheet';
 import { AddCategoryPage } from '../CRUD/add/add-category/add-category.page';
 import { AddProductPage } from '../CRUD/add/add-product/add-product.page';
@@ -14,14 +14,18 @@ import { EditSubProductComponent } from '../CRUD/edit/edit-sub-product/edit-sub-
 import { ParringProductPage } from '../CRUD/add/parring-product/parring-product.page';
 import { RecipeIngredientPage } from '../CRUD/add/recipe-ingredient/recipe-ingredient.page';
 import { AddIngredientPage } from '../CRUD/add/add-ingredient/add-ingredient.page';
+import { InviteAuthPage } from '../auth/invite-auth/invite-auth.page';
+import { AddExtraPage } from '../CRUD/add/add-extra/add-extra.page';
+import { BlackListPage } from '../CRUD/add/black-list/black-list.page';
+import { DatePickerPage } from './date-picker/date-picker.page';
 
 interface Data {
   ing: {
     _id: string,
     qty: number
-  }[]
-  mode: string
-  ingId: string
+  }[],
+  mode: string,
+  ingId: string,
 }
 
 @Injectable({
@@ -31,7 +35,7 @@ export class ActionSheetService {
 
   emptyData: Data = {ing: [], mode: '', ingId: ''}
 
-  constructor(private modalCtrl: ModalController) { }
+  constructor(private modalCtrl: ModalController, private alertController: AlertController) { }
 
   async showActions() {
     const result = await ActionSheet.showActions({
@@ -99,8 +103,12 @@ export class ActionSheetService {
           title: 'Add Ingredient',
         },
         {
+          title: 'Add-Topping',
+        },
+        {
           title: 'Edit Ingredient',
         },
+
         {
           title: 'Cancel',
           style: ActionSheetButtonStyle.Cancel,
@@ -118,7 +126,9 @@ export class ActionSheetService {
       return this.openModal(RecipeIngredientPage, data)
     } else if (result.index === 3){
       return this.openModal(AddIngredientPage, this.emptyData)
-    } else if (result.index === 4){
+    } else if(result.index === 4){
+      return this.openModal(AddExtraPage, this.emptyData)
+    } else if (result.index == 5){
       data.mode = 'on-edit';
       data.ing = []
       return this.openModal(RecipeIngredientPage, data)
@@ -135,7 +145,10 @@ export class ActionSheetService {
                typeof CashBackPage |
                typeof ParringProductPage |
                typeof RecipeIngredientPage |
-               typeof AddIngredientPage,
+               typeof AddIngredientPage |
+               typeof InviteAuthPage |
+               typeof AddExtraPage,
+
     dta: Data
                ) {
     const modal = await this.modalCtrl.create({
@@ -146,6 +159,7 @@ export class ActionSheetService {
     const { data } = await modal.onDidDismiss();
     return data
   }
+
 
   async openEdit(
     component: typeof EditCategoryComponent |
@@ -167,10 +181,88 @@ export class ActionSheetService {
     modal.present();
   };
 
-  async openAuth(component: typeof AuthPage | typeof RegisterPage) {
+  async openAuth(
+    component: typeof AuthPage |
+                typeof RegisterPage |
+                typeof BlackListPage |
+                typeof DatePickerPage
+                ) {
     const modal = await this.modalCtrl.create({
       component: component,
     });
+
     modal.present();
+    const { data } = await modal.onDidDismiss();
+    return data
   };
+
+
+
+  async chooseSubProduct(options: string[]) {
+    const inputs = options.map(option => {
+      return {
+          label: option,
+          type: 'radio' as const,
+          value: option,
+          cssClass: 'option'
+      };
+  });
+    const alert = await this.alertController.create({
+      header: 'Alege',
+      message: `Alege o opțiune`,
+      buttons: [
+        {
+          text: 'Alege',
+          role: 'confirm',
+        },
+      ],
+      inputs: inputs,
+      cssClass: 'extraAlert'
+    });
+    await alert.present();
+    const result = await alert.onDidDismiss();
+    if(result.role === "confirm"){
+      console.log(result)
+      return result.data.values
+    } else {
+      return null
+    }
+  }
+
+  async chooseExtra(options: string[]) {
+    const inputs = options.map(option => {
+      return {
+          label: option,
+          type: 'checkbox' as const,
+          value: option,
+
+      };
+  });
+    const alert = await this.alertController.create({
+      header: 'Extra',
+      message: `Adaugă extra`,
+      buttons: [
+        {
+          text: 'Nu Muțumesc!',
+          role: 'cancel'
+        },
+        {
+          text: 'Adaugă',
+          role: 'confirm',
+        },
+      ],
+      inputs: inputs,
+      cssClass: 'extraAlert'
+    });
+    await alert.present();
+    const result = await alert.onDidDismiss();
+    if(result.role === 'confirm'){
+      return result.data.values
+    } else {
+      return null
+    }
+  }
+
+
+
 };

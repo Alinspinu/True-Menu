@@ -9,6 +9,8 @@ import { AuthService } from '../../auth/auth.service';
 import User from '../../auth/user.model';
 import { Subscription } from 'rxjs';
 import { CapitalizePipe } from '../../shared/capitalize.pipe';
+import { BlackListPage } from 'src/app/CRUD/add/black-list/black-list.page';
+import { ProductContentService } from '../product-content/product-content.service';
 @Component({
   selector: 'app-tab-header',
   templateUrl: './tab-header.page.html',
@@ -17,6 +19,8 @@ import { CapitalizePipe } from '../../shared/capitalize.pipe';
   imports: [IonicModule, CommonModule, FormsModule, AuthPage, CapitalizePipe]
 })
 export class TabHeaderPage implements OnInit, OnDestroy {
+  @Input() title: string = '';
+  @Input() imgPath: string = '';
   tab!: string;
   isLoggedIn: boolean = false;
   isAdmin: boolean = false;
@@ -27,7 +31,8 @@ export class TabHeaderPage implements OnInit, OnDestroy {
   constructor(
     private tabSrv: TabsService,
     @Inject(ActionSheetService) private actionSheet: ActionSheetService,
-    private authSrv: AuthService
+    private authSrv: AuthService,
+    private productSrv: ProductContentService,
   ) { };
 
 
@@ -68,6 +73,15 @@ export class TabHeaderPage implements OnInit, OnDestroy {
     };
 
 
+    async blackList(){
+    const blackList = await this.actionSheet.openAuth(BlackListPage)
+    console.log(blackList)
+    this.productSrv.updateBlackList(blackList).subscribe(res => {
+      console.log(res)
+    })
+    }
+
+
   logout(){
    this.authSrv.logout();
   };
@@ -80,5 +94,8 @@ export class TabHeaderPage implements OnInit, OnDestroy {
  private round(num: number) {
     return Math.round(num * 100) / 100;
 };
+
+
+
 
 }

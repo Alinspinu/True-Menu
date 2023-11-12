@@ -4,6 +4,9 @@ import { Platform } from '@ionic/angular';
 import { Capacitor } from '@capacitor/core';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { TabsService } from './tabs/tabs.service';
+import { ProductContentService } from './content/product-content/product-content.service';
+import { AuthService } from './auth/auth.service';
+import User from './auth/user.model';
 
 
 @Component({
@@ -14,14 +17,29 @@ import { TabsService } from './tabs/tabs.service';
 
 })
 export class AppComponent  implements OnInit{
+  user!: User
   facebookUrl!: string;
   newWindow!: string;
   isLoadding: boolean = false;
 
-  constructor(private router: Router, private platform: Platform, private tabSrv: TabsService) {}
+  constructor(
+    private router: Router,
+    private authSrv: AuthService,
+    private platform: Platform,
+    private tabSrv: TabsService,
+    private prodSrv: ProductContentService
+    ) {}
 
   openFacebookPage() {
     window.open(this.facebookUrl, this.newWindow);
+  }
+
+  getUser(){
+    this.authSrv.user$.subscribe(response=> {
+      response.subscribe(user => {
+       this.user = user
+      })
+    })
   }
 
   setUrl(){
@@ -40,6 +58,7 @@ export class AppComponent  implements OnInit{
 
   fetchData(){
     this.tabSrv.fetchCategories().subscribe();
+    this.prodSrv.fetchBlackList().subscribe()
   }
 
 
@@ -51,6 +70,7 @@ export class AppComponent  implements OnInit{
   };
   ngOnInit(): void {
     this.initializeApp();
+    this.getUser()
     this.setUrl();
     this.fetchData();
   };

@@ -40,3 +40,19 @@
   src: url('./assets/font/NoirPro-Regular.woff');
 }
 
+body ion-alert.extraAlert{
+  --width: 100% !important;
+
+}
+
+.md .option{
+  .alert-radio-label{
+    font-size: 15px !important;
+   padding-inline-end: 5px !important;
+   padding-inline-start: 15px !important;
+  }
+  .alert-radio-icon{
+    inset-inline-start: 8px !important;
+  }
+}
+

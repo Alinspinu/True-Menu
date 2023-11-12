@@ -22,11 +22,13 @@ img{
   height: 35px;
   width: 40px;
 }
- ion-title span{
-  font-size: 22px;
+ ion-title ion-label{
+  font-family: NoirPro !important;
+  font-size: 25px;
+
  }
 
- ion-title img{
+ ion-title {
   margin-left: 13px;
  }
 
