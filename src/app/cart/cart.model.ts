@@ -14,6 +14,7 @@ export class Cart{
     public pickUp: boolean,
     public userName: string,
     public userTel: string,
+    public preOrderPickUpDate: string,
   ){}
 };
 
@@ -28,9 +29,14 @@ export class Order{
     public total: number,
     public discount: number,
     public status: string,
+    public endTime: string,
+    public preOrderPickUpDate: string,
     public toGo: boolean,
+    public index: number,
+    public createdAt: string,
     public pickUp: boolean,
     public completetime: number,
+    public pending: boolean,
     public paymentMethod: string,
     public cashBack: number,
     public payOnSite: boolean,
@@ -38,6 +44,7 @@ export class Order{
     public userName: string,
     public userTel: string,
     public cif: string,
+    public show: boolean,
     public products: CartProduct[]
   ){}
 }
@@ -52,8 +59,10 @@ export class CartProduct{
    public imgPath: string,
    public category: string,
    public sub: boolean,
-   public toppings: string[],
+   public toppings: Topping[],
    public payToGo: boolean,
+   public preOrder: boolean,
+   public ings: Ing[]
   ){}
 };
 
@@ -62,6 +71,24 @@ export class Table{
     public _id: string,
     public index: number,
     public bills: Order[]
+  ){}
+}
+
+export class Topping {
+  constructor(
+    public name: string,
+    public price: number,
+    public qty: number,
+    public ingPrice: number,
+    public um: string
+  ){}
+}
+
+export class Ing{
+  constructor(
+    public name: String,
+    public qty: Number,
+    public price: number
   ){}
 }
 

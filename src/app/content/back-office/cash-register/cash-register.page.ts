@@ -37,14 +37,17 @@ export class CashRegisterPage implements OnInit {
     this.loadDocuments()
   }
 
+  reciveEntry(ev: any){
+    const dayIndex = this.documents.findIndex(el => el.date === ev.date)
+    this.documents[dayIndex] = ev
+  }
+
 
 
 loadDocuments(event?: any) {
   this.backOfficeSrv.getDocuments(this.page).subscribe((response) => {
     // Append new documents to the existing list
-
     this.documents = [...this.documents, ...response.documents];
-    console.log(this.documents)
     if (event) {
       event.target.complete();
     }
@@ -62,41 +65,27 @@ formatDate(inputDate: string): string {
   const day = date.getUTCDate().toString().padStart(2, '0');
   const month = (date.getUTCMonth() + 1).toString().padStart(2, '0');
   const year = date.getUTCFullYear().toString();
-
   return `${day}.${month}.${year}`;
+}
+
+deleteEntry(id: string, index: number, dayIndex: number){
+  const dateToCompare = new Date().setUTCHours(0,0,0,0)
+  const day = this.documents[dayIndex];
+  const dayDate = new Date(day.date).setUTCHours(0,0,0,0)
+  if(dayDate === dateToCompare){
+    this.backOfficeSrv.deleteEntry(id).subscribe(response => {
+      showToast(this.toastCtrl, response.message, 3000);
+      const entry = day.entry[index];
+      day.cashOut = day.cashOut - entry.amount
+      day.entry.splice(index, 1);
+    })
+  } else {
+    showToast(this.toastCtrl, 'Poți șterge doar intrările din ziua curentă!', 4000)
+  }
 }
 
 round(num: number){
   return Math.round(num * 100) / 100;
 }
-
-
-//   getDateNow(){
-//     const date = new Date().toISOString()
-//     this.getDay(date)
-//   }
-
-
-//  async openDatePiker(){
-//    this.date = await this.actionSheet.openAuth(DatePickerPage)
-//    if(this.date !== "cancel"){
-//      this.getDay(this.date)
-//    }
-//   }
-
-
-// getDay(date: string){
-//   this.backOfficeSrv.fetchData(date).subscribe(response => {
-//     if(response){
-//       this.day = response.regPopDay
-//       this.formatedDate = this.formatDate(this.day.date)
-//       console.log(response, this.day)
-//     }
-//   }, (error) => {
-//     if(error.status === 404){
-//       showToast(this.toastCtrl, 'No Records Found', 4000)
-//     }
-//   })
-// }
 
 }

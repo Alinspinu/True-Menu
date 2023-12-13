@@ -1,6 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-buttons slot="start">
+    <ion-buttons slot="start" *ngIf="registerMode">
       <ion-button (click)="triggerEscape()">
         <ion-icon name="arrow-back-outline" style="font-size: 22px"></ion-icon>
       </ion-button>

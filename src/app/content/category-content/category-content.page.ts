@@ -7,7 +7,7 @@ import { Category, Product} from '../../CRUD/add/category.model';
 import { ActionSheetService } from '../../shared/action-sheet.service';
 import { RouterModule } from '@angular/router';
 import { CartService } from '../../cart/cart.service';
-import { Cart } from '../../cart/cart.model';
+import { Cart, CartProduct, Topping } from '../../cart/cart.model';
 import { Subscription } from 'rxjs';
 import User from '../../auth/user.model';
 import { AuthService } from '../../auth/auth.service';
@@ -16,6 +16,12 @@ import { EditSubProductComponent } from '../../CRUD/edit/edit-sub-product/edit-s
 import { CapitalizePipe } from '../../shared/capitalize.pipe';
 import { ProductContentService } from '../product-content/product-content.service';
 import { triggerEscapeKeyPress } from 'src/app/shared/utils/toast-controller';
+
+
+
+
+
+
 
 
 
@@ -47,6 +53,8 @@ export class CategoryContentPage implements OnInit, OnDestroy {
   hideProduct: boolean = false;
   blackList: string[] = [];
   blackListSub!: Subscription;
+
+  preOrder: boolean = false
 
   constructor(
     private tabSrv: TabsService,
@@ -136,31 +144,40 @@ export class CategoryContentPage implements OnInit, OnDestroy {
        return triggerEscapeKeyPress()
       }
     }
-    let options: string[] = []
+    let options: Topping[] = []
     let optionPrice: number = 0;
-    let extraNames: string[] = [];
+    let pickedOptions: Topping[] = [];
     if(product.toppings.length){
       const itemsToSort = [...product.toppings]
       const sortedTopings = itemsToSort.sort((a, b) => a.price - b.price)
       const filterOptions = sortedTopings.filter(item => !this.blackList.includes(item.name.trim().replace(/\s+/g, '').toLocaleLowerCase()))
-      filterOptions.forEach(el => {
-        let price: string = 'Lei'
-        el.price === 1 ? price = 'Leu' : price = 'Lei'
-        options.push(`${el.name} +${el.price} ${price}`)
-      })
+      options = filterOptions
     }
     if(options.length){
       const extra = await this.actionSheet.chooseExtra(options)
         if(extra) {
-          extra.forEach((el: string) => {
-            const extraName = el.split('+')
-            extraNames.push(extraName[0])
-            optionPrice += parseFloat(extraName[1].slice(0,-2))
+          pickedOptions = extra
+          pickedOptions.forEach(el => {
+            optionPrice += el.price
           })
         }
       }
-      const totalPrice = price + optionPrice
-      const cartProduct = {
+      let totalPrice = price + optionPrice
+      if(product.preOrder){
+        this.preOrder = true
+        totalPrice = product.preOrderPrice;
+        pickedOptions = [{
+          name: 'Valoare Avans',
+          price: 0,
+          qty: 0,
+          ingPrice: 0,
+          um: 'kg'
+
+        }]
+      } else {
+        this.preOrder = false
+      }
+      const cartProduct: CartProduct = {
         name: cartProdName,
         price: totalPrice,
         quantity: 1,
@@ -169,11 +186,13 @@ export class CategoryContentPage implements OnInit, OnDestroy {
         imgPath: product.image.path,
         category: product.category._id,
         sub: false,
-        toppings: extraNames,
-        payToGo
+        toppings: pickedOptions,
+        payToGo,
+        preOrder: this.preOrder,
+        ings: []
       };
       this.cartService.saveCartProduct(cartProduct);
-      this.tabSrv.addProd(product.category._id, product.name);
+      this.tabSrv.addProd(product.category._id, product.name, this.preOrder);
   };
 
 

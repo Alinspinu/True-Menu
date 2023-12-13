@@ -1,0 +1,11 @@
+
+
+<ion-content [fullscreen]="true">
+ <ion-grid>
+  <ion-row>
+    <ion-col *ngFor="let t of time" size="6">
+      <ion-button class="ion-text-center" size="large" color="danger" (click)="pickTime(t)" expand="block">{{t}} Min</ion-button>
+    </ion-col>
+  </ion-row>
+ </ion-grid>
+</ion-content>

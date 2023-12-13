@@ -1,0 +1,30 @@
+import { Order } from "src/app/cart/cart.model"
+
+export const emptyOrder: Order = {
+  pending: true,
+  _id: '',
+  total: 0,
+  products: [],
+  masa: 0,
+  cashBack: 0,
+  productCount: 0,
+  index: 0,
+  tips: 0,
+  totalProducts: 0,
+  toGo: false,
+  pickUp: false,
+  userName: '',
+  userTel: '',
+  createdAt: '',
+  cif: '',
+  payOnline: false,
+  payOnSite: false,
+  endTime: '',
+  paymentMethod: '',
+  completetime: 0,
+  discount: 0,
+  status: '',
+  show: false,
+  preOrderPickUpDate: '',
+  masaRest: {_id: '', index: 0, bills:[]}
+};

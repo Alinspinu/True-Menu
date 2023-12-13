@@ -24,12 +24,11 @@
     <ion-input type="text" label="Price" labelPlacement="floating" fill="outline" formControlName="price"></ion-input>
   </ion-item>
   <ion-item>
-    <ion-input  mode="ios" type="number" label="Order" labelPlacement="floating" fill="outline" formControlName="order"></ion-input>
+    <ion-input  mode="ios" type="text" label="Cantitate" labelPlacement="floating" fill="outline" formControlName="qty"></ion-input>
   </ion-item>
   <ion-item>
-  <ion-select  mode="ios" aria-label="product" placeholder="Select Product" formControlName="product">
-    <ion-select-option *ngFor="let product of products" [value]="product._id">{{product.name}}</ion-select-option>
-  </ion-select>
-</ion-item>
+    <ion-input  mode="ios" type="number" label="Order" labelPlacement="floating" fill="outline" formControlName="order"></ion-input>
+  </ion-item>
+
   </form>
   </ion-content>

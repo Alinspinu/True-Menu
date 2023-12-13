@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonDatetime, IonicModule, ModalController } from '@ionic/angular';
+import { IonDatetime, IonicModule, ModalController, NavParams } from '@ionic/angular';
 
 @Component({
   selector: 'app-date-picker',
@@ -13,16 +13,26 @@ import { IonDatetime, IonicModule, ModalController } from '@ionic/angular';
 export class DatePickerPage implements OnInit {
 
   selectedDate!: string;
+  date!: any
 
   constructor(
     private modalCtrl: ModalController,
+    private navParams: NavParams
   ) { }
 
   ngOnInit() {
+    this.setDate()
+
+  }
+
+  setDate(){
+    const currentDate = new Date();
+    currentDate.setHours(currentDate.getHours() + 72); // Add 72 hours
+    this.date = currentDate.toISOString().split('T')[0];
   }
 
   onCancel(){
-    this.modalCtrl.dismiss('cancel')
+    this.modalCtrl.dismiss(null)
   }
 
   onDateChange(event: any) {

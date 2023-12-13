@@ -46,6 +46,14 @@ export const routes: Routes = [
         loadComponent: () => import('../content/back-office/cash-register/cash-register.page').then( m => m.CashRegisterPage)
       },
       {
+        path: 'finished-orders',
+        loadComponent: () => import('../content/back-office/finshed-orders/finshed-orders.page').then( m => m.FinshedOrdersPage)
+      },
+      {
+        path: 'voucher',
+        loadComponent: () => import('./voucher/voucher.page').then( m => m.VoucherPage)
+      },
+      {
         path: '',
         redirectTo: '/tabs/food',
         pathMatch: 'full',

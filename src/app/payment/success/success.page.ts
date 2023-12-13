@@ -40,6 +40,7 @@ export class SuccessPage implements OnInit {
 
   error: boolean = false;
   baseUrl: string = 'http://localhost:8080/api-true/';
+
   newUrl: string = 'https://flow-api-394209.lm.r.appspot.com/api-true/';
   herokuUrl: string = 'https://www.cafetish.com/api/';
   isLoading: boolean = true;
@@ -52,6 +53,9 @@ export class SuccessPage implements OnInit {
   payOnSite: boolean = false;
   payOnline: boolean = false;
 
+  preOrder: boolean = false;
+  pickUpDate: string = ''
+   production: boolean = false
 
   constructor(
     private http: HttpClient,
@@ -122,6 +126,7 @@ export class SuccessPage implements OnInit {
     const cart = Preferences.get({ key: 'cart' }).then(res => {
       if (res.value) {
         const cartObject: Cart = JSON.parse(res.value);
+        this.preOrder = cartObject.products[0].preOrder
         this.createOrder(cartObject);
       } else { console.log('No cart Found')};
     });
@@ -129,6 +134,7 @@ export class SuccessPage implements OnInit {
 
   createOrder(cart: Cart) {
     const cartProducts = cart.products;
+    this.production = cart.products[0].preOrder
     let products = [];
     for (let product of cartProducts) {
       const orderProduct = {
@@ -143,6 +149,7 @@ export class SuccessPage implements OnInit {
     if(cart.userId.length){
       const order = {
         masa: cart.masa,
+        production: this.production,
         toGo: cart.toGo,
         pickUp: cart.pickUp,
         productCount: cart.productCount,
@@ -155,12 +162,15 @@ export class SuccessPage implements OnInit {
         payOnSite: this.payOnSite,
         payOnline: this.payOnline,
         userName: cart.userName,
-        userTel: cart.userTel
+        userTel: cart.userTel,
+        preOrderPickUpDate: cart.preOrderPickUpDate,
+        preOrder: cartProducts[0].preOrder
       };
      return this.saveOrder(order)
     } else {
       const order = {
         masa: cart.masa,
+        production: this.production,
         toGo: cart.toGo,
         pickUp: cart.pickUp,
         productCount: cart.productCount,
@@ -173,21 +183,25 @@ export class SuccessPage implements OnInit {
         payOnline: this.payOnline,
         userName: 'Neînregistrat',
         userTel: 'Neînregistrat',
+        preOrderPickUpDate: cart.preOrderPickUpDate,
+        preOrder: cartProducts[0].preOrder
       };
       return this.saveOrder(order);
     };
   };
 
-  saveOrder(order: Order) {
-    console.log("success",order)
-    this.http.post<any>(`${this.baseUrl}save-order`, order).subscribe(res => {
+  saveOrder(order: any) {
+    console.log("inside before create order", order.production)
+    this.http.post<any>(`${this.newUrl}save-order`, order).subscribe(res => {
       console.log("success-in-function")
       if(res.message === 'Order Saved Without a user'){
         this.getTime(res.orderId)
+        this.pickUpDate = this.formatedDateToShow(res.preOrderPickUpDate)
         this.orderNumber = res.orderIndex
         Preferences.remove({key: 'cart'});
       } else {
         console.log(res)
+        this.pickUpDate = this.formatedDateToShow(res.preOrderPickUpDate)
         this.orderNumber = res.orderIndex
         this.authServ.updateCaskBack(res.user);
         this.getTime(res.orderId)
@@ -199,13 +213,29 @@ export class SuccessPage implements OnInit {
   };
 
 getTime(orderId: string){
-  setTimeout(()=>{
-    this.http.get<any>(`${this.newUrl}get-time?orderId=${orderId}`).subscribe(res => {
-      this.orderTime = res.completetime / 1000 / 60
-      this.isLoading = false
-    })
-  }, 24000)
-
+  if(!this.preOrder){
+    setTimeout(()=>{
+      this.http.get<any>(`${this.newUrl}get-time?orderId=${orderId}`).subscribe(res => {
+        this.orderTime = res.completetime / 1000 / 60
+        this.isLoading = false
+      })
+    }, 24000)
+  } else{
+    this.isLoading = false
+  }
 }
+
+formatedDateToShow(date: string){
+  if(date.length){
+    const inputDate = new Date(date);
+    const monthNames = [
+      "Ianuarie", "Februarie", "Martie", "Aprilie", "Mai", "Iunie",
+      "Iulie", "August", "Septembrie", "Octombrie", "Noiembrie", "Decembrie"
+    ];
+    return `${inputDate.getDate().toString().padStart(2, '0')}-${monthNames[inputDate.getMonth()]}-${inputDate.getFullYear()}`
+  } else {
+    return ''
+  }
+  }
 
 }

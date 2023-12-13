@@ -14,6 +14,7 @@ import { showToast, triggerEscapeKeyPress } from '../../shared/utils/toast-contr
 import { CartService } from '../../cart/cart.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductContentService } from './product-content.service';
+import { Topping } from 'src/app/cart/cart.model';
 
 
 interface Response {
@@ -71,6 +72,8 @@ export class ProductContentPage implements OnInit, OnDestroy {
   blackList: string[] = [];
   blackListSub!: Subscription;
 
+  preOrder: boolean = false
+
 
   constructor(
     private authSrv: AuthService,
@@ -96,6 +99,7 @@ export class ProductContentPage implements OnInit, OnDestroy {
      this.setImageCroppingSettings();
      this.getBackTab();
      this.product ? this.setPickOption(this.product.category.name) : null
+     console.log(this.product)
 
   }
 
@@ -261,6 +265,7 @@ export class ProductContentPage implements OnInit, OnDestroy {
     };
 
     async saveProdToCart(product: Product, index: number){
+      console.log(product)
       let payToGo = false
       const categoryToCheck = ['BREAKFAST ALL DAY', 'SALATE SI APERITIV', 'PASTE ȘI RISOTTO', 'CARTOFI CRISPERS', 'TOAST & MUFFIN', 'DESERT'];
       if (categoryToCheck.some(prefix => product.category.name === prefix)){
@@ -283,30 +288,39 @@ export class ProductContentPage implements OnInit, OnDestroy {
         price  = parseFloat(subProd[1].slice(0, -2))
         cartProdName = product.name + '-' + subProdName;
       }
-      let options: string[] = []
+      let options: Topping[] = []
       let optionPrice: number = 0;
-      let extraNames: string[] = [];
+      let pickedOptions: Topping[] = [];
       if(product.toppings.length){
         const itemsToSort = [...product.toppings]
         const sortedTopings = itemsToSort.sort((a, b) => a.price - b.price)
         const filterOptions = sortedTopings.filter(item => !this.blackList.includes(item.name.trim().replace(/\s+/g, '').toLocaleLowerCase()))
-        filterOptions.forEach(el => {
-          let price: string = 'Lei'
-          el.price === 1 ? price = 'Leu' : price = 'Lei'
-          options.push(`${el.name} +${el.price} ${price}`)
-        })
+        options = filterOptions
       }
       if(options.length){
         const extra = await this.actionSheet.chooseExtra(options)
           if(extra) {
-            extra.forEach((el: string) => {
-              const extraName = el.split('+')
-              extraNames.push(extraName[0])
-              optionPrice += parseFloat(extraName[1].slice(0,-2))
+            pickedOptions = extra
+            pickedOptions.forEach(el => {
+              optionPrice += el.price
             })
           }
         }
-        const totalPrice = price + optionPrice
+        let totalPrice = price + optionPrice
+        if(product.preOrder){
+          this.preOrder = true
+          totalPrice = product.preOrderPrice;
+          pickedOptions = [{
+            name: 'Valoare Avans',
+            price: 0,
+            qty: 0,
+            ingPrice: 0,
+            um: 'kg'
+
+          }]
+        } else {
+          this.preOrder = false
+        }
         const cartProduct = {
           name: cartProdName,
           price: totalPrice,
@@ -316,14 +330,16 @@ export class ProductContentPage implements OnInit, OnDestroy {
           imgPath: product.image.path,
           category: product.category._id,
           sub: false,
-          toppings: extraNames,
-          payToGo
+          toppings: pickedOptions,
+          payToGo,
+          preOrder: this.preOrder,
+          ings: []
         };
           if(index !== -1){
             this.product.paring[index].quantity++
           }
         this.cartService.saveCartProduct(cartProduct);
-        this.tabSrv.addProd(product.category._id, product.name);
+        this.tabSrv.addProd(product.category._id, product.name, this.preOrder);
     };
 
     getBackTab(){

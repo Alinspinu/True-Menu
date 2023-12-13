@@ -1,9 +1,10 @@
 import { HttpClient, HttpHeaders} from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Preferences } from "@capacitor/preferences";
+import { ToastController } from "@ionic/angular";
 import { BehaviorSubject,  from,  map,  Observable} from "rxjs";
-import { TabsService } from "../tabs/tabs.service";
-import { Cart, CartProduct } from "./cart.model";
+import { showToast } from "../shared/utils/toast-controller";
+import { Cart, CartProduct, Topping } from "./cart.model";
 
 interface cash{
   message: string,
@@ -34,14 +35,15 @@ export class CartService{
     toGo: false,
     pickUp: false,
     userName: '',
-    userTel: ''
+    userTel: '',
+    preOrderPickUpDate: ''
   };
   cart: Cart = this.emptyCart;
 
 
   constructor(
     private http: HttpClient,
-    private tabsSrv: TabsService,
+    private toastCtrl: ToastController,
     ){
     this.cartState = new BehaviorSubject<Cart>(this.emptyCart);
     this.cartSend$ = this.cartState.asObservable();
@@ -49,16 +51,35 @@ export class CartService{
 
 
   saveCartProduct(product: CartProduct){
-    this.cart.productCount++
-    const existingProduct = this.cart.products.find((p: CartProduct) =>(p.name === product.name) && this.arraysAreEqual(p.toppings, product.toppings));
-
-    if (existingProduct) {
-      existingProduct.quantity = product.quantity + existingProduct.quantity;
-      existingProduct.total = (existingProduct.quantity) * existingProduct.price;
+    const orderType = this.cart.products[0]
+    if(orderType){
+      console.log('inside save product', product.preOrder, orderType.preOrder)
+      if(product.preOrder === orderType.preOrder){
+        this.cart.productCount++
+        const existingProduct = this.cart.products.find((p: CartProduct) =>(p.name === product.name) && this.arraysAreEqual(p.toppings, product.toppings));
+        if (existingProduct) {
+          existingProduct.quantity = product.quantity + existingProduct.quantity;
+          existingProduct.total = (existingProduct.quantity) * existingProduct.price;
+        } else {
+          this.cart.products.push(product);
+        }
+        this.cartState.next(this.cart);
+      } else{
+        showToast(this.toastCtrl, 'Nu poti avea pe o nota produse date spre precomandă și produse din meniu! Dă două comenzi diferite!', 5000)
+      }
     } else {
-      this.cart.products.push(product);
+      console.log(this.cart.products[0])
+      this.cart.productCount++
+      const existingProduct = this.cart.products.find((p: CartProduct) =>(p.name === product.name) && this.arraysAreEqual(p.toppings, product.toppings));
+      if (existingProduct) {
+        existingProduct.quantity = product.quantity + existingProduct.quantity;
+        existingProduct.total = (existingProduct.quantity) * existingProduct.price;
+      } else {
+        this.cart.products.push(product);
+      }
+      this.cartState.next(this.cart);
+
     }
-    this.cartState.next(this.cart);
   };
 
   removeCartProd(product: CartProduct){
@@ -155,7 +176,7 @@ addTips(tips: number){
 };
 
 
-arraysAreEqual = (arr1: string[], arr2: string[]) => arr1.length === arr2.length && arr1.every((value, index) => value === arr2[index]);
+arraysAreEqual = (arr1: Topping[], arr2: Topping[]) => arr1.length === arr2.length && arr1.every((value, index) => value === arr2[index]);
 
 };
 

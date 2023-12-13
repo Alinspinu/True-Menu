@@ -25,7 +25,6 @@ export class AddSubproductPage implements OnInit {
   currentCategory!: string;
   products!: Product[];
   baseUrl: string = 'http://localhost:8080/api-true/';
-  baseUrlHeroku: string = 'https://www.cafetish.com/api/';
   newUrl: string = 'https://flow-api-394209.lm.r.appspot.com/api-true/';
   isLoading = false;
   form!: FormGroup;
@@ -41,10 +40,13 @@ export class AddSubproductPage implements OnInit {
     this.isLoading = true;
     if(this.form.valid){
       const subProdData = {
-        id: this.form.value.product,
+        product: this.form.value.product,
         name: this.form.value.name,
         price: this.form.value.price,
-        order: this.form.value.order,
+        order: +this.form.value.order,
+        ings: [],
+        toppings: [],
+        qty: this.form.value.qty
       };
      return this.http.post<Response>(`${this.newUrl}sub-prod-add`, subProdData).subscribe((res)=>{
       this.tabServ.onSubProductAdd(res.subProduct);
@@ -71,6 +73,10 @@ export class AddSubproductPage implements OnInit {
         validators: [Validators.required]
       }),
       product: new FormControl(null, {
+        updateOn: 'change',
+        validators: [Validators.required]
+      }),
+      qty: new FormControl(null, {
         updateOn: 'change',
         validators: [Validators.required]
       }),

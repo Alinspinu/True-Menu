@@ -20,9 +20,34 @@
   <!-- add to homescreen for ios -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
+  <style>
+    .splash-screen {
+      font-family: NoirPro !important;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      width: 100vw;
+      position: fixed;
+      background-color: #e0cebf;
+      z-index: 1000;
+    }
+    h1{
+      color: white;
+      font-size: 35px !important;
+    }
+  </style>
 </head>
 
 <body>
+  <div class="splash-screen" id="splash-screen">
+    <img src="assets/animated-icons/logo-true.gif" alt="Logo">
+    <h1>Loadding...</h1>
+  </div>
+
+  </div>
   <app-root></app-root>
 </body>
 

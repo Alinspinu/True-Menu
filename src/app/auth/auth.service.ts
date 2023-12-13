@@ -6,7 +6,7 @@ import { Preferences } from "@capacitor/preferences";
 import User from "./user.model";
 import { CartService } from "../cart/cart.service";
 import { TabsService } from "../tabs/tabs.service";
-import { Survey } from "./register/register.page";
+
 
 
 export interface AuthResData {
@@ -23,7 +23,6 @@ user: {
 
 export class AuthService{
   baseUrl: string = 'http://localhost:8080/auth/';
-  baseUrlHeroku: string = 'https://www.cafetish.com/api/';
   newUrl: string = 'https://flow-api-394209.lm.r.appspot.com/auth/';
   activeLogoutTimer!: any;
   emptyUser: User = {_id: '', name:'',token:'',cashBack: -1, admin: 0, email:'', tokenExpirationDate: '', status: '', telephone: ''};
@@ -77,13 +76,13 @@ export class AuthService{
         .pipe(tap(this.setAndStoreUserData.bind(this)));
   }
 
-  onRegister(name: string, email: string, tel: string, password: string, confirmPassword: string, firstCart: string, survey: string){
+  onRegister(name: string, email: string, tel: string, password: string, confirmPassword: string, firstCart: string, survey: string, id: string){
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
       })
     };
-    return this.http.post<{message: string, id: string}>(`${this.newUrl}register`,{name, email, password, confirmPassword, firstCart, survey, tel}, httpOptions);
+    return this.http.post<{message: string, id: string}>(`${this.newUrl}register`,{name, email, password, confirmPassword, firstCart, survey, tel, id}, httpOptions);
   };
 
   verifyToken(token: string){
@@ -119,7 +118,7 @@ export class AuthService{
       const tokenDate = new Date(expirationDate).getTime() - new Date().getTime();
       this.aoutoLogout(tokenDate);
       this.user.next(JSON.parse(data));
-      Preferences.set({key: 'authData', value: data});
+    Preferences.set({key: 'authData', value: data});
     };
   };
 

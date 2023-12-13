@@ -102,7 +102,6 @@ export class AddProductPage implements OnInit {
       prodData.append('description', this.form.value.description);
       prodData.append('longDescription', this.form.value.longDescription);
       return this.http.post<Response>(`${this.newUrl}prod-add`, prodData).subscribe((res)=>{
-        console.log(res)
         this.tabSrv.onProductAdd(res.product);
         showToast(this.toastCtrl, res.message, 3000);
         this.isLoading = false;

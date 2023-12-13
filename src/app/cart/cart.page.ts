@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AlertController, IonicModule, ToastController } from '@ionic/angular';
 import { CartService } from './cart.service';
-import { Cart } from './cart.model';
+import { Cart, Topping } from './cart.model';
 import { Subscription } from 'rxjs';
 import { TabsService } from '../tabs/tabs.service';
 import { Preferences } from '@capacitor/preferences'
@@ -19,6 +19,7 @@ import { Router } from '@angular/router';
 import { showToast } from '../shared/utils/toast-controller';
 import { TimerPage } from '../shared/timer/timer.page';
 import { InviteAuthPage } from '../auth/invite-auth/invite-auth.page';
+import { DatePickerPage } from '../shared/date-picker/date-picker.page';
 
 
 interface Data {
@@ -41,8 +42,13 @@ interface Data {
 })
 export class CartPage implements OnInit, OnDestroy {
 
-  enableOrder: boolean = false
-  checkedTerms: boolean = false
+  enableOrder: boolean = false;
+  checkedTerms: boolean = false;
+  pickUpDate: boolean = false;
+
+  dateToPickUp!:any;
+  dateToShow!: any;
+
   maxTable: number = 99
   tips: boolean = false;
   showCashBack: boolean = false;
@@ -98,6 +104,20 @@ export class CartPage implements OnInit, OnDestroy {
   }
 
 
+  async selectDate(){
+   const pickUpDate = await this.actionSheet.pikUpOrder(DatePickerPage)
+    if(pickUpDate){
+      this.dateToPickUp = pickUpDate;
+      this.dateToShow = this.dateToPickUp
+      this.pickUpDate = true;
+      this.cart.preOrderPickUpDate = this.dateToShow
+    }
+    if(pickUpDate && this.isLoggedIn){
+      this.enableOrder = true
+    }
+  }
+
+
 
   saveCart(){
     this.cart.masa = this.inputValue;
@@ -114,7 +134,6 @@ export class CartPage implements OnInit, OnDestroy {
       }
     }
     const cart = JSON.stringify(this.cart);
-    console.log(this.cart)
     Preferences.set({key: 'cart', value: cart});
   }
 
@@ -139,7 +158,7 @@ export class CartPage implements OnInit, OnDestroy {
 
 
   checked(event: any){
-    if(this.inputValue && event.detail.checked || this.pickUp && event.detail.checked){
+    if(this.inputValue && event.detail.checked || this.pickUp && event.detail.checked || this.pickUpDate && event.detail.checked){
       this.enableOrder = true
       this.checkedTerms = true
     } else if(event.detail.checked){
@@ -162,7 +181,6 @@ export class CartPage implements OnInit, OnDestroy {
       this.pickUp = true;
       this.inputValue = 0
       this.enableOrder = true
-      console.log(this.enableOrder)
     } else {
       this.pickUp = false;
       this.enableOrder = false
@@ -188,9 +206,7 @@ export class CartPage implements OnInit, OnDestroy {
     }
   }
 
-  // getAmbalaj(){
-  //  const amb = this.tabSrv.getAmbalaj()
-  // }
+
 
   saveData(userId: string, userCashBackBefore: number, cartCashBack: number){
       const data = JSON.stringify({
@@ -235,9 +251,14 @@ export class CartPage implements OnInit, OnDestroy {
 
 
   async getToken() {
-    // this.presentAlert()
+    console.log('ohit comanda this pickUpDate',this.pickUpDate)
     if(this.cart.total === 0 && this.cart.totalProducts === this.cart.cashBack){
       this.checkProductsAvalability()
+    } else if(this.pickUpDate && this.isLoggedIn){
+      this.checkProductsAvalability()
+    } else if(this.pickUpDate && !this.isLoggedIn){
+      this.saveCart()
+      this.actionSheet.openModal(InviteAuthPage, true)
     } else {
       this.saveCart()
       this.presentAlert()
@@ -256,9 +277,8 @@ export class CartPage implements OnInit, OnDestroy {
         idProd.push(product._id);
       };
       if(product.toppings.length){
-
         product.toppings.forEach(el => {
-          const topping = el.trim().replace(/\s+/g, '').toLocaleLowerCase()
+          const topping = el.name.trim().replace(/\s+/g, '').toLocaleLowerCase()
           if(!toppings.includes(topping)){
             toppings.push(topping)
           }
@@ -281,7 +301,7 @@ export class CartPage implements OnInit, OnDestroy {
               })
             } else if(res.message === 'Value 0') {
               this.saveCart();
-              return window.location.href = `http://localhost:8100/success?user=${res.userId}&ucbb=${res.userCashBackBefore}&ccb=${res.cartCashBack}`;
+              return window.location.href = `https://flow-api-394209.lm.r.appspot.com/success?user=${res.userId}&ucbb=${res.userCashBackBefore}&ccb=${res.cartCashBack}`;
             } else {
               this.isLoading = false;
               return showToast(this.toastCtrl, res.message, 4000);
@@ -327,7 +347,7 @@ export class CartPage implements OnInit, OnDestroy {
 
 }
 
-add(index: number, name: string, category: string, sub: boolean){
+add(index: number, name: string, category: string, sub: boolean, preOrder: boolean){
     this.cartService.addOne(index);
     if(sub){
      const names =  name.split('-');
@@ -335,11 +355,14 @@ add(index: number, name: string, category: string, sub: boolean){
      const subName = names[1];
      this.tabSrv.addSub(subName, prodName, category);
     } else {
-      this.tabSrv.addProd(category, name);
+      this.tabSrv.addProd(category, name, preOrder);
     };
 };
 
 red(index: number, name: string, category: string, sub: boolean){
+  if(!this.cart.products.length){
+    this.pickUpDate = false
+  }
   const rem = false;
   this.cartService.redOne(index);
   if(sub){
@@ -353,6 +376,9 @@ red(index: number, name: string, category: string, sub: boolean){
 };
 
 remove(index: number, qty: number, name: string, category: string, sub: boolean){
+  if(!this.cart.products.length){
+    this.pickUpDate = false
+  }
   const rem = true;
   this.cartService.removeProduct(index, qty);
   if(sub){
@@ -429,7 +455,7 @@ remove(index: number, qty: number, name: string, category: string, sub: boolean)
        } else if(result.data.values === 'locatie') {
         if(this.isLoggedIn){
           this.saveCart()
-          return window.location.href = `http://localhost:8100/success?user=${this.user._id}&pay-on=${this.user._id}`;
+          return window.location.href = `https://true-meniu.web.app/success?user=${this.user._id}&pay-on=${this.user._id}`;
         } else {
           return this.actionSheet.openModal(InviteAuthPage, this.emptyData)
         }

@@ -1,0 +1,71 @@
+<app-tab-header [title]="'Comenzi Terminate'"></app-tab-header>
+
+<ion-content [fullscreen]="true">
+  <ion-grid>
+   <ion-row *ngIf="orderArr.length">
+     <ion-col *ngFor="let order of orderArr; let i = index" size-lg="4" size-md="6">
+       <ion-card color="danger">
+         <ion-card-content>
+           <div class="eye" (click)="showOrder(i)">
+             <ion-icon *ngIf="order.show" name="eye" size="large"></ion-icon>
+             <ion-icon *ngIf="!order.show" name="eye-off-outline" size="large"></ion-icon>
+           </div>
+           <ion-list *ngIf="order.show">
+             <ion-item lines="none" class="ion-no-margin ion-no-padding name">
+               <ion-label slot="start" class="ion-no-margin bold">Name: {{order.userName | capitalize}}</ion-label>
+               <!-- <ion-label> -->
+               <!-- </ion-label> -->
+               <ion-label slot="end" class="ion-no-margin bold">Tel: {{order.userTel}}</ion-label>
+             </ion-item>
+             <ion-item lines="none" class="ion-no-margin ion-no-padding">
+               <ion-label slot="start" class="ion-no-margin bold">Nr: {{order.index}}</ion-label>
+               <ion-label class="ion-no-margin bold red" *ngIf="order.toGo">La Pachet</ion-label>
+               <ion-label slot="end" class="ion-no-margin bold">{{order.pickUp ? 'Pik Up' : "Masa: " + order.masa}}</ion-label>
+             </ion-item>
+             <ion-item lines="none" class="ion-no-margin ion-no-padding">
+               <ion-label slot="start" class="ion-no-margin">Primită: <span class="bold">{{getHours(order.createdAt)}}</span></ion-label>
+               <!-- <ion-label class="ion-no-margin">Va-Urma</ion-label> -->
+               <ion-label slot="end" class="ion-no-margin">ETA: <span class="bold">{{order.endTime}}</span></ion-label>
+             </ion-item>
+             <div class="product-wrapper" *ngFor="let product of order.products">
+              <ion-item lines="none" class="ion-no-margin ion-no-padding">
+                <ion-label>{{product.name}}</ion-label>
+                <ion-label class="bold" slot="end"> X {{product.quantity}}</ion-label>
+                <ion-label slot="end">{{product.total}} Lei</ion-label>
+              </ion-item>
+              <div class="options" *ngIf="product.toppings.length">
+                <div class="toppings-wrapper">
+                  <ion-label *ngFor="let topping of product.toppings" class="toppings">+{{topping}}</ion-label>
+                </div>
+              </div>
+            </div>
+             <ion-item lines="none" class="ion-no-margin ion-no-padding">
+               <ion-label slot="start" class="bold">Total Produse</ion-label>
+               <ion-label slot="end" class="bold">{{order.totalProducts}} Lei</ion-label>
+             </ion-item>
+             <ion-item *ngIf="order.tips > 0" lines="none" class="ion-no-margin ion-no-padding">
+               <ion-label slot="start">Tips</ion-label>
+               <ion-label slot="end">{{order.tips}}</ion-label>
+             </ion-item>
+             <ion-item *ngIf="order.cashBack > 0" lines="none" class="ion-no-margin ion-no-padding">
+               <ion-label slot="start">Plătit cu Cash Back</ion-label>
+               <ion-label slot="end">- {{order.cashBack}} Lei</ion-label>
+             </ion-item>
+             <ion-item *ngIf="order.payOnline" lines="none" class="ion-no-margin ion-no-padding">
+               <ion-label slot="start">Plătit Online</ion-label>
+               <ion-label slot="end">{{order.total}} Lei</ion-label>
+             </ion-item>
+             <ion-item *ngIf="order.payOnSite || order.cashBack > 0" lines="none" class="ion-no-margin ion-no-padding">
+               <ion-label slot="start" class="bold">Rest de Plată</ion-label>
+               <ion-label slot="end" class="bold">{{order.total}} Lei</ion-label>
+             </ion-item>
+             <!-- <ion-item> -->
+               <!-- <ion-button size="large" expand="block" (click)="finishOrder(i)">Terminat</ion-button> -->
+             <!-- </ion-item> -->
+           </ion-list>
+         </ion-card-content>
+       </ion-card>
+     </ion-col>
+   </ion-row>
+  </ion-grid>
+ </ion-content>

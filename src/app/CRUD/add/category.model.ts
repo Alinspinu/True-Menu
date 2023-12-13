@@ -23,6 +23,8 @@ export class Product {
   public image: {path: string, filename: string},
   public subProducts: SubProduct[],
   public category: Category,
+  public preOrderPrice: number,
+  public preOrder: boolean,
   public available: boolean,
   public longDescription: string,
   public allergens: {name: string, _id: string}[],
@@ -34,15 +36,10 @@ export class Product {
     salts: number,
     protein: number,
   },
-  public toppings: {
-    name: string,
-    price: number,
-    coffee: boolean,
-    qty: string,
-    um: string
-  }[],
+  public toppings: Topping[],
   public ingredients:{quantity: number, ingredient: Ingredient}[],
-  public paring: Product[]
+  public paring: Product[],
+  public ings: Ing[]
   ){};
 };
 
@@ -70,6 +67,24 @@ export class Ingredient{
     public protein: number,
     public additives: {name: string, _id: string}[],
     public allergens: {name: string, _id: string}[]
+  ){}
+}
+
+export class Topping {
+  constructor(
+    public name: string,
+    public price: number,
+    public qty: number,
+    public ingPrice: number,
+    public um: string
+  ){}
+}
+
+export class Ing{
+  constructor(
+    public name: String,
+    public qty: Number,
+    public price: number
   ){}
 }
 

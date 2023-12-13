@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IonicModule, ToastController } from '@ionic/angular';
+import { IonicModule, ModalController, NavParams, ToastController } from '@ionic/angular';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { Preferences } from '@capacitor/preferences';
@@ -46,6 +46,8 @@ export class RegisterPage implements OnInit {
   hideSurveyButton: boolean = false;
   survey: Survey = {food: [], foodPrice: [], coffee: [], coffeePrice: []}
 
+  user!: any
+  registerMode: boolean = true
 
   foodPrice: string[] = ['Sub 30 lei', 'Între 30 și 60 lei', 'Peste 60 lei'];
   coffeePrice: string[] = ['Sub 10 lei', 'Între 10 și 20 lei', 'Peste 30 lei'];
@@ -57,6 +59,7 @@ export class RegisterPage implements OnInit {
   private router: Router,
   private fb: FormBuilder,
   private toastCtrl: ToastController,
+  private modalCtrl: ModalController,
   ) {
     this.form = fb.group({
       email: fb.control('', [Validators.required]),
@@ -65,7 +68,6 @@ export class RegisterPage implements OnInit {
       password: fb.control('', [Validators.required]),
       confirmPassword: fb.control('', [Validators.required]),
     });
-
     this.passwordControl = this.form.get('password');
     this.confirmPasswordControl = this.form.get('confirmPassword');
     this.form.addValidators(
@@ -101,10 +103,29 @@ export class RegisterPage implements OnInit {
 
   ngOnInit() {
     this.validateForm();
+    this.getAndValidateToken()
   };
 
+
+  getAndValidateToken(){
+    const queryParams = new URLSearchParams(window.location.search);
+    const token = queryParams.get('token');
+      if(token){
+        this.authService.verifyToken(token).subscribe(response => {
+          if(response){
+            this.user = response
+            this.registerMode = false
+              this.form.get('name')?.setValue(this.user.name);
+              this.form.get('email')?.setValue(this.user.email);
+          } else {
+            showToast(this.toastCtrl, 'Ceva nu a mers bine la verificarea datelor!', 5000)
+          }
+        })
+      }
+  }
+
   triggerEscape(){
-    triggerEscapeKeyPress()
+    this.modalCtrl.dismiss()
   }
 
   togglePassword(){
@@ -129,7 +150,13 @@ export class RegisterPage implements OnInit {
     const tel = this.form.value.tel;
     const confirmPassword = this.form.value.confirmPassword;
     const survey = JSON.stringify(this.survey)
-    this.authService.onRegister(name, email, tel, password, confirmPassword, this.cart, survey).subscribe(res => {
+    let id: string
+    if(!this.registerMode){
+      id = this.user._id
+    } else {
+      id = ''
+    }
+    this.authService.onRegister(name, email, tel, password, confirmPassword, this.cart, survey, id).subscribe(res => {
       if(res.message === "Email sent") {
         const data = JSON.stringify({
           name: name,
@@ -138,11 +165,11 @@ export class RegisterPage implements OnInit {
         })
         Preferences.set({key: 'tempUserData', value: data });
         this.router.navigate(['/email-sent']);
-        triggerEscapeKeyPress();
+        this.modalCtrl.dismiss()
       } else if(res.message === 'This email allrady exist'){
         this.router.navigate(['/tabs/cart']);
         showToast(this.toastCtrl, res.message, 3000);
-        triggerEscapeKeyPress();
+        this.modalCtrl.dismiss()
       } else if(res.message === 'Error sending email'){
         const data = JSON.stringify({
           name: name,
@@ -151,7 +178,10 @@ export class RegisterPage implements OnInit {
         });
         Preferences.set({key: 'tempUserData', value: data });
         this.router.navigate(['/email-error']);
-        triggerEscapeKeyPress();
+        this.modalCtrl.dismiss()
+      } else if(res.message === 'Datele au fost actualizate.'){
+        showToast(this.toastCtrl, 'Datele au fost actualizate. Bine ai venit!', 5000)
+        this.router.navigate(['/tabs/food'])
       };
     });
 

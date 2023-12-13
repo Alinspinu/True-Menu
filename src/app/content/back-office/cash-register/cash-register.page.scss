@@ -45,9 +45,19 @@ ion-content {
 .amount{
   font-family: NoirPro !important;
   text-align: end;
-  flex: 30%;
+  flex: 20%;
   margin: 5px;
   color: green;
+}
+
+.trash{
+  text-align: end;
+  flex: 10%;
+  cursor: pointer;
+}
+
+.trash:active{
+  color: rgb(210, 89, 89);
 }
 
 .red{
@@ -73,3 +83,9 @@ ion-content {
       font-size: 13px !important;
     }
 }
+
+// @media(max-width: 666px){
+  .title{
+    display: none !important;
+  }
+// }

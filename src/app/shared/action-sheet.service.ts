@@ -18,6 +18,9 @@ import { InviteAuthPage } from '../auth/invite-auth/invite-auth.page';
 import { AddExtraPage } from '../CRUD/add/add-extra/add-extra.page';
 import { BlackListPage } from '../CRUD/add/black-list/black-list.page';
 import { DatePickerPage } from './date-picker/date-picker.page';
+import { TimePickerPage } from './time-picker/time-picker.page';
+import { AddEntryPage } from '../CRUD/add/add-entry/add-entry.page';
+import { Topping } from '../cart/cart.model';
 
 interface Data {
   ing: {
@@ -147,9 +150,10 @@ export class ActionSheetService {
                typeof RecipeIngredientPage |
                typeof AddIngredientPage |
                typeof InviteAuthPage |
-               typeof AddExtraPage,
+               typeof AddExtraPage |
+               typeof AddEntryPage,
 
-    dta: Data
+    dta: any
                ) {
     const modal = await this.modalCtrl.create({
       component: component,
@@ -185,10 +189,13 @@ export class ActionSheetService {
     component: typeof AuthPage |
                 typeof RegisterPage |
                 typeof BlackListPage |
-                typeof DatePickerPage
+                typeof DatePickerPage |
+                typeof TimePickerPage
                 ) {
     const modal = await this.modalCtrl.create({
       component: component,
+      backdropDismiss: false,
+      keyboardClose: false,
     });
 
     modal.present();
@@ -196,6 +203,20 @@ export class ActionSheetService {
     return data
   };
 
+
+  async pikUpOrder(
+    component:  typeof DatePickerPage,
+
+                ) {
+    const modal = await this.modalCtrl.create({
+      component: component,
+
+    });
+
+    modal.present();
+    const { data } = await modal.onDidDismiss();
+    return data
+  };
 
 
   async chooseSubProduct(options: string[]) {
@@ -229,10 +250,10 @@ export class ActionSheetService {
     }
   }
 
-  async chooseExtra(options: string[]) {
+  async chooseExtra(options: Topping[]) {
     const inputs = options.map(option => {
       return {
-          label: option,
+          label: option.name + '   +' + option.price + 'Lei',
           type: 'checkbox' as const,
           value: option,
 

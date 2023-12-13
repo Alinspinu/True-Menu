@@ -16,14 +16,8 @@ firebase.initializeApp({
   measurementId: "G-PVD9BMRH14"
 });
 
-// self.addEventListener('push', function(event) {
-//   let data = {}
-//   if (event.data) {
-//     data = event.data.json()
-//   }
 
-//   self.clients.matchAll().then(all => all.map(client => client.postMessage(data)));
-// });
+
 
 // Retrieve an instance of Firebase Messaging so that it can handle background messages.
  firebase.messaging().onBackgroundMessage(function(payload) {

@@ -73,5 +73,30 @@ export class AppComponent  implements OnInit{
     this.getUser()
     this.setUrl();
     this.fetchData();
+    this.registrateServiceWorker();
+    this.hideSplashScreen();
   };
+
+
+
+  hideSplashScreen(){
+    setTimeout(() => {
+      const splash = document.getElementById('splash-screen');
+      if (splash) {
+        splash.style.display = 'none';
+      }
+    },4000)
+  }
+
+  registrateServiceWorker(){
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/firebase-messaging-sw.js')
+        .then(registration => {
+          console.log('Service Worker Registered', registration);
+        })
+        .catch(err => {
+          console.error('Service Worker Registration Failed', err);
+        });
+    }
+  }
 };

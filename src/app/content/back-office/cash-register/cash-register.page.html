@@ -1,23 +1,24 @@
-<app-tab-header [title]="'Registru de Casă'"></app-tab-header>
+<app-tab-header [title]="'Casă'"(dayEv)="reciveEntry($event)"></app-tab-header>
 
 <ion-content [fullscreen]="true">
-  <ion-card *ngFor="let day of documents">
+  <ion-card *ngFor="let day of documents; let z = index">
     <ion-card-header>
       <span class="cash">Cash in  {{round(day.cashIn)}} Lei</span>
       <span class="date">DATA  {{formatDate(day.date)}}</span>
     </ion-card-header>
     <ion-card-content class="ion-no-padding">
       <ion-list>
-        <ion-item *ngFor="let entry of day.entry" class="entry" class="ion-no-margin ion-no-padding">
+        <ion-item *ngFor="let entry of day.entry; let i = index" class="entry" class="ion-no-margin ion-no-padding">
           <ion-label class="description">{{entry.description | capitalize}}</ion-label>
           <ion-label class="tip" [class.red]="entry.tip === 'expense'">{{entry.tip === 'expense' ? 'out' : 'in'}}</ion-label>
           <ion-label class="amount" [class.red]="entry.tip === 'expense'">{{entry.amount}}</ion-label>
+          <ion-icon name="trash" class="trash" (click)="deleteEntry(entry._id, i, z)"></ion-icon>
         </ion-item>
       </ion-list>
     </ion-card-content>
     <ion-card-header>
       <span class="cash">Cash left  {{round(day.cashOut)}} Lei</span>
-    </ion-card-header>`
+    </ion-card-header>
   </ion-card>
 
   <ion-infinite-scroll (ionInfinite)="loadMore($event)">

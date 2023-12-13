@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IonicModule, ToastController } from '@ionic/angular';
+import { IonicModule, ModalController, ToastController } from '@ionic/angular';
 
 import { Router } from '@angular/router';
 import { AuthService } from './auth.service';
@@ -43,12 +43,13 @@ export class AuthPage implements OnInit {
     private router: Router,
     private authService: AuthService,
     private toastCtrl: ToastController,
+    private modalCtrl: ModalController,
     @Inject(ActionSheetService) private actionSheet: ActionSheetService,
   ) { }
 
 
   triggerEscape(){
-    triggerEscapeKeyPress()
+    this.modalCtrl.dismiss()
   }
   getCurrentTab() {
     const currentTab = window.location.href;
@@ -96,14 +97,15 @@ export class AuthPage implements OnInit {
         });
         Preferences.set({key: 'tempUserData', value: data });
         this.router.navigateByUrl('/email-sent');
-        triggerEscapeKeyPress();
+        this.modalCtrl.dismiss()
+        // triggerEscapeKeyPress();
       } else {
-        triggerEscapeKeyPress();
+        this.modalCtrl.dismiss()
         this.router.navigateByUrl(`/tabs/${this.tab}`);
       }
     }, error => {
       if(error.status === 401){
-        showToast(this.toastCtrl, 'Nume sau parola incorectă!', 5000);
+        showToast(this.toastCtrl, error.error.message, 5000);
         setTimeout(() => {
           this.resetPassword = true;
         }, 600);

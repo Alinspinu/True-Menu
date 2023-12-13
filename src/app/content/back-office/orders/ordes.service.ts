@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable, take, tap } from "rxjs";
 import { Ingredient } from "src/app/CRUD/add/category.model";
 
 import { AngularFireMessaging } from '@angular/fire/compat/messaging';
+import { Order } from "src/app/cart/cart.model";
 
 
 @Injectable({providedIn: 'root'})
@@ -24,28 +25,47 @@ export class OrdersService{
 
     getMessage(){
        return this.afMessaging.messages.pipe(tap(res => {
-        console.log('service', res)
+        // console.log('service', res)
        }))
     }
 
-    getMsg(){
-      this.afMessaging.onMessage(function(payload){
-        console.log(payload)
-      })
-    }
 
     requestPermission() {
       this.afMessaging.requestToken
         .subscribe(token => {
           if(token){
-            this.openConnection(token).subscribe()
+            console.log(token)
+            this.openConnection(token).subscribe(response => {
+              console.log(response)
+            }
+            )
           }
         }
         );
     }
 
+    getOrdersFromDb(){
+      return this.http.get<Order[]>(`${this.newUrl}orders/get-order`)
+    }
+
     openConnection(token: string){
       return this.http.get(`${this.baseUrl}message/send-msg?token=${token}`)
+    }
+
+    orderDone(id: string) {
+      return this.http.get(`${this.baseUrl}orders/order-done?cmdId=${id}`)
+    }
+
+    setOrderTime(id: string, time: number){
+      return this.http.get(`${this.newUrl}orders/set-order-time?orderId=${id}&time=${time}`).subscribe()
+    }
+
+    endPending(id: string){
+      return this.http.get(`${this.baseUrl}orders/order-pending?id=${id}`)
+    }
+
+    getFinishedOrders(){
+      return this.http.get<Order[]>(`${this.newUrl}orders/finished-orders`)
     }
 
 

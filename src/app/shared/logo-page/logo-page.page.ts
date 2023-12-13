@@ -15,6 +15,7 @@ export class LogoPagePage implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    console.log('inside a logo page')
   }
 
 }

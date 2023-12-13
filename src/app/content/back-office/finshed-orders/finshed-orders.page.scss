@@ -1,0 +1,46 @@
+
+ion-label{
+  font-family: NoirProLight !important;
+  padding-left: 8px;
+}
+
+.bold{
+  font-family: NoirPro !important;
+}
+
+.red{
+  color: red;
+}
+
+ion-button{
+  color: white;
+}
+
+ion-list{
+  background-color: var(--ion-color-danger);
+}
+
+.eye{
+display: flex;
+flex-direction: row;
+justify-content: center;
+ width: 100%;
+}
+
+
+.toppings{
+  font-family: NoirPro !important;
+  font-size: 14px;
+  color: var(--ion-color-primary-contrast);
+}
+
+.toppings-wrapper{
+  margin-left: auto;
+  padding-right: 8px;
+}
+
+.options{
+  display: flex;
+  width: 100%;
+  background: white;
+}

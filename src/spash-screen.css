@@ -1,0 +1,199 @@
+
+
+.container{
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background-color: #e0cebf;
+}
+
+.count-container{
+  width: 100px;
+  text-align: center;
+  position: absolute;
+  top: 41%;
+  left: 37%;
+}
+.count-container span{
+  font-family: NoirPro, sans-serif;
+  font-size: 78px;
+  color: white;
+}
+
+.message{
+  font-family: NoirProLight, sans-serif;
+  font-size: 25px;
+  padding: 0 10px 0 10px;
+  position: absolute;
+  text-align: center;
+  top: 8%;
+}
+
+.img-container{
+  position:absolute;
+  right: 10%;
+  bottom: 0;
+}
+img{
+  height: 250px;
+  width: 100px;
+}
+
+.lds-spinner {
+  color: official;
+  display: inline-block;
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+.lds-spinner div {
+  transform-origin: 100px 100px;
+  animation: lds-spinner 12s linear infinite;
+}
+
+
+.lds-spinner div:after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 4px;
+  left: 100px;
+  width: 10px;
+  height: 20px;
+  border-radius: 20%;
+  background: #1f1f1f;
+}
+.lds-spinner div:nth-child(1) {
+  transform: rotate(0deg);
+  animation-delay: -12s;
+}
+.lds-spinner div:nth-child(2) {
+  transform: rotate(30deg);
+  animation-delay: -11s;
+}
+.lds-spinner div:nth-child(3) {
+  transform: rotate(60deg);
+  animation-delay: -10s;
+}
+.lds-spinner div:nth-child(4) {
+  transform: rotate(90deg);
+  animation-delay: -9s;
+}
+.lds-spinner div:nth-child(5) {
+  transform: rotate(120deg);
+  animation-delay: -8s;
+}
+.lds-spinner div:nth-child(6) {
+  transform: rotate(150deg);
+  animation-delay: -7s;
+}
+.lds-spinner div:nth-child(7) {
+  transform: rotate(180deg);
+  animation-delay: -6s;
+}
+.lds-spinner div:nth-child(8) {
+  transform: rotate(210deg);
+  animation-delay: -5s;
+}
+.lds-spinner div:nth-child(9) {
+  transform: rotate(240deg);
+  animation-delay: -4s;
+}
+.lds-spinner div:nth-child(10) {
+  transform: rotate(270deg);
+  animation-delay: -3s;
+}
+.lds-spinner div:nth-child(11) {
+  transform: rotate(300deg);
+  animation-delay: -2s;
+}
+.lds-spinner div:nth-child(12) {
+  transform: rotate(330deg);
+  animation-delay: -1s;
+}
+@keyframes lds-spinner {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@media(max-height: 500px) and (min-width: 300px){
+  img{
+    height: 150px;
+    width: 70px;
+  }
+
+  .lds-spinner div {
+    transform-origin: 80px 80px;
+  }
+
+  .lds-spinner div:after {
+    content: " ";
+    left: 80px;
+    width: 10px;
+    height: 20px;
+  }
+
+  .lds-spinner {
+    width: 155px;
+    height: 155px;
+  }
+
+  .count-container{
+    left: 35%;
+  }
+  .count-container span{
+    font-size: 60px;
+  }
+
+}
+@media(min-width: 350px) and (min-height: 690px){
+  .count-container{
+    top: 42%;
+    left: 36%;
+  }
+}
+
+@media(min-width: 380px) and (min-height: 800px){
+  .count-container{
+    top: 44%;
+    left: 38%;
+  }
+}
+
+@media(min-width: 500px){
+  .count-container{
+    left: 40%;
+  }
+}
+@media(min-width: 725px){
+  .count-container{
+    left: 43%;
+  }
+}
+@media(min-width: 925px){
+  .count-container{
+    left: 45%;
+  }
+}
+@media(min-width: 1250px){
+  .count-container{
+    left: 46%;
+  }
+}
+@media(min-width: 1600px){
+  .count-container{
+    left: 47%;
+  }
+}
+@media(min-width: 1950px){
+  .count-container{
+    left: 48%;
+  }
+}

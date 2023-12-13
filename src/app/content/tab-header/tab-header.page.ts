@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnDestroy, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -11,6 +11,19 @@ import { Subscription } from 'rxjs';
 import { CapitalizePipe } from '../../shared/capitalize.pipe';
 import { BlackListPage } from 'src/app/CRUD/add/black-list/black-list.page';
 import { ProductContentService } from '../product-content/product-content.service';
+import { AddEntryPage } from 'src/app/CRUD/add/add-entry/add-entry.page';
+
+
+interface Data {
+  ing: {
+    _id: string,
+    qty: number
+  }[],
+  mode: string,
+  ingId: string,
+}
+
+
 @Component({
   selector: 'app-tab-header',
   templateUrl: './tab-header.page.html',
@@ -21,24 +34,38 @@ import { ProductContentService } from '../product-content/product-content.servic
 export class TabHeaderPage implements OnInit, OnDestroy {
   @Input() title: string = '';
   @Input() imgPath: string = '';
+
+  @Output() dayEv = new EventEmitter<any>()
+
+  on: boolean = false
   tab!: string;
   isLoggedIn: boolean = false;
   isAdmin: boolean = false;
   user!: User;
   userSub!: Subscription;
   secondUserSub!: Subscription;
+  emptyData: Data = {ing: [], mode: '', ingId: ''}
+
+  private audioPlayer!: HTMLAudioElement;
 
   constructor(
     private tabSrv: TabsService,
     @Inject(ActionSheetService) private actionSheet: ActionSheetService,
     private authSrv: AuthService,
     private productSrv: ProductContentService,
-  ) { };
+  ) {
+    this.audioPlayer = new Audio('/assets/audio/ding.mp3')
+   };
 
 
   ngOnInit() {
     this.getUser();
     this.getCurrentTab()
+  }
+
+  async openAddEntry(){
+   const day = await this.actionSheet.openModal(AddEntryPage, this.emptyData)
+   this.dayEv.emit(day)
   }
 
   getCurrentTab() {
@@ -57,6 +84,13 @@ export class TabHeaderPage implements OnInit, OnDestroy {
   showActions(){
     this.actionSheet.showActions();
   };
+
+  play(){
+    if(!this.on){
+      this.on = true;
+      this.audioPlayer.play()
+    }
+  }
 
 
   getUser(){

@@ -15,7 +15,13 @@
   <!-- <app-logo-page *ngIf="isLoading && !error"></app-logo-page> -->
   <app-timer *ngIf="isLoading && !error"></app-timer>
   <app-failure *ngIf="error"[errorMessage]="errorMessage"></app-failure>
-  <div class="center-container">
+
+  <div class="center-container" *ngIf="preOrder">
+    <div>
+      <p class="center-message">Mulțumim pentru comandă! <br> Aveți comanda cu numarul <span class="bold">{{orderNumber}}.</span> <br>Puteți ridica produsele din locație în data de:<br> <span class="bold">{{pickUpDate}}.</span> <br> Vă așteptăm cu drag!</p>
+    </div>
+  </div>
+  <div class="center-container" *ngIf="!preOrder">
   <div *ngIf="!isLoading && !error && orderTime > 0" >
     <p class="center-message">Mulțumim pentru comandă! <br> Aveți comanda cu numarul <span class="bold">{{orderNumber}}.</span> <br>Produsele vor fi gata în <br> <span class="bold">{{orderTime}} minute.</span></p>
   </div>

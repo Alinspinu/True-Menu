@@ -22,7 +22,7 @@ import { EditCategoryComponent } from '../../CRUD/edit/edit-category/edit-catego
 })
 
 export class TabContentPage implements OnInit, OnDestroy {
-  isLoadding: boolean = false;
+  isLoadding: boolean = true;
   isLoggedIn: boolean = false;
   isAdmin: boolean = false;
   socialUrl!: string;
@@ -58,12 +58,14 @@ export class TabContentPage implements OnInit, OnDestroy {
     this.isLoadding = true;
     this.tabSubscription = this.tabSrv.categorySend$.subscribe(res => {
       this.categories = [];
-      for(let category of res){
-        if(category.mainCat === this.currentCategory){
-          this.categories.push(category);
-        }
+      if(res) {
+        for(let category of res){
+          if(category.mainCat === this.currentCategory){
+            this.categories.push(category);
+          }
+        };
         this.isLoadding = false;
-      };
+      }
     });
   };
 
@@ -86,7 +88,7 @@ export class TabContentPage implements OnInit, OnDestroy {
   detectColorScheme() {
     const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     this.isDarkMode = darkModeMediaQuery.matches;
-    console.log(this.isDarkMode);
+    console.log("is dark mode",this.isDarkMode);
     darkModeMediaQuery.addListener((event) => {
       this.isDarkMode = event.matches;
     });

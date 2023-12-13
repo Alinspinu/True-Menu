@@ -30,7 +30,6 @@ export class EditSubProductComponent  implements OnInit {
   currentCategory!: string;
   products!: Product[];
   baseUrl: string = 'http://localhost:8080/api-true/';
-  baseUrlHeroku: string = 'https://www.cafetish.com/api/';
   newUrl: string = 'https://flow-api-394209.lm.r.appspot.com/api-true/';
   isLoading = false;
   form!: FormGroup;

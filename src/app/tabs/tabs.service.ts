@@ -1,7 +1,10 @@
 import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, take, tap} from "rxjs";
 import { Category, Product} from "../CRUD/add/category.model";
+import { Preferences } from "@capacitor/preferences";
+import { CartService } from "../cart/cart.service";
+import { CartProduct } from "../cart/cart.model";
 
 @Injectable({providedIn: 'root'})
 
@@ -33,16 +36,22 @@ export class TabsService{
       protein: 0,
     },
     additives: [],
+    preOrderPrice: 0,
+    preOrder: false,
     allergens: [],
     paring: [],
     toppings: [],
+    ings: []
   }
   private categoryState!: BehaviorSubject<Category[]>;
   public categorySend$!: Observable<Category[]>;
   category: Category[] = [this.emptyCategory];
 
 
-  constructor(private http: HttpClient){
+  constructor(
+    private http: HttpClient,
+    private crtSrv: CartService,
+    ){
     this.categoryState = new BehaviorSubject<Category[]>([this.emptyCategory]);
     this.categorySend$ =  this.categoryState.asObservable();
   }
@@ -62,17 +71,35 @@ export class TabsService{
 
 
   fetchCategories(){
+    Preferences.get({key: 'categories'}).then(data => {
+      console.log(data)
+      if(data.value){
+        const cats = JSON.parse(data.value)
+        console.log("from local storage", cats)
+        this.category = this.sortData(cats)
+        this.categoryState.next([...this.category])
+      }
+    })
     return this.http.get<Category[]>(`${this.newUrl}get-cats`).pipe(take(1), tap(res => {
       this.category = this.sortData(res)
-      console.log(this.category)
+      const data = JSON.stringify(this.category)
+      Preferences.set({key: "categories", value: data })
       this.categoryState.next([...this.category]);
     }));
+
+
 };
 
 getAmbalaj(qty: number){
     const categoryIndex = this.category.findIndex(index => index.name == 'MERCH');
     const productIndex = this.category[categoryIndex].product.findIndex(index => index.name == "Ambalaj")
     const product = this.category[categoryIndex].product[productIndex]
+    let preOrder
+    if(product.preOrder === undefined){
+        preOrder = false
+    } else {
+      preOrder = product.preOrder
+    }
     const cartAmbalaj = {
       name: product.name,
       price: product.price,
@@ -83,7 +110,9 @@ getAmbalaj(qty: number){
       category: product.category._id,
       sub: false,
       toppings: [],
-      payToGo: false
+      payToGo: false,
+      preOrder: preOrder,
+      ings: []
     };
     return cartAmbalaj
 }
@@ -109,16 +138,39 @@ changeProdStatus(status: string, id: string){
     });
   };
 
-  addProd(categoryId: string, prodName: string){
-    this.category.map(obj => {
-      if(obj['_id'] === categoryId){
-           obj.product.map(obj=> {
-            if(obj['name'] === prodName){
-              obj.quantity++;
-            };
-          });
-      };
-    });
+  addProd(categoryId: string, prodName: string, preOrder: boolean){
+    let firstProduct!: CartProduct
+    this.crtSrv.cartSend$.subscribe(res => {
+      // console.log(res.products[0])
+      firstProduct = res.products[0]
+    })
+    console.log(firstProduct, preOrder)
+    if(firstProduct){
+      if(firstProduct.preOrder === preOrder){
+        this.category.map(obj => {
+          if(obj['_id'] === categoryId){
+               obj.product.map(obj=> {
+                if(obj['name'] === prodName){
+                  obj.quantity++;
+                };
+              });
+          };
+        });
+      } else{
+        return
+      }
+    } else{
+      this.category.map(obj => {
+        if(obj['_id'] === categoryId){
+             obj.product.map(obj=> {
+              if(obj['name'] === prodName){
+                obj.quantity++;
+              };
+            });
+        };
+      });
+    }
+
   };
 
   redSub(subName: string, prodName: string, categoryId: string, rem: boolean){

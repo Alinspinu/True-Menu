@@ -32,5 +32,9 @@ export class BackOfficeService{
       return this.http.get<{message: string, documents: Day[]}>(`${this.newUrl}register/show-cash-register?page=${page}`);
     }
 
+    deleteEntry(id: string){
+      return this.http.delete<{message: string}>(`${this.newUrl}register/delete-entry?id=${id}`)
+    }
+
 
 }

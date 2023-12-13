@@ -11,6 +11,7 @@
 
 <ion-content [fullscreen]="true" class="auth-wrapper">
   <div class="header">
+    <ion-label class="title">Pentru a putea lasa o comanda, <br> avem nevoie de datele tale!</ion-label>
     <p class="first-p">Intră în cont!</p>
     <ion-button size="small" class="login" color="success"  (click)="onSignIn()">Login</ion-button>
     <p class="second-p">Nu ai unul?</p>
@@ -18,9 +19,9 @@
     <p class="second-p" style="margin-top: 2px;">Pentru 5% Cash Back în aplicatie!</p>
     <ion-button size="small" class="login" color="secondary"  (click)="onRegister()">Register</ion-button>
       <!-- <span (click)="onRegister()" class="register">Register</span> -->
-      <p class="second-p">Sau</p>
-      <p class="third-p">Plătește online fară cont!</p>
-      <ion-button size="small" class="login" color="success" (click)="triggerEscape()">
+      <p class="second-p" *ngIf="!mode">Sau</p>
+      <p class="third-p" *ngIf="!mode">Plătește online fară cont!</p>
+      <ion-button size="small" class="login" color="success" (click)="triggerEscape()" *ngIf="!mode">
         <ion-icon name="arrow-back-outline"></ion-icon>
         Înapoi</ion-button>
   </div>
