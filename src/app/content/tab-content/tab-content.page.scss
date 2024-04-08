@@ -13,7 +13,7 @@ span, p{
   margin-bottom: 9px;
 }
 img{
-  height: 23vh;
+  height: 28vh;
   cursor: pointer;
   margin: 3px;
   border-radius: 5px;
@@ -57,9 +57,16 @@ img{
 
 }
 
-@media (min-height: 700px) {
+@media (min-height: 700px) and (max-width: 450px) {
   img{
-    height: 18vh !important;
+    height: 20vh !important;
+  }
+
+}
+
+@media (min-width: 300px) and (min-height: 600px) and (max-width: 500px){
+  img{
+    height: 25vh !important;
   }
 
 }

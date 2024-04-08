@@ -1,0 +1,49 @@
+
+
+ion-content {
+  --background: var(--ion-color-secondary);
+}
+ion-header {
+  --background: var(--ion-color-secondary);
+
+}
+ion-toolbar{
+  --background: var(--ion-color-secondary);
+}
+
+ion-title{
+  font-family: NoirPro !important;
+  font-size: 22px;
+  color: white;
+}
+
+.icon{
+  font-size: 30px;
+  color: white;
+}
+
+.qr-code{
+  height: 400px;
+  width: 400px;
+}
+
+.title{
+  margin: 30px 0 30px 0;
+  font-family: NoirPro;
+  font-size: 20px;
+  padding: 20px;
+  text-align: center;
+}
+
+.message{
+  margin: 20px 0 20px 0;
+  font-family: NoirProLight;
+  font-size: 18px;
+  padding: 20px;
+  text-align: center;
+}
+
+.cashback{
+  font-family: NoirPro !important;
+  color: white;
+}

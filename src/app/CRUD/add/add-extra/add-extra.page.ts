@@ -24,8 +24,7 @@ interface Data {
 export class AddExtraPage implements OnInit {
 
   @Input() data!: Data
-  baseUrl: string = 'http://localhost:8080/api-true/';
-  newUrl: string = 'https://flow-api-394209.lm.r.appspot.com/api-true/';
+
   form!: FormGroup;
   coffee: boolean = false
   constructor(

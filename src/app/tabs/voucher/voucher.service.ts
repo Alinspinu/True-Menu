@@ -13,14 +13,14 @@ export class VoucherService{
   ){}
 
   saveVoucher(code: string, value: number){
-    return this.http.post<{message: string}>(`${environment.BASE_URL_CLOUD}pay/add-voucher`, {code: code, value: value})
+    return this.http.post<{message: string}>(`${environment.BASE_URL}pay/add-voucher`, {code: code, value: value})
   }
 
   verfyVoucher(code: string){
-    return this.http.post<{message: string, voucher: any}>(`${environment.BASE_URL_CLOUD}pay/verify-voucher`, {code: code})
+    return this.http.post<{message: string, voucher: any}>(`${environment.BASE_URL}pay/verify-voucher`, {code: code})
   }
 
   useVoucher(id: string){
-    return this.http.post<{message: string}>(`${environment.BASE_URL_CLOUD}pay/use-voucher`, {id: id})
+    return this.http.post<{message: string}>(`${environment.BASE_URL}pay/use-voucher`, {id: id})
   }
 }

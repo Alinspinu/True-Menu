@@ -10,6 +10,12 @@ export const environment = {
     appId: "1:797347778793:web:80a7be921c939dff71a078",
     measurementId: "G-PVD9BMRH14"
   },
-  BASE_URL_LOCAL: 'http://localhost:8080/',
-  BASE_URL_CLOUD: 'https://flow-api-394209.lm.r.appspot.com/'
+  LOC: '655e2e7c5a3d53943c6b7c53',
+  ADMIN_EMAIL: "alinz.spinu@gmail.com",
+  BASE_URL: 'http://localhost:8080/',
+  // BASE_URL: 'https://flow-api-394209.lm.r.appspot.com/',
+  // BASE_URL: 'https://fa74-82-77-237-76.ngrok-free.app/',
+
+  // APP_URL: 'https://true-meniu.web.app/'
+  APP_URL: 'http://localhost:8101/',
 };

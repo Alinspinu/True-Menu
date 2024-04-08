@@ -7,6 +7,7 @@ import { TabsService } from 'src/app/tabs/tabs.service';
 import { Product, SubProduct } from '../category.model';
 import { SpinnerPage } from '../../../shared/spinner/spinner.page';
 import { showToast } from '../../../shared/utils/toast-controller';
+import { environment } from 'src/environments/environment';
 
 interface Response {
   message: string,
@@ -24,8 +25,6 @@ export class AddSubproductPage implements OnInit {
   currentTab!: string;
   currentCategory!: string;
   products!: Product[];
-  baseUrl: string = 'http://localhost:8080/api-true/';
-  newUrl: string = 'https://flow-api-394209.lm.r.appspot.com/api-true/';
   isLoading = false;
   form!: FormGroup;
   constructor(
@@ -48,7 +47,7 @@ export class AddSubproductPage implements OnInit {
         toppings: [],
         qty: this.form.value.qty
       };
-     return this.http.post<Response>(`${this.newUrl}sub-prod-add`, subProdData).subscribe((res)=>{
+     return this.http.post<Response>(`${environment.BASE_URL}sub/sub-prod-add`, subProdData).subscribe((res)=>{
       this.tabServ.onSubProductAdd(res.subProduct);
       showToast(this.toastCtrl, res.message, 3000);
       this.isLoading = false;

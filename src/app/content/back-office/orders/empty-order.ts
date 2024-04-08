@@ -22,6 +22,13 @@ export const emptyOrder: Order = {
   endTime: '',
   paymentMethod: '',
   completetime: 0,
+  payment: {
+    cash: 0,
+    card: 0,
+    viva: 0,
+    voucher: 0,
+    online:  0,
+  },
   discount: 0,
   status: '',
   show: false,

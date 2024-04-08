@@ -7,6 +7,8 @@ import { TabsService } from './tabs/tabs.service';
 import { ProductContentService } from './content/product-content/product-content.service';
 import { AuthService } from './auth/auth.service';
 import User from './auth/user.model';
+import { Subscription } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 
 @Component({
@@ -16,11 +18,13 @@ import User from './auth/user.model';
 
 
 })
-export class AppComponent  implements OnInit{
+export class AppComponent  implements OnInit, OnDestroy{
   user!: User
   facebookUrl!: string;
   newWindow!: string;
   isLoadding: boolean = false;
+  userSub!: Subscription
+  secondUserSub!: Subscription
 
   constructor(
     private router: Router,
@@ -34,10 +38,20 @@ export class AppComponent  implements OnInit{
     window.open(this.facebookUrl, this.newWindow);
   }
 
+  ngOnDestroy(): void {
+    if(this.userSub){
+      this.userSub.unsubscribe()
+    }
+    if(this.secondUserSub){
+      this.secondUserSub.unsubscribe()
+    }
+  }
+
   getUser(){
-    this.authSrv.user$.subscribe(response=> {
-      response.subscribe(user => {
-       this.user = user
+    this.userSub = this.authSrv.user$.subscribe(response=> {
+      this.secondUserSub = response.subscribe(user => {
+        this.user = user
+
       })
     })
   }
@@ -57,7 +71,7 @@ export class AppComponent  implements OnInit{
   };
 
   fetchData(){
-    this.tabSrv.fetchCategories().subscribe();
+    this.tabSrv.fetchCategories(environment.LOC).subscribe();
     this.prodSrv.fetchBlackList().subscribe()
   }
 
@@ -72,9 +86,9 @@ export class AppComponent  implements OnInit{
     this.initializeApp();
     this.getUser()
     this.setUrl();
-    this.fetchData();
-    this.registrateServiceWorker();
+    // this.registrateServiceWorker();
     this.hideSplashScreen();
+    this.fetchData();
   };
 
 

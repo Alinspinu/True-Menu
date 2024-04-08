@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "true-meniu"
-  }
+    "default": "true-meniu",
+    "meniu": "true-meniu"
+  },
+  "targets": {},
+  "etags": {}
 }

@@ -20,9 +20,6 @@ export class BlackListPage implements OnInit {
   toppingsList: string[] =[];
   listToShow: string[] = [];
 
-  baseUrl: string = 'http://localhost:8080/api-true/';
-  newUrl: string = 'https://flow-api-394209.lm.r.appspot.com/api-true/';
-
   constructor(
     private prodServ: ProductContentService,
     private modalCtrl: ModalController,

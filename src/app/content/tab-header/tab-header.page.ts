@@ -12,6 +12,8 @@ import { CapitalizePipe } from '../../shared/capitalize.pipe';
 import { BlackListPage } from 'src/app/CRUD/add/black-list/black-list.page';
 import { ProductContentService } from '../product-content/product-content.service';
 import { AddEntryPage } from 'src/app/CRUD/add/add-entry/add-entry.page';
+import { DisplayQrPage } from 'src/app/shared/display-qr/display-qr.page';
+import { DomSanitizer } from '@angular/platform-browser';
 
 
 interface Data {
@@ -53,6 +55,7 @@ export class TabHeaderPage implements OnInit, OnDestroy {
     @Inject(ActionSheetService) private actionSheet: ActionSheetService,
     private authSrv: AuthService,
     private productSrv: ProductContentService,
+    private sanitizer: DomSanitizer,
   ) {
     this.audioPlayer = new Audio('/assets/audio/ding.mp3')
    };
@@ -61,6 +64,7 @@ export class TabHeaderPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.getUser();
     this.getCurrentTab()
+    console.log(this.isLoggedIn)
   }
 
   async openAddEntry(){
@@ -92,6 +96,22 @@ export class TabHeaderPage implements OnInit, OnDestroy {
     }
   }
 
+  openQrModal(){
+    console.log(this.user._id)
+    this.authSrv.getQrCode(this.user._id).subscribe((response: any) => {
+      const data = {
+        cashBack: this.user.cashBack,
+        qrCode: response,
+        username: this.user.name
+      }
+      this.actionSheet.openModal(DisplayQrPage, data)
+    })
+  }
+
+
+  getQRCodeUrl(qrCodeData: any) {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(qrCodeData));
+  }
 
   getUser(){
     this.userSub = this.authSrv.user$.subscribe((res: any ) => {

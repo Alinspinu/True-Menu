@@ -1,6 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, map, Observable, take, tap } from "rxjs";
+import { environment } from "src/environments/environment";
 import { Ingredient } from "../category.model";
 
 
@@ -9,8 +10,6 @@ import { Ingredient } from "../category.model";
 export class RecipeIngredientService{
 
 
- baseUrl: string = 'http://localhost:8080/nutrition/';
- newUrl: string = 'https://flow-api-394209.lm.r.appspot.com/nutrition/';
  ingredients!: Ingredient[]
 
  private ingState!: BehaviorSubject<Ingredient[]>;
@@ -35,7 +34,7 @@ export class RecipeIngredientService{
   }
 
 getIngredients(){
-  return this.http.get<Ingredient[]>(`${this.newUrl}ing-send`).pipe(take(1), tap(res=>{
+  return this.http.get<Ingredient[]>(`${environment}nutrition/ing-send`).pipe(take(1), tap(res=>{
     this.ingredients = res
     this.ingState.next([...this.ingredients])
   }),
@@ -51,7 +50,7 @@ getIngredients(){
 }
 
 deleteIngredients(id: string){
-  return this.http.delete<{message: string}>(`${this.newUrl}delete-ingredient?id=${id}`)
+  return this.http.delete<{message: string}>(`${environment}nutrition/delete-ingredient?id=${id}`)
 }
 
 

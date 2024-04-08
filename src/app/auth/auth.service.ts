@@ -6,6 +6,7 @@ import { Preferences } from "@capacitor/preferences";
 import User from "./user.model";
 import { CartService } from "../cart/cart.service";
 import { TabsService } from "../tabs/tabs.service";
+import { environment } from "src/environments/environment";
 
 
 
@@ -22,10 +23,25 @@ user: {
 @Injectable({providedIn: 'root'})
 
 export class AuthService{
-  baseUrl: string = 'http://localhost:8080/auth/';
-  newUrl: string = 'https://flow-api-394209.lm.r.appspot.com/auth/';
   activeLogoutTimer!: any;
-  emptyUser: User = {_id: '', name:'',token:'',cashBack: -1, admin: 0, email:'', tokenExpirationDate: '', status: '', telephone: ''};
+  emptyUser: User = {
+    _id: '',
+    name:'',
+    token:'',
+    cashBack: -1,
+    cashBackProcent: 0,
+    admin: 0,
+    email:'',
+    tokenExpirationDate: '',
+    status: '',
+    telephone: '',
+    locatie: '',
+    employee: {fullName: '', position: '', user: '', access: 0},
+    discount: {
+      general: 0,
+      category: []
+    },
+  };
 
   private user = new BehaviorSubject<User>(this.emptyUser);
 
@@ -38,10 +54,21 @@ export class AuthService{
             token: string,
             admin: number,
             cashBack: number,
+            cashBackProcent: number
             email: string,
             tokenExpirationDate: any,
             status: string,
             telephone: string,
+            locatie: string,
+            discount: {
+              general: number,
+              category: {
+                precent: number
+                name: string,
+                cat: string
+              }[]
+          },
+            employee: {position: string, fullName: string, user: string, access: number}
           };
           const tokenDate = new Date(userData.tokenExpirationDate).getTime() - new Date().getTime();
           if(tokenDate <= 0){
@@ -72,30 +99,30 @@ export class AuthService{
         'Content-Type': 'application/json'
       })
     };
-    return this.http.post<any>(`${this.newUrl}login`,{email, password}, httpOptions)
+    return this.http.post<any>(`${environment.BASE_URL}auth/login`,{email, password, url: environment.APP_URL, adminEmail: environment.ADMIN_EMAIL, loc: environment.LOC}, httpOptions)
         .pipe(tap(this.setAndStoreUserData.bind(this)));
   }
 
-  onRegister(name: string, email: string, tel: string, password: string, confirmPassword: string, firstCart: string, survey: string, id: string){
+  onRegister(name: string, email: string, tel: string, password: string, confirmPassword: string, firstCart: string, survey: string, id: string, loc: string, url: string){
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
       })
     };
-    return this.http.post<{message: string, id: string}>(`${this.newUrl}register`,{name, email, password, confirmPassword, firstCart, survey, tel, id}, httpOptions);
+    return this.http.post<{message: string, id: string}>(`${environment.BASE_URL}auth/register`,{name, email, password, confirmPassword, firstCart, survey, tel, id, loc, url}, httpOptions);
   };
 
   verifyToken(token: string){
-    return this.http.post<any>(`${this.newUrl}verify-token`, {token: token})
+    return this.http.post<any>(`${environment.BASE_URL}auth/verify-token`, {token: token, adminEmail: environment.ADMIN_EMAIL})
         .pipe(tap(this.setAndStoreUserData.bind(this)));
   };
 
   sendResetEmail(email: string){
-   return this.http.post<AuthResData>(`${this.newUrl}send-reset-email`, {email});
+   return this.http.post<AuthResData>(`${environment.BASE_URL}auth/send-reset-email`, {email: email, loc: environment.LOC, url: environment.APP_URL });
   };
 
   resetPassword(token: string, password: string, confirmPassword: string){
-    return this.http.post(`${this.newUrl}reset-password`, {token, password, confirmPassword})
+    return this.http.post(`${environment.BASE_URL}auth/reset-password`, {token, password, confirmPassword, adminEmail: environment.ADMIN_EMAIL})
         .pipe(tap(this.setAndStoreUserData.bind(this)));
   }
 
@@ -110,10 +137,19 @@ export class AuthService{
         token: userData.token,
         admin: userData.admin,
         cashBack: userData.cashBack,
+        cashBackProcent: userData.cashBackProcent,
         email: userData.email,
         tokenExpirationDate: expirationDate,
         status: userData.status,
-        telephone: userData.telephone
+        telephone: userData.telephone,
+        locatie: userData.locatie,
+        employee: {
+          fullName: userData.employee.fullName,
+          position: userData.employee.position,
+          access: userData.employee.access,
+          user: decodedToken.userId
+        },
+        discount: userData.discount
       });
       const tokenDate = new Date(expirationDate).getTime() - new Date().getTime();
       this.aoutoLogout(tokenDate);
@@ -135,6 +171,11 @@ export class AuthService{
     this.cartSrv.removeCart();
     this.tabSrv.clearQty();
     this.user.next(this.emptyUser);
+  }
+
+  getQrCode(data: string){
+    console.log(data)
+    return this.http.get(`${environment.BASE_URL}users/generateQr?id=${data}`, { responseType: 'text' })
   }
 
   private aoutoLogout(duration: number) {

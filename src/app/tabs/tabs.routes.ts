@@ -46,6 +46,10 @@ export const routes: Routes = [
         loadComponent: () => import('../content/back-office/cash-register/cash-register.page').then( m => m.CashRegisterPage)
       },
       {
+        path: 'cash',
+        loadComponent: () => import('../content/back-office/cash/cash.page').then( m => m.CashPage)
+      },
+      {
         path: 'finished-orders',
         loadComponent: () => import('../content/back-office/finshed-orders/finshed-orders.page').then( m => m.FinshedOrdersPage)
       },

@@ -1,9 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { triggerEscapeKeyPress } from 'src/app/shared/utils/toast-controller';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { ActionSheetService } from 'src/app/shared/action-sheet.service';
+import { DatePickerPage } from 'src/app/shared/date-picker/date-picker.page';
+import { formatedDateToShow } from 'src/app/shared/utils/functions';
+import { AuthService } from 'src/app/auth/auth.service';
+import User from 'src/app/auth/user.model';
 
 // interface Data {
 //   ing: {
@@ -22,21 +28,22 @@ import { HttpClient } from '@angular/common/http';
   imports: [IonicModule, CommonModule, ReactiveFormsModule]
 })
 export class AddEntryPage implements OnInit {
-
-  baseUrl: string = 'http://localhost:8080/';
-  newUrl: string = 'https://flow-api-394209.lm.r.appspot.com/';
   form!: FormGroup;
   coffee: boolean = false
-
+  date!: any
+  user!: User
 
   constructor(
     private modalCtrl: ModalController,
     private http: HttpClient,
+    @Inject(ActionSheetService) private actionSheet: ActionSheetService,
+    private usrSrv: AuthService,
   ) { }
 
 
   ngOnInit() {
    this.setForm()
+   this.getUser()
   //  console.log(this.data)
   }
 
@@ -45,13 +52,21 @@ export class AddEntryPage implements OnInit {
     triggerEscapeKeyPress()
   }
 
+  getUser(){
+    this.usrSrv.user$.subscribe(response => {
+      if(response){
+        response.subscribe(user => {
+          if(user){
+            this.user = user
+          }
+        })
+      }
+    })
+  }
+
   setForm(){
     this.form = new FormGroup({
       price: new FormControl(null, {
-        updateOn: 'change',
-        validators: [Validators.required]
-      }),
-      date: new FormControl(null, {
         updateOn: 'change',
         validators: [Validators.required]
       }),
@@ -68,19 +83,32 @@ export class AddEntryPage implements OnInit {
   }
 
   confirm(){
-    if(this.form.valid){
+    console.log('hit function')
+    if(this.form.valid && this.date){
       const entry = {
         tip: this.form.value.typeOfEntry,
-        date: this.form.value.date,
+        date: this.date,
         description: this.form.value.description,
         amount: this.form.value.price,
+        locatie: this.user.locatie,
       }
-      this.http.post(`${this.newUrl}register/add-entry`, entry).subscribe(response => {
+      this.http.post(`${environment.BASE_URL}register/add-entry`, entry).subscribe(response => {
         this.modalCtrl.dismiss(response)
       })
-      console.log(this.form)
     }
   }
+
+  async openDateModal(){
+    const response = await this.actionSheet.openAuth(DatePickerPage)
+    if(response){
+      this.date = response
+    }
+
+  }
+  formatDate(date: any){
+    return formatedDateToShow(date).split('ora')[0]
+  }
+
 
 
 }

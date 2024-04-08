@@ -10,6 +10,8 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { CartService } from 'src/app/cart/cart.service';
 import { FailurePage } from '../failure/failure.page';
 import { TimerPage } from 'src/app/shared/timer/timer.page';
+import { environment } from 'src/environments/environment';
+import { WebRTCService } from 'src/app/shared/webRTC.service';
 
 interface Order {
   masa: number,
@@ -39,10 +41,7 @@ interface OrderProduct {
 export class SuccessPage implements OnInit {
 
   error: boolean = false;
-  baseUrl: string = 'http://localhost:8080/api-true/';
 
-  newUrl: string = 'https://flow-api-394209.lm.r.appspot.com/api-true/';
-  herokuUrl: string = 'https://www.cafetish.com/api/';
   isLoading: boolean = true;
   transactionId!: string;
   orderTime: number = 0
@@ -52,15 +51,16 @@ export class SuccessPage implements OnInit {
   orderNumber: number = 0;
   payOnSite: boolean = false;
   payOnline: boolean = false;
-
+  onlineOrder: boolean = true
   preOrder: boolean = false;
   pickUpDate: string = ''
-   production: boolean = false
+  production: boolean = true
 
   constructor(
     private http: HttpClient,
     private authServ: AuthService,
     private crtSrv: CartService,
+    private webRTC: WebRTCService,
     ) { }
 
   ngOnInit() {
@@ -79,7 +79,6 @@ export class SuccessPage implements OnInit {
     const eventId = params.get('eventId');
     const eci = params.get('eci');
     const payOnSite = params.get('pay-on');
-    console.log(userId, payOnSite)
     if(userId && ucbb && ccb){
       this.crtSrv.checkUser(userId, +ccb, +ucbb).subscribe(res => {
 
@@ -136,19 +135,10 @@ export class SuccessPage implements OnInit {
     const cartProducts = cart.products;
     this.production = cart.products[0].preOrder
     let products = [];
-    for (let product of cartProducts) {
-      const orderProduct = {
-        name: product.name,
-        quantity: product.quantity,
-        price: product.price,
-        total: product.total,
-        toppings: product.toppings
-      }
-      products.push(orderProduct);
-    }
     if(cart.userId.length){
       const order = {
-        masa: cart.masa,
+        masa: 54,
+        name: cart.userName,
         production: this.production,
         toGo: cart.toGo,
         pickUp: cart.pickUp,
@@ -157,53 +147,79 @@ export class SuccessPage implements OnInit {
         totalProducts: cart.totalProducts,
         cashBack: cart.cashBack,
         total: cart.total,
-        products: products,
+        products: cart.products,
         user: cart.userId,
         payOnSite: this.payOnSite,
         payOnline: this.payOnline,
-        userName: cart.userName,
-        userTel: cart.userTel,
+        onlineOrder: this.onlineOrder,
+        locatie: environment.LOC,
+        clientInfo: {
+          name: cart.userName,
+          telephone: cart.userTel,
+          userId: cart.userId
+        },
+        payment: {
+          cash: 0,
+          card: 0,
+          viva: 0,
+          voucher: 0,
+          online: 0,
+        },
+        discount: cart.discount,
         preOrderPickUpDate: cart.preOrderPickUpDate,
-        preOrder: cartProducts[0].preOrder
+        preOrder: true
       };
      return this.saveOrder(order)
     } else {
       const order = {
-        masa: cart.masa,
+        masa: 54,
+        name: 'Neînregistrat',
         production: this.production,
         toGo: cart.toGo,
         pickUp: cart.pickUp,
         productCount: cart.productCount,
         tips: cart.tips,
+        user: 'john doe',
+        onlineOrder: this.onlineOrder,
         totalProducts: cart.totalProducts,
         cashBack: cart.cashBack,
         total: cart.total,
-        products: products,
+        products: cart.products,
         payOnSite: this.payOnSite,
         payOnline: this.payOnline,
-        userName: 'Neînregistrat',
-        userTel: 'Neînregistrat',
+        locatie: environment.LOC,
+        clientInfo: {
+          name: 'Neînregistrat',
+          telephone: 'Neînregistrat',
+        },
+        payment: {
+          cash: 0,
+          card: 0,
+          viva: 0,
+          voucher: 0,
+          online: 0,
+        },
+        discount: cart.discount,
         preOrderPickUpDate: cart.preOrderPickUpDate,
-        preOrder: cartProducts[0].preOrder
+        preOrder: true
       };
       return this.saveOrder(order);
     };
   };
 
   saveOrder(order: any) {
-    console.log("inside before create order", order.production)
-    this.http.post<any>(`${this.newUrl}save-order`, order).subscribe(res => {
-      console.log("success-in-function")
+    this.http.post<any>(`${environment.BASE_URL}orders/save-order`, {order, adminEmail: environment.ADMIN_EMAIL, loc: environment.LOC}).subscribe(res => {
       if(res.message === 'Order Saved Without a user'){
         this.getTime(res.orderId)
         this.pickUpDate = this.formatedDateToShow(res.preOrderPickUpDate)
         this.orderNumber = res.orderIndex
+        this.webRTC.sendOrderId(res.orderId)
         Preferences.remove({key: 'cart'});
       } else {
-        console.log(res)
         this.pickUpDate = this.formatedDateToShow(res.preOrderPickUpDate)
         this.orderNumber = res.orderIndex
         this.authServ.updateCaskBack(res.user);
+        this.webRTC.sendOrderId(res.orderId)
         this.getTime(res.orderId)
         Preferences.remove({key: 'cart'});
         Preferences.remove({key: 'data'});
@@ -215,7 +231,7 @@ export class SuccessPage implements OnInit {
 getTime(orderId: string){
   if(!this.preOrder){
     setTimeout(()=>{
-      this.http.get<any>(`${this.newUrl}get-time?orderId=${orderId}`).subscribe(res => {
+      this.http.get<any>(`${environment.BASE_URL}orders/get-time?orderId=${orderId}`).subscribe(res => {
         this.orderTime = res.completetime / 1000 / 60
         this.isLoading = false
       })

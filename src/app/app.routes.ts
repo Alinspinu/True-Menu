@@ -64,7 +64,20 @@ export const routes: Route[] = [
   {
     path: 'reports',
     loadComponent: () => import('./content/back-office/reports/reports.page').then( m => m.ReportsPage)
-  }
+  },
+  {
+    path: 'display-qr',
+    loadComponent: () => import('./shared/display-qr/display-qr.page').then( m => m.DisplayQrPage)
+  },
+  {
+    path: 'orders-view',
+    loadComponent: () => import('./content/back-office/cash/orders-view/orders-view.page').then( m => m.OrdersViewPage)
+  },
+  {
+    path: 'del-prod-view',
+    loadComponent: () => import('./content/back-office/cash/del-prod-view/del-prod-view.page').then( m => m.DelProdViewPage)
+  },
+
 
 
 ];

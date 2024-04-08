@@ -9,6 +9,7 @@ import { SpinnerPage } from 'src/app/shared/spinner/spinner.page';
 import { base64toBlob } from 'src/app/shared/utils/base64toBlob';
 import { showToast, triggerEscapeKeyPress } from 'src/app/shared/utils/toast-controller';
 import { TabsService } from 'src/app/tabs/tabs.service';
+import { environment } from 'src/environments/environment';
 
 
 interface RespData{
@@ -30,8 +31,7 @@ export class EditCategoryComponent  implements OnInit {
   categoryId!: string;
   category!: Category;
   currentCategory!: string;
-  baseUrl: string = 'http://localhost:8080/api-true/';
-  newUrl: string = 'https://flow-api-394209.lm.r.appspot.com/api-true/';
+
   isLoading = false;
   form!: FormGroup;
   mainCategories: {name: string, id: string}[] = [
@@ -90,7 +90,7 @@ getCategory(){
       catData.append('image', this.form.value.image);
       catData.append('mainCat', this.form.value.mainCat);
       catData.append('order', this.form.value.order);
-     return this.http.put<RespData>(`${this.newUrl}cat`, catData).subscribe((res)=>{
+     return this.http.put<RespData>(`${environment.BASE_URL}cat/cat`, catData).subscribe((res)=>{
       this.tabSrv.onCategoryEdit(res.category);
       showToast(this.toastCtrl, res.message, 3000);
       this.isLoading = false;
@@ -128,7 +128,7 @@ getCategory(){
 
 
   onDelete(){
-    this.http.delete<{message: string}>(`${this.newUrl}cat?id=${this.categoryId}`).subscribe(res => {
+    this.http.delete<{message: string}>(`${environment.BASE_URL}cat/cat?id=${this.categoryId}`).subscribe(res => {
       this.tabSrv.catDelete(this.categoryId);
       triggerEscapeKeyPress();
       showToast(this.toastCtrl, res.message, 3000);

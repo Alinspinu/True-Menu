@@ -5,6 +5,7 @@ import { Ingredient } from "src/app/CRUD/add/category.model";
 
 import { AngularFireMessaging } from '@angular/fire/compat/messaging';
 import { Order } from "src/app/cart/cart.model";
+import { environment } from "src/environments/environment";
 
 
 @Injectable({providedIn: 'root'})
@@ -12,9 +13,6 @@ import { Order } from "src/app/cart/cart.model";
 
 
 export class OrdersService{
-  baseUrl: string = 'http://localhost:8080/';
-  newUrl: string = 'https://flow-api-394209.lm.r.appspot.com/';
-
 
   constructor(
     private http: HttpClient,
@@ -45,27 +43,27 @@ export class OrdersService{
     }
 
     getOrdersFromDb(){
-      return this.http.get<Order[]>(`${this.newUrl}orders/get-order`)
+      return this.http.get<Order[]>(`${environment.BASE_URL}orders/get-order`)
     }
 
     openConnection(token: string){
-      return this.http.get(`${this.baseUrl}message/send-msg?token=${token}`)
+      return this.http.get(`${environment.BASE_URL}message/send-msg?token=${token}`)
     }
 
     orderDone(id: string) {
-      return this.http.get(`${this.baseUrl}orders/order-done?cmdId=${id}`)
+      return this.http.get(`${environment.BASE_URL}orders/order-done?cmdId=${id}`)
     }
 
     setOrderTime(id: string, time: number){
-      return this.http.get(`${this.newUrl}orders/set-order-time?orderId=${id}&time=${time}`).subscribe()
+      return this.http.get(`${environment.BASE_URL}orders/set-order-time?orderId=${id}&time=${time}`).subscribe()
     }
 
     endPending(id: string){
-      return this.http.get(`${this.baseUrl}orders/order-pending?id=${id}`)
+      return this.http.get(`${environment.BASE_URL}orders/order-pending?id=${id}`)
     }
 
     getFinishedOrders(){
-      return this.http.get<Order[]>(`${this.newUrl}orders/finished-orders`)
+      return this.http.get<Order[]>(`${environment.BASE_URL}orders/finished-orders`)
     }
 
 

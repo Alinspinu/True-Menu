@@ -9,6 +9,7 @@ import { LogoPagePage } from '../../../shared/logo-page/logo-page.page';
 import { base64toBlob } from '../../../shared/utils/base64toBlob';
 import { showToast, triggerEscapeKeyPress } from '../../../shared/utils/toast-controller';
 import { TabsService } from '../../../tabs/tabs.service';
+import { environment } from 'src/environments/environment';
 
 interface RespData{
   message: string,
@@ -26,8 +27,7 @@ export class EditProductComponent  implements OnInit {
 
 
   currentCategory!: string;
-  baseUrl: string = 'http://localhost:8080/api-true/';
-  newUrl: string = 'https://flow-api-394209.lm.r.appspot.com/api-true/';
+
   isLoading = false;
   categories!: Category[];
   form!: FormGroup;
@@ -55,6 +55,7 @@ export class EditProductComponent  implements OnInit {
     this.getProduct();
     this.getCategories();
     this.setupForm();
+    console.log(this.productId)
   };
 
   setupForm() {
@@ -114,7 +115,7 @@ export class EditProductComponent  implements OnInit {
       prodData.append('id', this.productId);
       prodData.append('order', this.form.value.order);
       prodData.append('longDescription', this.form.value.longDescription);
-     return this.http.put<RespData>(`${this.newUrl}product`, prodData).subscribe((res)=>{
+     return this.http.put<RespData>(`${environment.BASE_URL}product/product?id=${this.productId}`, prodData).subscribe((res)=>{
       this.tabSrv.onProductEdit(res.product, this.categoryIndex);
       showToast(this.toastCtrl, res.message, 3000);
       this.isLoading = false;
@@ -166,7 +167,7 @@ export class EditProductComponent  implements OnInit {
   };
 
   onDelete(){
-    this.http.delete<{message: string}>(`${this.newUrl}product?id=${this.productId}`).subscribe(res => {
+    this.http.delete<{message: string}>(`${environment.BASE_URL}product/product?id=${this.productId}`).subscribe(res => {
       this.tabSrv.prodDelete(this.categoryIndex, this.prodIndex);
       triggerEscapeKeyPress();
       showToast(this.toastCtrl, res.message, 3000);

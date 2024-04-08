@@ -9,6 +9,7 @@ import { Preferences } from '@capacitor/preferences';
 import { showToast, triggerEscapeKeyPress } from '../shared/utils/toast-controller';
 import { ActionSheetService } from '../shared/action-sheet.service';
 import { RegisterPage } from './register/register.page';
+import { environment } from 'src/environments/environment';
 
 
 export interface AuthResData {
@@ -27,8 +28,6 @@ export interface AuthResData {
 })
 export class AuthPage implements OnInit {
 
-  baseUrl: string = 'http://localhost:8080/api/';
-  newUrl: string = 'https://flow-api-394209.lm.r.appspot.com/api-true/';
   isLoading = false;
   form!: FormGroup;
   showPassword = false;
@@ -140,7 +139,7 @@ export class AuthPage implements OnInit {
         })
         Preferences.set({key: 'tempUserData', value: data });
         this.router.navigateByUrl('/email-sent');
-        triggerEscapeKeyPress();
+        this.modalCtrl.dismiss()
       }
     }, error => {
       console.log('error', error);
@@ -152,6 +151,7 @@ export class AuthPage implements OnInit {
 
 
   onRegister(){
+    this.modalCtrl.dismiss()
     this.actionSheet.openAuth(RegisterPage);
   };
 };

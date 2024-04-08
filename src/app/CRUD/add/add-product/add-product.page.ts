@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
 import { TabsService } from 'src/app/tabs/tabs.service';
 import { LogoPagePage } from 'src/app/shared/logo-page/logo-page.page';
 import {showToast} from '../../../shared/utils/toast-controller'
+import { environment } from 'src/environments/environment';
 
 interface Response{
   message: string,
@@ -27,8 +28,7 @@ export class AddProductPage implements OnInit {
   dynamicControlKeys: {name: string, price: string}[] = [];
   dynamicInputCounter: number = 1;
   currentCategory!: string;
-  baseUrl: string = 'http://localhost:8080/api-true/';
-  newUrl: string = 'https://flow-api-394209.lm.r.appspot.com/api-true/';
+
   isLoading = false;
   category!: Category;
   form!: FormGroup;
@@ -101,7 +101,7 @@ export class AddProductPage implements OnInit {
       prodData.append('category', this.currentCategory);
       prodData.append('description', this.form.value.description);
       prodData.append('longDescription', this.form.value.longDescription);
-      return this.http.post<Response>(`${this.newUrl}prod-add`, prodData).subscribe((res)=>{
+      return this.http.post<Response>(`${environment.BASE_URL}product/prod-add`, prodData).subscribe((res)=>{
         this.tabSrv.onProductAdd(res.product);
         showToast(this.toastCtrl, res.message, 3000);
         this.isLoading = false;

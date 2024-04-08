@@ -35,8 +35,12 @@
                   <ion-item lines="none" class="ion-no-padding" color="tertiary">
                       <div style="display: flex; flex-direction: row; width: 100%; height: 60px; align-items: center; justify-content: center;">
                         <ion-label class="ion-text-wrap cart-prod-name" style=" flex: 50%; padding-right: 5px;">{{product.name}}</ion-label>
-                        <ion-label class="ion-text-wrap cart-prod-qty" style="flex: 30%;">{{product.quantity}} X {{product.price}} Lei</ion-label>
-                        <ion-label class="ion-text-wrap cart-prod-total" style="flex: 16%">{{product.total}} Lei</ion-label>
+                        <ion-label class="ion-text-wrap cart-prod-qty" style="flex: 25%;">{{product.quantity}} X {{product.price}} Lei</ion-label>
+                        <div class="cart-prod-total"style="flex: 21%">
+                          <ion-label class="ion-text-wrap " >{{product.total}} Lei</ion-label>
+                          <span style="font-size:11px; color:red;" *ngIf="product.discount > 0">-{{product.discount}} Lei</span>
+                        </div>
+
                         <div class="wrapper">
                           <svg width="18px" height="17px" viewBox="0 0 18 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                               <g id="prev" transform="translate(8.500000, 8.500000) scale(-1, 1) translate(-8.500000, -8.500000)">
@@ -48,9 +52,13 @@
                         </div>
                       </div>
                     </ion-item>
+                    <!-- <div *ngIf="product.discount > 0" style="display: flex; flex-direction: row; ">
+                      <span style="flex: 60%; text-align: start;">Discount client</span>
+
+                    </div> -->
                     <div class="options" *ngIf="product.toppings.length">
                       <div class="toppings-wrapper" *ngIf="!product.preOrder">
-                        <ion-label *ngFor="let topping of product.toppings" class="toppings">+{{topping.name}}</ion-label>
+                        <ion-label *ngFor="let topping of product.toppings" class="toppings">+{{topping.name.split('/')[0]}}</ion-label>
                       </div>
                       <div class="toppings-wrapper" *ngIf="product.preOrder">
                         <ion-label *ngFor="let topping of product.toppings" class="toppings">{{topping.name+' '+product.name}}</ion-label>
@@ -104,7 +112,15 @@
                       </ion-item>
                     </ion-col>
                 </ion-row>
-              <ion-row class="ion-no-padding" *ngIf="tips || showCashBack">
+              <ion-row class="ion-no-padding" *ngIf="cart.discount > 0">
+                <ion-col class="ion-no-padding">
+                      <ion-item class="ion-no-padding total-wrapper" color="tertiary">
+                        <span class="total-text light" style="color:red;">DISCOUNT Client</span>
+                        <span class="ion-text-wrap total-value light" style="color:red;">-{{cart.discount}} Lei</span>
+                      </ion-item>
+                    </ion-col>
+                </ion-row>
+              <ion-row class="ion-no-padding" *ngIf="tips || showCashBack || cart.discount > 0">
                 <ion-col class="ion-no-padding">
                       <ion-item class="ion-no-padding total-wrapper" color="tertiary">
                         <span>TOTAL</span>

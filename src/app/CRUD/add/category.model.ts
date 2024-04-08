@@ -26,6 +26,9 @@ export class Product {
   public preOrderPrice: number,
   public preOrder: boolean,
   public available: boolean,
+  public tva: string,
+  public mainCat: string,
+  public printer: string,
   public longDescription: string,
   public allergens: {name: string, _id: string}[],
   public additives: {name: string, _id: string}[],
@@ -39,7 +42,9 @@ export class Product {
   public toppings: Topping[],
   public ingredients:{quantity: number, ingredient: Ingredient}[],
   public paring: Product[],
-  public ings: Ing[]
+  public ings: Ing[],
+  public dep: string,
+  public sgrTax: boolean,
   ){};
 };
 

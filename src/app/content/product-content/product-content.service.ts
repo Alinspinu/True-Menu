@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, take, tap } from "rxjs";
 import { Ingredient } from "src/app/CRUD/add/category.model";
+import { environment } from "src/environments/environment";
 
 interface Topping{
   name: string,
@@ -22,11 +23,8 @@ interface Response {
 
 @Injectable({providedIn: 'root'})
 
-
-
 export class ProductContentService{
-  baseUrl: string = 'http://localhost:8080/';
-  newUrl: string = 'https://flow-api-394209.lm.r.appspot.com/';
+
   private blackListState!: BehaviorSubject<string[]>;
   public blackListSend$!: Observable<string[]>;
   balckList: string[] = [];
@@ -41,19 +39,19 @@ export class ProductContentService{
     }
 
   addIngredients(ingredients: Ings[], productId: string){
-   return this.http.post(`${this.newUrl}nutrition/add-ing-to-product?id=${productId}`, ingredients)
+   return this.http.post(`${environment.BASE_URL}nutrition/add-ing-to-product?id=${productId}`, ingredients)
   }
 
   addProductIngredient(ingredients: Ings[], name: string){
-    return this.http.post(`${this.newUrl}nutrition/add-prod-ing?name=${name}`, ingredients )
+    return this.http.post(`${environment.BASE_URL}nutrition/add-prod-ing?name=${name}`, ingredients )
   }
 
   addProductTopping(topping: Topping, id: string){
-    return this.http.post(`${this.newUrl}api-true/add-topping?id=${id}`, topping)
+    return this.http.post(`${environment.BASE_URL}top/add-topping?id=${id}`, topping)
   }
 
   updateBlackList(listToSend: string[]){
-   return this.http.put<Response>(`${this.newUrl}api-true/update-blackList`, listToSend).pipe(take(1), tap((response: Response) => {
+   return this.http.put<Response>(`${environment.BASE_URL}top/update-blackList`, listToSend).pipe(take(1), tap((response: Response) => {
     this.balckList = response.list
     console.log(response)
     this.blackListState.next([...this.balckList])
@@ -61,13 +59,11 @@ export class ProductContentService{
   }
 
   fetchBlackList(){
-   return this.http.get<string[]>(`${this.newUrl}api-true/get-blackList`).pipe(take(1), tap(response => {
+   return this.http.get<string[]>(`${environment.BASE_URL}top/get-blackList`).pipe(take(1), tap(response => {
     this.balckList = response
     this.blackListState.next([...this.balckList])
    }))
   }
-
-
 
 }
 

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AlertController, IonicModule, ToastController } from '@ionic/angular';
 import { CartService } from './cart.service';
-import { Cart, Topping } from './cart.model';
+import { Cart} from './cart.model';
 import { Subscription } from 'rxjs';
 import { TabsService } from '../tabs/tabs.service';
 import { Preferences } from '@capacitor/preferences'
@@ -20,6 +20,7 @@ import { showToast } from '../shared/utils/toast-controller';
 import { TimerPage } from '../shared/timer/timer.page';
 import { InviteAuthPage } from '../auth/invite-auth/invite-auth.page';
 import { DatePickerPage } from '../shared/date-picker/date-picker.page';
+import { environment } from 'src/environments/environment';
 
 
 interface Data {
@@ -105,7 +106,7 @@ export class CartPage implements OnInit, OnDestroy {
 
 
   async selectDate(){
-   const pickUpDate = await this.actionSheet.pikUpOrder(DatePickerPage)
+   const pickUpDate = await this.actionSheet.selectDate(DatePickerPage, true)
     if(pickUpDate){
       this.dateToPickUp = pickUpDate;
       this.dateToShow = this.dateToPickUp
@@ -120,7 +121,7 @@ export class CartPage implements OnInit, OnDestroy {
 
 
   saveCart(){
-    this.cart.masa = this.inputValue;
+    this.cart.masa = 54;
     this.cart.pickUp = this.pickUp;
     this.cart.toGo = this.toGo;
     if(!this.cart.tips){
@@ -193,13 +194,14 @@ export class CartPage implements OnInit, OnDestroy {
       this.toGo = true;
       for(let product of this.cart.products){
         if(product.payToGo){
-          this.cartService.saveCartProduct(this.tabSrv.getAmbalaj(product.quantity))
+          console.log(product.quantity)
+          this.cartService.saveCartProduct(this.tabSrv.getAmbalaj(product.quantity, this.user.discount))
         }
       }
     } else {
       for(let product of this.cart.products){
         if(product.name === "Ambalaj"){
-          this.cartService.removeAmbalaj(this.tabSrv.getAmbalaj(product.quantity))
+          this.cartService.removeAmbalaj(this.tabSrv.getAmbalaj(product.quantity, this.user.discount))
         }
       }
       this.toGo = false;
@@ -223,8 +225,9 @@ export class CartPage implements OnInit, OnDestroy {
       if(cart){
         cart.subscribe(cart => {
           this.cart = cart;
+          this.cart.discount = this.calcDiscountTotal(this.cart.products)
           this.isLoading = false;
-          this.cart.total = this.totalProduct() + this.cart.tips - this.cart.cashBack;
+          this.cart.total = this.totalProduct() + this.cart.tips - this.cart.cashBack - this.cart.discount;
           this.emptyBasket = this.cart.productCount !== 0 ? false : true;
           this.tips = this.cart.tips > 0 ? true : false;
           this.showCashBack = this.cart.cashBack > 0 ? true : false;
@@ -251,7 +254,6 @@ export class CartPage implements OnInit, OnDestroy {
 
 
   async getToken() {
-    console.log('ohit comanda this pickUpDate',this.pickUpDate)
     if(this.cart.total === 0 && this.cart.totalProducts === this.cart.cashBack){
       this.checkProductsAvalability()
     } else if(this.pickUpDate && this.isLoggedIn){
@@ -264,6 +266,7 @@ export class CartPage implements OnInit, OnDestroy {
       this.presentAlert()
     }
   };
+
 
   checkProductsAvalability(){
     this.isLoading = true;
@@ -301,7 +304,7 @@ export class CartPage implements OnInit, OnDestroy {
               })
             } else if(res.message === 'Value 0') {
               this.saveCart();
-              return window.location.href = `https://flow-api-394209.lm.r.appspot.com/success?user=${res.userId}&ucbb=${res.userCashBackBefore}&ccb=${res.cartCashBack}`;
+              return window.location.href = `${environment.APP_URL}success?user=${res.userId}&ucbb=${res.userCashBackBefore}&ccb=${res.cartCashBack}`;
             } else {
               this.isLoading = false;
               return showToast(this.toastCtrl, res.message, 4000);
@@ -455,7 +458,7 @@ remove(index: number, qty: number, name: string, category: string, sub: boolean)
        } else if(result.data.values === 'locatie') {
         if(this.isLoggedIn){
           this.saveCart()
-          return window.location.href = `https://true-meniu.web.app/success?user=${this.user._id}&pay-on=${this.user._id}`;
+          return window.location.href = `${environment.APP_URL}success?user=${this.user._id}&pay-on=${this.user._id}`;
         } else {
           return this.actionSheet.openModal(InviteAuthPage, this.emptyData)
         }
@@ -464,7 +467,20 @@ remove(index: number, qty: number, name: string, category: string, sub: boolean)
   }
 
 
+  // this.discountValue = this.calcDiscountTotal(bill.products)
+  // if(this.discountValue > this.billToshow.discount){
+  //   const dif = this.discountValue - this.billToshow.discount
+  //   this.billToshow.total = round(this.billToshow.total - dif)
+  //   this.billToshow.discount = this.discountValue
+  // }
 
+  calcDiscountTotal(products: any[]){
+    let discount = 0
+    products.forEach(el => {
+      discount += el.discount
+    })
+    return discount
+  }
 
 }
 

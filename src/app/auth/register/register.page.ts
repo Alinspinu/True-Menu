@@ -6,6 +6,7 @@ import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { Preferences } from '@capacitor/preferences';
 import { showToast, triggerEscapeKeyPress } from 'src/app/shared/utils/toast-controller';
+import { environment } from 'src/environments/environment';
 
 
 export interface Survey {
@@ -120,6 +121,8 @@ export class RegisterPage implements OnInit {
           } else {
             showToast(this.toastCtrl, 'Ceva nu a mers bine la verificarea datelor!', 5000)
           }
+        }, err => {
+          showToast(this.toastCtrl, 'Eroare la aducerea datelor, trebuie sa mai completezi odata formularul!', 3000)
         })
       }
   }
@@ -156,7 +159,7 @@ export class RegisterPage implements OnInit {
     } else {
       id = ''
     }
-    this.authService.onRegister(name, email, tel, password, confirmPassword, this.cart, survey, id).subscribe(res => {
+    this.authService.onRegister(name, email, tel, password, confirmPassword, this.cart, survey, id, environment.LOC, environment.APP_URL).subscribe(res => {
       if(res.message === "Email sent") {
         const data = JSON.stringify({
           name: name,

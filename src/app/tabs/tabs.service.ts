@@ -1,16 +1,16 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Inject, Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, take, tap} from "rxjs";
 import { Category, Product} from "../CRUD/add/category.model";
 import { Preferences } from "@capacitor/preferences";
 import { CartService } from "../cart/cart.service";
 import { CartProduct } from "../cart/cart.model";
+import { environment } from "src/environments/environment";
+import { calcProductDiscount } from "../shared/utils/functions";
 
 @Injectable({providedIn: 'root'})
 
 export class TabsService{
-  baseUrl: string = 'http://localhost:8080/api-true/';
-  newUrl: string = 'https://flow-api-394209.lm.r.appspot.com/api-true/';
   currentCategory!: string;
   tab: string = 'food';
   emptyCategory: Category = {_id: '', mainCat: '', name: '', product: [], image: {path: '', filename:''}, order: 0}
@@ -28,6 +28,9 @@ export class TabsService{
     available: false,
     longDescription: '',
     ingredients: [],
+    tva: '',
+    mainCat: '',
+    printer: '',
     nutrition: {
       energy:{kJ: 0, kcal: 0},
       fat: {all: 0, satAcids: 0},
@@ -41,7 +44,9 @@ export class TabsService{
     allergens: [],
     paring: [],
     toppings: [],
-    ings: []
+    ings: [],
+    dep: '',
+    sgrTax: false,
   }
   private categoryState!: BehaviorSubject<Category[]>;
   public categorySend$!: Observable<Category[]>;
@@ -57,30 +62,17 @@ export class TabsService{
   }
 
 
-  saveCat(
-    name: string,
-    mainCat: string,
-    image: File
-  ){
-    const catData = new FormData();
-    catData.append('name', name);
-    catData.append('mainCat', mainCat);
-    catData.append('image', image);
-    this.http.post(`${this.newUrl}add-product`, catData);
-  };
-
-
-  fetchCategories(){
+  fetchCategories(locatie: string){
     Preferences.get({key: 'categories'}).then(data => {
-      console.log(data)
       if(data.value){
         const cats = JSON.parse(data.value)
-        console.log("from local storage", cats)
         this.category = this.sortData(cats)
+        console.log(this.category)
         this.categoryState.next([...this.category])
       }
     })
-    return this.http.get<Category[]>(`${this.newUrl}get-cats`).pipe(take(1), tap(res => {
+    const headers = new HttpHeaders().set("ngrok-skip-browser-warning", "420");
+    return this.http.get<Category[]>(`${environment.BASE_URL}cat/get-cats?loc=${locatie}`, {headers}).pipe(take(1), tap(res => {
       this.category = this.sortData(res)
       const data = JSON.stringify(this.category)
       Preferences.set({key: "categories", value: data })
@@ -90,7 +82,7 @@ export class TabsService{
 
 };
 
-getAmbalaj(qty: number){
+getAmbalaj(qty: number, discount: any){
     const categoryIndex = this.category.findIndex(index => index.name == 'MERCH');
     const productIndex = this.category[categoryIndex].product.findIndex(index => index.name == "Ambalaj")
     const product = this.category[categoryIndex].product[productIndex]
@@ -105,20 +97,31 @@ getAmbalaj(qty: number){
       price: product.price,
       quantity: 1 * qty,
       _id: product._id,
-      total: product.price,
+      total: product.price * qty,
       imgPath: product.image.path,
       category: product.category._id,
       sub: false,
       toppings: [],
       payToGo: false,
       preOrder: preOrder,
-      ings: []
+      ings: [],
+      mainCat:'',
+      newEntry: true,
+      printer: 'kitchen',
+      sentToPrint: true,
+      imgUrl: product.image.path,
+      discount: 0,
+      tva: 19,
+      dep: product.dep,
+      qty: '',
+      sgrTax: false,
+
     };
-    return cartAmbalaj
+    return calcProductDiscount(cartAmbalaj, discount)
 }
 
 changeProdStatus(status: string, id: string){
-  return this.http.post(`${this.newUrl}change-status`, {stat: status, id: id});
+  return this.http.post(`${environment.BASE_URL}product/change-status`, {stat: status, id: id});
 };
 
 

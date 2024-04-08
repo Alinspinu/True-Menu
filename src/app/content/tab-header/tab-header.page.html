@@ -15,7 +15,10 @@
         <ion-icon name="add-circle" color="medium" class="volume"></ion-icon>
       </ion-button>
     </ion-buttons>
-  <ion-buttons slot="end" *ngIf="user">
+  <ion-buttons slot="end">
+    <ion-button (click)="openQrModal()" *ngIf="user && user._id.length">
+      <ion-icon class="dark" src="../../../assets/icon/quick.svg"></ion-icon>
+    </ion-button>
     <ion-button (click)="blackList()" *ngIf="isAdmin && title !== 'Casă'">
       <ion-icon class="dark" name="close-sharp"></ion-icon>
     </ion-button>
@@ -31,7 +34,7 @@
   </ion-buttons>
   <ion-buttons slot="end" *ngIf="user">
     <ion-menu-button>
-      <ion-icon name="key-outline" *ngIf="user.admin === 1" color="medium" style="margin-left: 20px; font-size: 28px"></ion-icon>
+      <ion-icon name="key-outline" *ngIf="user.employee.access > 1" color="medium" style="margin-left: 20px; font-size: 28px"></ion-icon>
       <img id="like" src="assets/icon/black-social-media.png" alt="" *ngIf="user.admin === 0">
     </ion-menu-button>
   </ion-buttons>

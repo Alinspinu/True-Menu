@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { Preferences } from "@capacitor/preferences";
 import { ToastController } from "@ionic/angular";
 import { BehaviorSubject,  from,  map,  Observable} from "rxjs";
+import { environment } from "src/environments/environment";
 import { showToast } from "../shared/utils/toast-controller";
 import { Cart, CartProduct, Topping } from "./cart.model";
 
@@ -17,8 +18,6 @@ interface cash{
 @Injectable({providedIn: 'root'})
 
 export class CartService{
-  baseUrl: string = 'http://localhost:8080/';
-  newUrl: string = 'https://flow-api-394209.lm.r.appspot.com/';
 
   private cartState!: BehaviorSubject<Cart>;
   public cartSend$!: Observable<Cart>;
@@ -36,7 +35,8 @@ export class CartService{
     pickUp: false,
     userName: '',
     userTel: '',
-    preOrderPickUpDate: ''
+    preOrderPickUpDate: '',
+    discount: 0,
   };
   cart: Cart = this.emptyCart;
 
@@ -53,13 +53,13 @@ export class CartService{
   saveCartProduct(product: CartProduct){
     const orderType = this.cart.products[0]
     if(orderType){
-      console.log('inside save product', product.preOrder, orderType.preOrder)
       if(product.preOrder === orderType.preOrder){
         this.cart.productCount++
         const existingProduct = this.cart.products.find((p: CartProduct) =>(p.name === product.name) && this.arraysAreEqual(p.toppings, product.toppings));
         if (existingProduct) {
           existingProduct.quantity = product.quantity + existingProduct.quantity;
           existingProduct.total = (existingProduct.quantity) * existingProduct.price;
+          existingProduct.discount += product.discount;
         } else {
           this.cart.products.push(product);
         }
@@ -144,11 +144,11 @@ export class CartService{
 };
 
 checkAvailable(subId: string[], prodId: string[], toppings: string[]){
-  return this.http.post<{message: string}>(`${this.newUrl}api-true/check-product`,{subProdId: subId, prodId: prodId, toppings: toppings});
+  return this.http.post<{message: string}>(`${environment.BASE_URL}product/check-product`,{subProdId: subId, prodId: prodId, toppings: toppings, loc: environment.LOC});
 };
 
 getToken(total: number) {
-return this.http.get<{orderCode: string}>(`${this.newUrl}pay/get-token?total=${total}`);
+return this.http.get<{orderCode: string}>(`${environment.BASE_URL}pay/get-token?total=${total}`);
 };
 
 
@@ -158,11 +158,11 @@ checkUserCashBack(cashBack: number, userId: string, cartTotal: number){
     userId: userId,
     cartTotal: cartTotal,
   }
-  return this.http.post<cash>(`${this.newUrl}pay/check-cash`, body);
+  return this.http.post<cash>(`${environment.BASE_URL}pay/check-cash`, body);
 };
 
 checkUser(userId: string, ccb: number, ucbb: number) {
-  return this.http.get<{message: string}>(`${this.newUrl}pay/check-user?user=${userId}&ucbb=${ucbb}&ccb=${ccb}`);
+  return this.http.get<{message: string}>(`${environment.BASE_URL}pay/check-user?user=${userId}&ucbb=${ucbb}&ccb=${ccb}`);
 };
 
 updateCashBack(cash: number){

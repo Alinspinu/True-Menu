@@ -1,0 +1,39 @@
+
+
+
+.option-row{
+  margin-top: 2rem;
+}
+
+
+// ion-item{
+//   margin-top: 2rem;
+// }
+
+.input{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 65px;
+  border: 0.5px solid var(--ion-color-medium);
+  border-radius: 8px;
+  padding: 10px;
+  margin: 0.5rem 0 0.5rem 0.5rem;
+  .topping-name{
+    flex:80%
+  }
+}
+
+
+
+.qty{
+  font-size: 13px;
+  margin: 10px;
+}
+
+// .wrapper{
+//   display: flex;
+//   flex-direction: row;
+// }
+
+

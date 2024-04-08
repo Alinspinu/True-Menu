@@ -12,9 +12,12 @@ import { ParringProductPage } from '../../CRUD/add/parring-product/parring-produ
 import { HttpClient } from '@angular/common/http';
 import { showToast, triggerEscapeKeyPress } from '../../shared/utils/toast-controller';
 import { CartService } from '../../cart/cart.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ProductContentService } from './product-content.service';
-import { Topping } from 'src/app/cart/cart.model';
+import { CartProduct, Ing, Topping } from 'src/app/cart/cart.model';
+import { environment } from 'src/environments/environment';
+import { PickOptionPage } from 'src/app/shared/pick-option/pick-option.page';
+import { calcProductDiscount } from 'src/app/shared/utils/functions';
 
 
 interface Response {
@@ -39,10 +42,6 @@ interface Result {
   imports: [IonicModule, CommonModule, FormsModule, ParringProductPage]
 })
 export class ProductContentPage implements OnInit, OnDestroy {
-
-  baseUrl: string = 'http://localhost:8080/';
-  newUrl: string = 'https://flow-api-394209.lm.r.appspot.com/';
-
   emptyResult: Result = {
     energy: {kJ: 0, kcal: 0},
     carbs: { all: 0, sugar: 0 },
@@ -230,14 +229,23 @@ export class ProductContentPage implements OnInit, OnDestroy {
       case "True Blend":
         this.router.navigate(['tabs/product-content/64e1089a7b76ae5db7fec5d7/0']);
         break;
-      case "Columbia Monteblanco":
-        this.router.navigate(['tabs/product-content/64e1170581decdf638c719a1/3']);
+      case "Columbia Jairo Peach":
+        this.router.navigate(['tabs/product-content/64e1170581decdf638c719a1/6']);
         break;
       case "Papua Noua Guinee":
-        this.router.navigate(['tabs/product-content/64e110f681decdf638c71989/1']) ;
+        this.router.navigate(['tabs/product-content/64e110f681decdf638c71989/3']) ;
         break;
-      case "Columbia Decaf":
-        this.router.navigate(['tabs/product-content/650495786f57ad612744c3a3/4']);
+      case "NIcaragua Buena Vista":
+        this.router.navigate(['tabs/product-content/65b7736a70a5951d38f682d7/1']) ;
+        break;
+      case "Columbia Jairo Litch":
+        this.router.navigate(['tabs/product-content/65c8d1e7fe71e9cf259265e5/2']) ;
+        break;
+      case "Etiopia Dimtu":
+        this.router.navigate(['tabs/product-content/65b7754170a5951d38f69730/5']) ;
+        break;
+      case "Decofeinizat":
+        this.router.navigate(['tabs/product-content/650495786f57ad612744c3a3/7']);
         break;
       case "Etiopia Gargary":
         this.router.navigate(['tabs/product-content/64e119cb81decdf638c719a6/5'])
@@ -265,63 +273,47 @@ export class ProductContentPage implements OnInit, OnDestroy {
     };
 
     async saveProdToCart(product: Product, index: number){
-      console.log(product)
       let payToGo = false
-      const categoryToCheck = ['BREAKFAST ALL DAY', 'SALATE SI APERITIV', 'PASTE ȘI RISOTTO', 'CARTOFI CRISPERS', 'TOAST & MUFFIN', 'DESERT'];
+      const categoryToCheck = ['BREAKFAST ALL DAY', 'SALATE SI APERITIV', 'PASTE ȘI RISOTTO', 'CARTOFI CRISPERS', 'TOAST & MUFFIN', 'DESERT', 'MAIN COURSE'];
       if (categoryToCheck.some(prefix => product.category.name === prefix)){
         payToGo = true
       }
       let price: number = product.price;
       let cartProdName: string = product.name;
-      let subProducts: string[] = []
+      let ings: Ing[] = product.ings
       if(product.subProducts.length){
-        product.subProducts.forEach(el => {
-          if(el.available){
-            subProducts.push(`${el.name} - ${el.price} Lei`)
+        const result = await this.actionSheet.openTwoOp(PickOptionPage, product.subProducts, true)
+          if(result){
+            ings = result.ings
+            price  = result.price
+            cartProdName = product.name + '-' + result.name;
+          } else {
+           return triggerEscapeKeyPress()
           }
-        })
-      }
-      if(subProducts.length){
-        const result = await this.actionSheet.chooseSubProduct(subProducts)
-        const subProd = result.split('-')
-        const subProdName = subProd[0];
-        price  = parseFloat(subProd[1].slice(0, -2))
-        cartProdName = product.name + '-' + subProdName;
       }
       let options: Topping[] = []
       let optionPrice: number = 0;
-      let pickedOptions: Topping[] = [];
+      let pickedToppings: Topping[] = [];
       if(product.toppings.length){
         const itemsToSort = [...product.toppings]
-        const sortedTopings = itemsToSort.sort((a, b) => a.price - b.price)
-        const filterOptions = sortedTopings.filter(item => !this.blackList.includes(item.name.trim().replace(/\s+/g, '').toLocaleLowerCase()))
-        options = filterOptions
+        let allOptions = itemsToSort.sort((a, b) => a.price - b.price)
+        allOptions.forEach(option => {
+          if(!option.name.startsWith('To')){
+            options.push(option)
+          }
+        })
       }
       if(options.length){
-        const extra = await this.actionSheet.chooseExtra(options)
-          if(extra) {
-            pickedOptions = extra
-            pickedOptions.forEach(el => {
-              optionPrice += el.price
-            })
-          }
+          const extra = await this.actionSheet.openTwoOp(PickOptionPage, options, false)
+            if(extra) {
+               pickedToppings = extra
+               pickedToppings.forEach(el => {
+                optionPrice += el.price
+               })
+        }
         }
         let totalPrice = price + optionPrice
-        if(product.preOrder){
-          this.preOrder = true
-          totalPrice = product.preOrderPrice;
-          pickedOptions = [{
-            name: 'Valoare Avans',
-            price: 0,
-            qty: 0,
-            ingPrice: 0,
-            um: 'kg'
-
-          }]
-        } else {
-          this.preOrder = false
-        }
-        const cartProduct = {
+        const cartProduct: CartProduct = {
           name: cartProdName,
           price: totalPrice,
           quantity: 1,
@@ -330,15 +322,25 @@ export class ProductContentPage implements OnInit, OnDestroy {
           imgPath: product.image.path,
           category: product.category._id,
           sub: false,
-          toppings: pickedOptions,
+          toppings: options,
           payToGo,
-          preOrder: this.preOrder,
-          ings: []
+          preOrder: false,
+          ings: ings,
+          mainCat: product.mainCat,
+          newEntry: true,
+          printer: product.printer,
+          sentToPrint: true,
+          imgUrl: product.image.path,
+          discount: 0,
+          tva: product.tva,
+          dep: product.dep,
+          qty: product.qty,
+          sgrTax: product.sgrTax,
         };
           if(index !== -1){
             this.product.paring[index].quantity++
           }
-        this.cartService.saveCartProduct(cartProduct);
+        this.cartService.saveCartProduct(calcProductDiscount(cartProduct, this.user.discount));
         this.tabSrv.addProd(product.category._id, product.name, this.preOrder);
     };
 
@@ -363,7 +365,6 @@ export class ProductContentPage implements OnInit, OnDestroy {
     };
 
     addProduct(id: string){
-      console.log('click')
       this.actionSheet.openEdit(ParringProductPage, id, 0, 0 )
     };
 
@@ -372,7 +373,7 @@ export class ProductContentPage implements OnInit, OnDestroy {
       productToBeRemovedId,
       productToRemoveFromId: this.productId
     }
-    return this.http.post<Response>(`${this.newUrl}api-true/remove-paring-product`, data).subscribe(response => {
+    return this.http.post<Response>(`${environment.BASE_URL}product/remove-paring-product`, data).subscribe(response => {
       const catIndex = this.tabSrv.getCatIndex(this.productId)
       this.tabSrv.onProductEdit(response.updatedProduct, catIndex)
       showToast(this.toastCtrl, response.message, 3000)

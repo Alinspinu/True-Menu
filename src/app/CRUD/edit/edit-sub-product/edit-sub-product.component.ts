@@ -7,6 +7,7 @@ import { Product, SubProduct } from '../../add/category.model';
 import { LogoPagePage } from '../../../shared/logo-page/logo-page.page';
 import { showToast, triggerEscapeKeyPress } from '../../../shared/utils/toast-controller';
 import { TabsService } from '../../../tabs/tabs.service';
+import { environment } from 'src/environments/environment';
 
 interface RespData{
   message: string,
@@ -29,8 +30,7 @@ export class EditSubProductComponent  implements OnInit {
   currentTab!: string;
   currentCategory!: string;
   products!: Product[];
-  baseUrl: string = 'http://localhost:8080/api-true/';
-  newUrl: string = 'https://flow-api-394209.lm.r.appspot.com/api-true/';
+
   isLoading = false;
   form!: FormGroup;
   constructor(
@@ -89,7 +89,7 @@ export class EditSubProductComponent  implements OnInit {
         prodId: this.form.value.product,
         order: this.form.value.order,
       };
-     return this.http.put<RespData>(`${this.newUrl}sub-product`, subProdData).subscribe((res)=>{
+     return this.http.put<RespData>(`${environment.BASE_URL}sub/sub-product`, subProdData).subscribe((res)=>{
       this.tabServ.onSubProductEdit(res.subProd, this.categoryIndex, this.prodIndex);
       showToast(this.toastCtrl, res.message, 3000);
       this.isLoading = false;
@@ -105,7 +105,7 @@ export class EditSubProductComponent  implements OnInit {
   };
 
   onDelete(){
-    this.http.delete<{message: string}>(`${this.newUrl}sub-product?id=${this.subProduct._id}`).subscribe(res => {
+    this.http.delete<{message: string}>(`${environment.BASE_URL}sub/sub-product?id=${this.subProduct._id}`).subscribe(res => {
       this.tabServ.subDelete(this.subProdId, this.categoryIndex, this.prodIndex);
       triggerEscapeKeyPress();
       showToast(this.toastCtrl, res.message, 3000);

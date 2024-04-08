@@ -6,6 +6,7 @@ import { TabsService } from '../../../tabs/tabs.service';
 import { Product } from '../category.model';
 import { HttpClient } from '@angular/common/http';
 import { showToast, triggerEscapeKeyPress } from 'src/app/shared/utils/toast-controller';
+import { environment } from 'src/environments/environment';
 
 interface RespData{
   message: string,
@@ -20,9 +21,6 @@ interface RespData{
   imports: [IonicModule, CommonModule, FormsModule]
 })
 export class ParringProductPage implements OnInit {
-
-  baseUrl: string = 'http://localhost:8080/api-true/';
-  newUrl: string = 'https://flow-api-394209.lm.r.appspot.com/api-true/';
 
   products!: Product[]
   searchTerm: string = '';
@@ -61,7 +59,7 @@ onConfirm(id: string){
     productToEditId: this.productId,
     productToPushId: id,
   }
-  this.http.post<RespData>(`${this.newUrl}add-paring-product`, data).subscribe(response => {
+  this.http.post<RespData>(`${environment.BASE_URL}product/add-paring-product`, data).subscribe(response => {
     const catIndex = this.tabSrv.getCatIndex(this.productId)
     this.tabSrv.onProductEdit(response.updatedProduct, catIndex)
     showToast(this.toastCtrl, response.message, 3000)

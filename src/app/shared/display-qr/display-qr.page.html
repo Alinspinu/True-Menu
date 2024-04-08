@@ -1,0 +1,29 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="close()">
+        <ion-icon src="../../../assets/icon/arrow-back-outline.svg" class="icon"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Salut {{data.username | capitalize}}</ion-title>
+  </ion-toolbar>
+  </ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <div class="message">
+    <p>Scaneaza codul qr in locatie pentru a aduna cash-back la fiecare achizitie!</p>
+    <p>Până acum ai adunat <span class="cashback">{{data.cashBack}} Lei</span>, pe care îi poți folosi la comenzile online sau în locatie.</p>
+    <p>Spor la cumpărături!</p>
+  </div>
+
+<ion-grid>
+  <ion-row>
+      <ion-col>
+        <div *ngIf="data">
+          <img [src]="data.qrCode" alt="QR Code" class="qr-code">
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
