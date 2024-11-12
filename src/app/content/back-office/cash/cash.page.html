@@ -45,7 +45,7 @@
     <ion-col size-lg="6" offset-lg="3">
       <div class="sum-wrapper">
         <span class="label">Încasări (totale)</span>
-        <span class="total">{{total}} Lei</span>
+        <span class="total">{{roundInHtml(total)}} Lei</span>
         <span class="label">Încasări (cash + card)</span>
         <span class="total">{{roundInHtml(totalIncasat)}} Lei</span>
         <span class="data" *ngIf="!day">{{today.length ? today : formatDate(startDate) + " -- " +  formatDate(endDate)}}</span>
@@ -75,13 +75,13 @@
           <span class="index">{{i+1}}.</span>
           <span class="label">{{dep.name | capitalize}}</span>
           <span class="proc">{{dep.procent}}%</span>
-          <span class="sum">{{dep.total}} Lei</span>
+          <span class="sum">{{roundInHtml(dep.total)}} Lei</span>
         </div>
         <div *ngIf="dep.showType">
           <div class="type" *ngFor="let type of dep.dep; let z = index">
             <span class="label">{{type.name | capitalize}}</span>
             <span class="proc">{{type.procent}}%</span>
-            <span class="sum">{{type.total}} Lei</span>
+            <span class="sum">{{roundInHtml(type.total)}} Lei</span>
           </div>
         </div>
       </div>

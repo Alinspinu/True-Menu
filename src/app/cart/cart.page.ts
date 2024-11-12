@@ -194,7 +194,6 @@ export class CartPage implements OnInit, OnDestroy {
       this.toGo = true;
       for(let product of this.cart.products){
         if(product.payToGo){
-          console.log(product.quantity)
           this.cartService.saveCartProduct(this.tabSrv.getAmbalaj(product.quantity, this.user.discount))
         }
       }

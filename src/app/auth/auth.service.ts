@@ -45,6 +45,14 @@ export class AuthService{
 
   private user = new BehaviorSubject<User>(this.emptyUser);
 
+
+  private createBasicAuthHeader(): HttpHeaders {
+    const credentials = btoa(`${environment.API_USER}:${environment.API_PASSWORD}`);
+    return new HttpHeaders({
+      'Authorization': `Basic ${credentials}`
+    });
+  }
+
   get user$() {
       return from(Preferences.get({key: 'authData'})).pipe(map(data => {
         if(data.value){
@@ -94,22 +102,14 @@ export class AuthService{
   constructor(private http: HttpClient, private cartSrv: CartService, private tabSrv: TabsService){}
 
   onLogin(email: string, password: string){
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
-    return this.http.post<any>(`${environment.BASE_URL}auth/login`,{email, password, url: environment.APP_URL, adminEmail: environment.ADMIN_EMAIL, loc: environment.LOC}, httpOptions)
+    const headers = this.createBasicAuthHeader()
+    return this.http.post<any>(`${environment.BASE_URL}auth/login`,{email, password, url: environment.APP_URL, adminEmail: environment.ADMIN_EMAIL, loc: environment.LOC}, {headers})
         .pipe(tap(this.setAndStoreUserData.bind(this)));
   }
 
   onRegister(name: string, email: string, tel: string, password: string, confirmPassword: string, firstCart: string, survey: string, id: string, loc: string, url: string){
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
-    return this.http.post<{message: string, id: string}>(`${environment.BASE_URL}auth/register`,{name, email, password, confirmPassword, firstCart, survey, tel, id, loc, url}, httpOptions);
+    const headers = this.createBasicAuthHeader()
+    return this.http.post<{message: string, id: string}>(`${environment.BASE_URL}auth/register`,{name, email, password, confirmPassword, firstCart, survey, tel, id, loc, url}, {headers});
   };
 
   verifyToken(token: string){
@@ -174,8 +174,12 @@ export class AuthService{
   }
 
   getQrCode(data: string){
-    console.log(data)
-    return this.http.get(`${environment.BASE_URL}users/generateQr?id=${data}`, { responseType: 'text' })
+    const headers = this.createBasicAuthHeader()
+    const options = {
+      headers: headers,
+      responseType: 'text' as 'json'
+    };
+    return this.http.get(`${environment.BASE_URL}users/generateQr?id=${data}`, options)
   }
 
   private aoutoLogout(duration: number) {

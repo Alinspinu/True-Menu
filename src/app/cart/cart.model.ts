@@ -22,6 +22,7 @@ export class Cart{
 export class Order{
   constructor(
     public _id: string,
+    public soketId: string,
     public masa: number,
     public masaRest: Table,
     public productCount: number,
@@ -81,6 +82,8 @@ export class CartProduct{
    public dep: string,
    public qty: string,
    public sgrTax: boolean,
+   public subProductId: string,
+   public productId: string
   ){}
 };
 
@@ -116,6 +119,7 @@ export class Ing{
 export class Bill{
   constructor(
     public _id: string,
+    public soketId: string,
     public index: number,
     public masaRest: any,
     public production: boolean,
@@ -184,6 +188,8 @@ export class BillProduct{
    public tva: string,
    public dep: string,
    public sgrTax: boolean,
+   public subProductId: string,
+   public productId: string
   ){}
 }
 

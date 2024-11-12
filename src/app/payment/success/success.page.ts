@@ -11,7 +11,8 @@ import { CartService } from 'src/app/cart/cart.service';
 import { FailurePage } from '../failure/failure.page';
 import { TimerPage } from 'src/app/shared/timer/timer.page';
 import { environment } from 'src/environments/environment';
-import { WebRTCService } from 'src/app/shared/webRTC.service';
+// import { WebRTCService } from 'src/app/shared/webRTC.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 interface Order {
   masa: number,
@@ -60,7 +61,8 @@ export class SuccessPage implements OnInit {
     private http: HttpClient,
     private authServ: AuthService,
     private crtSrv: CartService,
-    private webRTC: WebRTCService,
+    private route: ActivatedRoute,
+     private router: Router
     ) { }
 
   ngOnInit() {
@@ -210,16 +212,16 @@ export class SuccessPage implements OnInit {
   saveOrder(order: any) {
     this.http.post<any>(`${environment.BASE_URL}orders/save-order`, {order, adminEmail: environment.ADMIN_EMAIL, loc: environment.LOC}).subscribe(res => {
       if(res.message === 'Order Saved Without a user'){
-        this.getTime(res.orderId)
         this.pickUpDate = this.formatedDateToShow(res.preOrderPickUpDate)
         this.orderNumber = res.orderIndex
-        this.webRTC.sendOrderId(res.orderId)
+        this.clearQueryParams()
+        this.getTime(res.orderId)
         Preferences.remove({key: 'cart'});
       } else {
         this.pickUpDate = this.formatedDateToShow(res.preOrderPickUpDate)
         this.orderNumber = res.orderIndex
         this.authServ.updateCaskBack(res.user);
-        this.webRTC.sendOrderId(res.orderId)
+        this.clearQueryParams()
         this.getTime(res.orderId)
         Preferences.remove({key: 'cart'});
         Preferences.remove({key: 'data'});
@@ -232,7 +234,7 @@ getTime(orderId: string){
   if(!this.preOrder){
     setTimeout(()=>{
       this.http.get<any>(`${environment.BASE_URL}orders/get-time?orderId=${orderId}`).subscribe(res => {
-        this.orderTime = res.completetime / 1000 / 60
+        this.orderTime = res.completetime
         this.isLoading = false
       })
     }, 24000)
@@ -252,6 +254,14 @@ formatedDateToShow(date: string){
   } else {
     return ''
   }
+  }
+
+
+  clearQueryParams() {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {},
+    });
   }
 
 }

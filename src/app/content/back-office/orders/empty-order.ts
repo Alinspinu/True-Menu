@@ -33,5 +33,7 @@ export const emptyOrder: Order = {
   status: '',
   show: false,
   preOrderPickUpDate: '',
-  masaRest: {_id: '', index: 0, bills:[]}
+  masaRest: {_id: '', index: 0, bills:[]},
+  soketId: '',
 };
+

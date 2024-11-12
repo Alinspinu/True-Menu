@@ -47,7 +47,6 @@ export class PickOptionPage implements OnInit {
   getOptions(){
     this.options = this.navPar.get('options');
     this.sub = this.navPar.get('sub')
-    console.log(this.options)
   }
 
   onCheckboxChange(option: any, ind: number) {
@@ -66,6 +65,7 @@ export class PickOptionPage implements OnInit {
     if(this.selectedOption){
       this.modalCtrl.dismiss(this.selectedOption)
     } else if(this.selectedO.length){
+      // console.log(this.selectedO)
       this.modalCtrl.dismiss(this.selectedO)
     } else {
       triggerEscapeKeyPress()

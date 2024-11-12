@@ -68,7 +68,6 @@ export class CartService{
         showToast(this.toastCtrl, 'Nu poti avea pe o nota produse date spre precomandă și produse din meniu! Dă două comenzi diferite!', 5000)
       }
     } else {
-      console.log(this.cart.products[0])
       this.cart.productCount++
       const existingProduct = this.cart.products.find((p: CartProduct) =>(p.name === product.name) && this.arraysAreEqual(p.toppings, product.toppings));
       if (existingProduct) {
@@ -90,7 +89,6 @@ export class CartService{
 
   removeAmbalaj(product: CartProduct){
     const productIndex = this.cart.products.findIndex((p: CartProduct) => p.name === product.name);
-    console.log(this.cart.productCount)
     this.removeProduct(productIndex, product.quantity)
   }
 
@@ -146,6 +144,7 @@ export class CartService{
 checkAvailable(subId: string[], prodId: string[], toppings: string[]){
   return this.http.post<{message: string}>(`${environment.BASE_URL}product/check-product`,{subProdId: subId, prodId: prodId, toppings: toppings, loc: environment.LOC});
 };
+
 
 getToken(total: number) {
 return this.http.get<{orderCode: string}>(`${environment.BASE_URL}pay/get-token?total=${total}`);

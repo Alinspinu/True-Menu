@@ -61,7 +61,9 @@ export class TabContentPage implements OnInit, OnDestroy {
       if(res) {
         for(let category of res){
           if(category.mainCat === this.currentCategory){
-            this.categories.push(category);
+            if(category.name !== 'Produse de Paște'){
+              this.categories.push(category);
+            }
           }
         };
         this.isLoadding = false;

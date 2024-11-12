@@ -254,7 +254,6 @@ export class ProductContentPage implements OnInit, OnDestroy {
 
   navigateParProduct(productId: string, catId: string){
     const catIndex = this.category.findIndex(obj=> obj._id === catId);
-    console.log(catIndex, this.category)
     const prodIndex = this.category[catIndex].product.findIndex(obj=> obj._id === productId);
     this.router.navigate(['tabs/product-content/'+ productId + '/' + prodIndex])
   }
@@ -281,12 +280,14 @@ export class ProductContentPage implements OnInit, OnDestroy {
       let price: number = product.price;
       let cartProdName: string = product.name;
       let ings: Ing[] = product.ings
+      let subProductId = ''
       if(product.subProducts.length){
         const result = await this.actionSheet.openTwoOp(PickOptionPage, product.subProducts, true)
           if(result){
             ings = result.ings
             price  = result.price
             cartProdName = product.name + '-' + result.name;
+            subProductId = result._id
           } else {
            return triggerEscapeKeyPress()
           }
@@ -322,7 +323,7 @@ export class ProductContentPage implements OnInit, OnDestroy {
           imgPath: product.image.path,
           category: product.category._id,
           sub: false,
-          toppings: options,
+          toppings: pickedToppings,
           payToGo,
           preOrder: false,
           ings: ings,
@@ -336,6 +337,8 @@ export class ProductContentPage implements OnInit, OnDestroy {
           dep: product.dep,
           qty: product.qty,
           sgrTax: product.sgrTax,
+          subProductId,
+          productId: product._id
         };
           if(index !== -1){
             this.product.paring[index].quantity++

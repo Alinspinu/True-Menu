@@ -127,12 +127,14 @@ export class CategoryContentPage implements OnInit, OnDestroy {
     let price: number = product.price;
     let cartProdName: string = product.name;
     let ings: Ing[] = product.ings
+    let subProductId = ''
     if(product.subProducts.length){
       const result = await this.actionSheet.openTwoOp(PickOptionPage, product.subProducts, true)
         if(result){
           ings = result.ings
           price  = result.price
           cartProdName = product.name + '-' + result.name;
+          subProductId = result._id
         } else {
          return triggerEscapeKeyPress()
         }
@@ -182,6 +184,8 @@ export class CategoryContentPage implements OnInit, OnDestroy {
         dep: product.dep,
         qty: product.qty,
         sgrTax: product.sgrTax,
+        subProductId,
+        productId: product._id
       };
       this.cartService.saveCartProduct(calcProductDiscount(cartProduct, this.user.discount));
       this.tabSrv.addProd(product.category._id, product.name, this.preOrder);

@@ -1,7 +1,10 @@
 {
   "projects": {
     "default": "true-meniu",
-    "meniu": "true-meniu"
+    "meniu": "true-meniu",
+    "true": "true-meniu",
+    "rrt": "true-meniu",
+    "menu": "true-meniu"
   },
   "targets": {},
   "etags": {}

@@ -223,7 +223,6 @@ openSurvey(mode: string){
     this.question = 'Ce fel de mâncare îți place? (1/4)'
     this.hideSurveyButton = true
   } else if(mode === 'food'){
-    console.log("ceva")
     this.showFoodPrice = true
     this.question = 'Câti bani ai cheltui pentru o masă? (2/4)'
     this.showFood = false

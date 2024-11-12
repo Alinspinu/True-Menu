@@ -15,13 +15,17 @@ export const environment = {
     measurementId: "G-PVD9BMRH14"
   },
   LOC: '655e2e7c5a3d53943c6b7c53',
-  BASE_URL: 'http://localhost:8080/',
+  // BASE_URL: 'http://localhost:8080/',
   ADMIN_EMAIL: "alinz.spinu@gmail.com",
-  // BASE_URL: 'https://flow-api-394209.lm.r.appspot.com/',
+  BASE_URL: 'https://flow-api-394209.lm.r.appspot.com/',
   // BASE_URL: 'https://fa74-82-77-237-76.ngrok-free.app/',
 
-  // APP_URL: 'https://true-meniu.web.app/'
-  APP_URL: 'http://localhost:8101/',
+  APP_URL: 'https://true-meniu.web.app/',
+  // APP_URL: 'http://localhost:8100/',
+
+
+  API_USER: 'uewmdhdA@&*939NSDOO73ns',
+  API_PASSWORD: 'JSHFBJDS7323423MBDSF7SHUI!7^4WEW@92MNSDSHDYSY2KS93BWSYQJ3NQBE>/QW3Q312HSDNMASU2UD',
 };
 
 /*

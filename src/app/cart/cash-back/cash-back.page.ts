@@ -67,7 +67,7 @@ export class CashBackPage implements OnInit, OnDestroy {
 
 change(value: any){
   this.cdRef.detectChanges();
-  this.newCashBackValue = value > this.cashBackValue ? this.cashBackValue : value;
+  this.newCashBackValue = value > this.cashBackValue || value < 0 ? this.cashBackValue : value;
 }
 
 triggerEscape(){
