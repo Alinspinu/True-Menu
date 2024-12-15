@@ -97,7 +97,6 @@ export class TabHeaderPage implements OnInit, OnDestroy {
   }
 
   openQrModal(){
-    console.log(this.user._id)
     this.authSrv.getQrCode(this.user._id).subscribe((response: any) => {
       const data = {
         cashBack: this.user.cashBack,

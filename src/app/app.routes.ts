@@ -77,6 +77,10 @@ export const routes: Route[] = [
     path: 'del-prod-view',
     loadComponent: () => import('./content/back-office/cash/del-prod-view/del-prod-view.page').then( m => m.DelProdViewPage)
   },
+  {
+    path: 'qr-code',
+    loadComponent: () => import('./content/qr-code/qr-code.page').then( m => m.QrCodePage)
+  },
 
 
 

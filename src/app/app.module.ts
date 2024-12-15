@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
-import {HttpClient, HttpClientModule} from '@angular/common/http'
+import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http'
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { provideFirebaseApp, getApp, initializeApp } from '@angular/fire/app';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
@@ -14,6 +14,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routes';
 import { LogoPagePage } from './shared/logo-page/logo-page.page';
 import { environment } from 'src/environments/environment';
+import { AuthInterceptorService } from './auth/auth-interceptor.service';
 
 
 
@@ -34,6 +35,11 @@ import { environment } from 'src/environments/environment';
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptorService,
+      multi: true,
+    },
     HttpClient,
     FCM,
     {provide: FIREBASE_OPTIONS, useValue: environment.firebaseConfig},

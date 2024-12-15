@@ -28,6 +28,7 @@ export class DisplayQrPage implements OnInit {
 
   ngOnInit() {
     this.data = this.navPar.get('data')
+    console.log(this.data)
   }
 
 }

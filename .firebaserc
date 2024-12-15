@@ -4,7 +4,8 @@
     "meniu": "true-meniu",
     "true": "true-meniu",
     "rrt": "true-meniu",
-    "menu": "true-meniu"
+    "menu": "true-meniu",
+    "firebase deploy": "true-meniu"
   },
   "targets": {},
   "etags": {}

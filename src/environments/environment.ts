@@ -15,13 +15,14 @@ export const environment = {
     measurementId: "G-PVD9BMRH14"
   },
   LOC: '655e2e7c5a3d53943c6b7c53',
-  // BASE_URL: 'http://localhost:8080/',
   ADMIN_EMAIL: "alinz.spinu@gmail.com",
+
+  // BASE_URL: 'http://localhost:8080/',
   BASE_URL: 'https://flow-api-394209.lm.r.appspot.com/',
-  // BASE_URL: 'https://fa74-82-77-237-76.ngrok-free.app/',
+
 
   APP_URL: 'https://true-meniu.web.app/',
-  // APP_URL: 'http://localhost:8100/',
+  // APP_URL: 'http://localhost:8103/',
 
 
   API_USER: 'uewmdhdA@&*939NSDOO73ns',
