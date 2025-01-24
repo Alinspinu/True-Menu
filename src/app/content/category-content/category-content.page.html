@@ -25,7 +25,7 @@
       <ion-col size-sm="8" offset-sm="2" size-md="6" offset-md="3" size-lg="5" offset-lg="3.5">
         <ion-row *ngFor="let product of products; let z = index" class="product-row">
           <ion-col size-xs="5" class="ion-no-padding"  *ngIf="isAdmin || (product.available && !isAdmin)">
-            <img alt="product" class="product-image" [src]='product.image.path' [routerLink]="'/tabs/product-content/' + product._id + '/'+ z"/>
+            <img alt="product" class="product-image" [src]=" product.image.length ? modifyUrl(product.image[0].path) : modifyUrl('https://res.cloudinary.com/dhetxk68c/image/upload/v1692369756/True/no_image_patrat_pt8iod.png')" [routerLink]="'/tabs/product-content/' + product._id + '/'+ z"/>
           </ion-col>
           <ion-col size-xs="7"  class="ion-no-padding description">
             <div style="width:100%;" *ngIf="isAdmin || (product.available && !isAdmin)">

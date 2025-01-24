@@ -320,7 +320,8 @@ export class ProductContentPage implements OnInit, OnDestroy {
           quantity: 1,
           _id: product._id,
           total: totalPrice,
-          imgPath: product.image.path,
+          imgPath: 'https://res.cloudinary.com/dhetxk68c/image/upload/v1692369756/True/no_image_patrat_pt8iod.png',
+          // imgPath: product.image[0].path,
           category: product.category._id,
           sub: false,
           toppings: pickedToppings,
@@ -331,7 +332,8 @@ export class ProductContentPage implements OnInit, OnDestroy {
           newEntry: true,
           printer: product.printer,
           sentToPrint: true,
-          imgUrl: product.image.path,
+          imgUrl: 'https://res.cloudinary.com/dhetxk68c/image/upload/v1692369756/True/no_image_patrat_pt8iod.png',
+          // imgUrl: product.image[0].path,
           discount: 0,
           tva: product.tva,
           dep: product.dep,
@@ -354,7 +356,7 @@ export class ProductContentPage implements OnInit, OnDestroy {
 
     setImageCroppingSettings(): string {
       if(this.product){
-      const url = this.product.image.path
+      const url = this.product.image.length ? this.product.image[0].path : 'https://res.cloudinary.com/dhetxk68c/image/upload/v1692369756/True/no_image_patrat_pt8iod.png'
       const segments = url.split('/');
       const uploadIndex = segments.indexOf('upload');
       if (uploadIndex === -1) {

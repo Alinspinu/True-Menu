@@ -16,7 +16,7 @@
       {{ product.name }}
      </span>
       <ion-thumbnail slot="end">
-        <img [src]="product.image.path" alt="product-image">
+        <img [src]=" product.image.length ? product.image[0].path :  'https://res.cloudinary.com/dhetxk68c/image/upload/v1692369756/True/no_image_patrat_pt8iod.png'" alt="product-image">
       </ion-thumbnail>
     </ion-item>
   </ion-list>

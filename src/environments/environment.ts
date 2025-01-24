@@ -18,7 +18,7 @@ export const environment = {
   ADMIN_EMAIL: "alinz.spinu@gmail.com",
 
   // BASE_URL: 'http://localhost:8080/',
-  BASE_URL: 'https://flow-api-394209.lm.r.appspot.com/',
+  BASE_URL: 'https://flowmanager.ro/',
 
 
   APP_URL: 'https://true-meniu.web.app/',

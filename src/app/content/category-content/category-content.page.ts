@@ -17,7 +17,7 @@ import { CapitalizePipe } from '../../shared/capitalize.pipe';
 import { ProductContentService } from '../product-content/product-content.service';
 import { triggerEscapeKeyPress } from 'src/app/shared/utils/toast-controller';
 import { PickOptionPage } from 'src/app/shared/pick-option/pick-option.page';
-import { calcProductDiscount, round } from 'src/app/shared/utils/functions';
+import { calcProductDiscount, modifyImageURL, modifyImageURLBack, round } from 'src/app/shared/utils/functions';
 
 
 
@@ -95,6 +95,7 @@ export class CategoryContentPage implements OnInit, OnDestroy {
   this.getCurrentTab();
    this.tabSubscription = this.tabSrv.categorySend$.subscribe(res => {
     this.categories = res;
+    console.log(this.categories)
       const cat = res.find(cat => cat._id === this.currentTab );
       if(cat){
         this.categoryName = cat.name;
@@ -167,7 +168,7 @@ export class CategoryContentPage implements OnInit, OnDestroy {
         quantity: 1,
         _id: product._id,
         total: totalPrice,
-        imgPath: product.image.path,
+        imgPath: product.image.length ? product.image[0].path :  'https://res.cloudinary.com/dhetxk68c/image/upload/v1692369756/True/no_image_patrat_pt8iod.png',
         category: product.category._id,
         sub: false,
         toppings: pickedToppings,
@@ -178,7 +179,7 @@ export class CategoryContentPage implements OnInit, OnDestroy {
         newEntry: true,
         printer: product.printer,
         sentToPrint: true,
-        imgUrl: product.image.path,
+        imgUrl: product.image.length ? product.image[0].path : 'https://res.cloudinary.com/dhetxk68c/image/upload/v1692369756/True/no_image_patrat_pt8iod.png',
         discount: 0,
         tva: product.tva,
         dep: product.dep,
@@ -274,7 +275,9 @@ getUser(){
   };
 
 
-
+modifyUrl(url: string){
+  return modifyImageURLBack(url)
+}
 
 
 

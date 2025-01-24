@@ -17,6 +17,14 @@ export function modifyImageURL(url: string): string {
   return cropUrl;
 }
 
+export function modifyImageURLBack(url: string): string {
+  const parts = url.split('/v1');
+  const baseURL = parts[0];
+  const cropParameters = '/w_555,h_888,c_fill';
+  const cropUrl = baseURL + cropParameters + '/v1' + parts[1];
+  return cropUrl;
+}
+
 export function formatedDateToShow(date: any){
   if(date){
     const inputDate = new Date(date);

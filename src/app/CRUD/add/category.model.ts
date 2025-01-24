@@ -20,7 +20,7 @@ export class Product {
   public order: number,
   public description: string,
   public quantity: number,
-  public image: {path: string, filename: string},
+  public image: {path: string, filename: string}[],
   public subProducts: SubProduct[],
   public category: Category,
   public preOrderPrice: number,
