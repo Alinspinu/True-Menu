@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, take, tap } from "rxjs";
-import { Ingredient } from "src/app/CRUD/add/category.model";
+import { Ingredient, Product } from "src/app/CRUD/add/category.model";
 import { environment } from "src/environments/environment";
 
 interface Topping{
@@ -63,6 +63,10 @@ export class ProductContentService{
     this.balckList = response
     this.blackListState.next([...this.balckList])
    }))
+  }
+
+  getProduct(id: string){
+    return this.http.get<Product>(`${environment.BASE_URL}product/get-product?id=${id}`)
   }
 
 }

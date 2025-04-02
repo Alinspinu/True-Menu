@@ -90,15 +90,12 @@ export class ProductContentPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.setProductIdandIndex();
-    this.fetchCategory();
-    this.getBlackList();
+    this.fetchCategory()
+     this.getBlackList();
      this.getUser()
-     this.calcProdNutrition()
      this.splitDescription()
      this.setImageCroppingSettings();
      this.getBackTab();
-     this.product ? this.setPickOption(this.product.category.name) : null
-     console.log(this.product)
 
   }
 
@@ -154,48 +151,49 @@ export class ProductContentPage implements OnInit, OnDestroy {
     return {ing: ings, mode:'', ingId: ''}
   }
 
-  calcProdNutrition(){
-    if(this.product && this.product.ingredients.length > 0){
-      const productQuantity = parseFloat(this.product.qty.replace(/g|ml/g, ''))
-      const prefixes = ['energy', 'carbs', 'fat', 'salts', 'protein']
-      const result = this.product.ingredients.reduce<Result>((acc, obj) => {
-        Object.keys(obj.ingredient).forEach(key => {
-          if (prefixes.some(prefix => key.startsWith(prefix))) {
-            if (typeof (obj.ingredient as any)[key] === 'object') {
-              Object.keys((obj.ingredient as any)[key]).forEach(subKey => {
-                (acc as any)[key] = (acc as any)[key] || {};
-                (acc as any)[key][subKey] = this.round((((acc as any)[key][subKey] || 0) + ((obj.ingredient as any)[key][subKey] * (obj.quantity / 100)))/(productQuantity/100));
-              });
-            } else {
-              (acc as any)[key] = this.round((((acc as any)[key] || 0) + ((obj.ingredient as any)[key] * (obj.quantity / 100)))/(productQuantity/100));
-            }
-          } else if((Array.isArray((obj.ingredient as any)[key]))) {
-            (acc as any)[key] = (acc as any)[key] || [];
-            (obj.ingredient as any)[key].forEach((item: any) => {
-                const index = (acc as any)[key].findIndex((obj:any) => obj.name === item.name)
-                if (index === -1 && item.name.length > 1) {
-                    (acc as any)[key].push(item);
-                }
-            });
-          }
-        });
-        return acc;
-      }, this.emptyResult);
-      this.product.nutrition.energy = result.energy;
-      this.product.nutrition.carbs = result.carbs;
-      this.product.nutrition.fat = result.fat;
-      this.product.nutrition.salts = result.salts;
-      this.product.nutrition.protein = result.protein;
-      this.product.allergens = result.allergens;
-      this.product.additives = result.additives;
-      this.additives = result.additives.map(obj => obj.name).join('/')
-    }
-  }
+  // calcProdNutrition(){
+  //   if(this.product && this.product.ingredients.length > 0){
+  //     const productQuantity = parseFloat(this.product.qty.replace(/g|ml/g, ''))
+  //     const prefixes = ['energy', 'carbs', 'fat', 'salts', 'protein']
+  //     const result = this.product.ingredients.reduce<Result>((acc, obj) => {
+  //       Object.keys(obj.ingredient).forEach(key => {
+  //         if (prefixes.some(prefix => key.startsWith(prefix))) {
+  //           if (typeof (obj.ingredient as any)[key] === 'object') {
+  //             Object.keys((obj.ingredient as any)[key]).forEach(subKey => {
+  //               (acc as any)[key] = (acc as any)[key] || {};
+  //               (acc as any)[key][subKey] = this.round((((acc as any)[key][subKey] || 0) + ((obj.ingredient as any)[key][subKey] * (obj.quantity / 100)))/(productQuantity/100));
+  //             });
+  //           } else {
+  //             (acc as any)[key] = this.round((((acc as any)[key] || 0) + ((obj.ingredient as any)[key] * (obj.quantity / 100)))/(productQuantity/100));
+  //           }
+  //         } else if((Array.isArray((obj.ingredient as any)[key]))) {
+  //           (acc as any)[key] = (acc as any)[key] || [];
+  //           (obj.ingredient as any)[key].forEach((item: any) => {
+  //               const index = (acc as any)[key].findIndex((obj:any) => obj.name === item.name)
+  //               if (index === -1 && item.name.length > 1) {
+  //                   (acc as any)[key].push(item);
+  //               }
+  //           });
+  //         }
+  //       });
+  //       return acc;
+  //     }, this.emptyResult);
+  //     this.product.nutrition.energy = result.energy;
+  //     this.product.nutrition.carbs = result.carbs;
+  //     this.product.nutrition.fat = result.fat;
+  //     this.product.nutrition.salts = result.salts;
+  //     this.product.nutrition.protein = result.protein;
+  //     this.product.allergens = result.allergens;
+  //     this.product.additives = result.additives;
+  //     this.additives = result.additives.map(obj => obj.name).join('/')
+  //   }
+  // }
 
 
 
 
   fetchCategory(){
+
     this.tabSubs = this.tabsServ.categorySend$.subscribe(res => {
       this.category = res
       for(let i = 0; i < res.length; i++ ){
@@ -208,6 +206,17 @@ export class ProductContentPage implements OnInit, OnDestroy {
         }
     }
     return
+    })
+  }
+
+  getProduct(){
+    this.productSrv.getProduct(this.productId).subscribe({
+      next: (product) => {
+        this.product = product
+      },
+      error: (error) => {
+        console.log(error)
+      }
     })
   }
 
@@ -350,6 +359,7 @@ export class ProductContentPage implements OnInit, OnDestroy {
     };
 
     getBackTab(){
+      console.log(this.product)
       if(this.product && this.product.category._id.length)
       this.backTab = this.product.category._id
     }

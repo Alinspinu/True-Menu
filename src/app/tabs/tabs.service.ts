@@ -74,6 +74,7 @@ export class TabsService{
     const headers = new HttpHeaders().set("ngrok-skip-browser-warning", "420");
     return this.http.get<Category[]>(`${environment.BASE_URL}cat/get-cats?loc=${locatie}`, {headers}).pipe(take(1), tap(res => {
       this.category = this.sortData(res)
+      console.log('category service', this.category)
       const data = JSON.stringify(this.category)
       Preferences.set({key: "categories", value: data })
       this.categoryState.next([...this.category]);
